@@ -1,0 +1,891 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Banking that moves with you — Landing page</title>
+<meta name="description" content="A Revolut-inspired redesign of the Figma landingpage frame. One app for spending, saving, investing and travelling." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+<style>
+  /* =========================================================
+     Revolut-inspired tokens (see ./DESIGN.md)
+     ========================================================= */
+  :root{
+    --shark:#0E0F11;
+    --shark-2:#15171B;
+    --shark-3:#1C1F24;
+    --white:#ffffff;
+    --ink:#06070A;
+    --muted:#8A8F98;
+    --hairline: rgba(255,255,255,.08);
+    --cornflower:#7F84F6;
+    --violet:#5A4BFF;
+    --lime:#D6FF4B;
+    --ocean:#0066FF;
+    --sunset:#FF6B5C;
+
+    --radius-sm:12px;
+    --radius-md:18px;
+    --radius-lg:24px;
+    --radius-pill:999px;
+
+    --container:1200px;
+
+    --grad-aurora:
+      radial-gradient(60% 80% at 18% -10%, rgba(90,75,255,.55) 0%, transparent 60%),
+      radial-gradient(50% 60% at 90% 20%, rgba(127,132,246,.45) 0%, transparent 55%),
+      radial-gradient(40% 50% at 50% 110%, rgba(214,255,75,.10) 0%, transparent 60%),
+      #0E0F11;
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family: 'Aeonik','Inter','SF Pro Display',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    background:var(--shark);
+    color:var(--white);
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    font-feature-settings:"ss01","cv11";
+    letter-spacing:-0.01em;
+  }
+  a{color:inherit;text-decoration:none}
+  img,svg{display:block;max-width:100%}
+  button{font:inherit}
+
+  .container{max-width:var(--container);margin:0 auto;padding:0 24px}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:12px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);
+  }
+  .eyebrow::before{
+    content:"";width:6px;height:6px;border-radius:50%;background:var(--lime);
+    box-shadow:0 0 14px var(--lime);
+  }
+
+  .h1{font-weight:500;font-size:clamp(44px,7.2vw,88px);line-height:.95;letter-spacing:-0.04em;margin:0}
+  .h2{font-weight:500;font-size:clamp(34px,4.6vw,56px);line-height:1.02;letter-spacing:-0.03em;margin:0}
+  .h3{font-weight:500;font-size:28px;line-height:1.15;letter-spacing:-0.015em;margin:0}
+  .body{font-size:18px;line-height:1.55;color:rgba(255,255,255,.78)}
+  .body--ink{color:rgba(6,7,10,.7)}
+
+  /* ======================== Buttons ======================== */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:10px;
+    height:54px;padding:0 26px;border-radius:var(--radius-pill);
+    font-weight:500;font-size:16px;letter-spacing:-0.01em;
+    border:1px solid transparent;cursor:pointer;
+    transition: transform .2s ease, background .2s ease, box-shadow .2s ease, border-color .2s ease;
+  }
+  .btn-primary{background:var(--violet);color:#fff}
+  .btn-primary:hover{background:#6E5DFF;box-shadow:0 14px 36px rgba(90,75,255,.45);transform:translateY(-1px)}
+  .btn-ghost{background:rgba(255,255,255,.06);color:#fff;border-color:rgba(255,255,255,.12)}
+  .btn-ghost:hover{background:rgba(255,255,255,.10)}
+  .btn-on-light{background:var(--ink);color:#fff}
+  .btn-on-light:hover{background:#1a1c20}
+
+  /* ======================== Pills / chips =================== */
+  .chip{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:6px 12px;border-radius:var(--radius-pill);
+    background:rgba(214,255,75,.14);color:var(--lime);
+    font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;
+  }
+  .chip--violet{background:rgba(127,132,246,.16);color:#cdd0ff}
+  .chip--white{background:rgba(255,255,255,.08);color:#fff}
+
+  /* ======================== Navigation ====================== */
+  .nav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(14,15,17,.72);
+    -webkit-backdrop-filter:blur(18px) saturate(140%);
+            backdrop-filter:blur(18px) saturate(140%);
+    border-bottom:1px solid var(--hairline);
+  }
+  .nav__inner{
+    max-width:var(--container);margin:0 auto;padding:18px 24px;
+    display:flex;align-items:center;gap:32px;
+  }
+  .logo{display:flex;align-items:center;gap:10px;font-weight:600;letter-spacing:-0.02em;font-size:20px}
+  .logo__mark{
+    width:28px;height:28px;border-radius:8px;
+    background:linear-gradient(135deg,#7F84F6 0%,#5A4BFF 100%);
+    position:relative;
+  }
+  .logo__mark::after{
+    content:"";position:absolute;inset:6px;
+    border:2px solid #fff;border-radius:50%;
+    border-top-color:transparent;border-right-color:transparent;
+    transform:rotate(-45deg);
+  }
+  .nav__links{display:flex;align-items:center;gap:6px;margin-left:8px}
+  .nav__links a{
+    padding:10px 14px;border-radius:10px;color:rgba(255,255,255,.78);
+    font-size:15px;font-weight:500;
+    transition:background .15s ease,color .15s ease;
+  }
+  .nav__links a:hover{background:rgba(255,255,255,.06);color:#fff}
+  .nav__cta{margin-left:auto;display:flex;align-items:center;gap:10px}
+  .nav__cta .btn{height:44px;padding:0 20px;font-size:14px}
+
+  /* ======================== Hero ============================ */
+  .hero{
+    position:relative;overflow:hidden;
+    background:var(--grad-aurora);
+    padding:80px 0 120px;
+  }
+  .hero::before{
+    content:"";position:absolute;inset:0;
+    background:
+      radial-gradient(1px 1px at 12% 30%, rgba(255,255,255,.5), transparent 60%),
+      radial-gradient(1px 1px at 78% 18%, rgba(255,255,255,.4), transparent 60%),
+      radial-gradient(1px 1px at 60% 70%, rgba(255,255,255,.35), transparent 60%);
+    opacity:.5;pointer-events:none;
+  }
+  .hero__grid{
+    position:relative;z-index:1;
+    display:grid;grid-template-columns: 1.1fr .9fr;gap:64px;align-items:center;
+  }
+  .hero__copy .h1{margin-top:18px}
+  .hero__copy .body{margin-top:22px;max-width:520px}
+  .hero__cta{margin-top:36px;display:flex;flex-wrap:wrap;gap:12px}
+  .hero__stats{margin-top:48px;display:flex;gap:40px;flex-wrap:wrap}
+  .stat__num{font-size:32px;font-weight:500;letter-spacing:-0.02em;font-variant-numeric:tabular-nums}
+  .stat__lbl{font-size:13px;color:var(--muted);margin-top:2px}
+
+  /* ======================== Hero visual ===================== */
+  .hero__visual{position:relative;height:560px}
+  .phone{
+    position:absolute;right:20px;top:0;
+    width:300px;height:560px;border-radius:48px;
+    background:#06070A;
+    box-shadow:
+      0 60px 120px -30px rgba(90,75,255,.55),
+      0 0 0 1px rgba(255,255,255,.06) inset,
+      0 1px 0 rgba(255,255,255,.18) inset;
+    padding:8px;
+  }
+  .phone__screen{
+    width:100%;height:100%;border-radius:40px;
+    background:linear-gradient(180deg,#15171B 0%,#0E0F11 100%);
+    overflow:hidden;position:relative;
+    padding:22px 18px;
+  }
+  .phone__notch{
+    position:absolute;left:50%;top:14px;transform:translateX(-50%);
+    width:96px;height:24px;border-radius:14px;background:#000;
+  }
+  .phone__balance{margin-top:20px}
+  .phone__balance small{font-size:12px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+  .phone__balance .amt{
+    display:flex;align-items:baseline;gap:6px;margin-top:4px;
+    font-size:36px;font-weight:500;font-variant-numeric:tabular-nums;letter-spacing:-0.02em;
+  }
+  .phone__balance .amt em{font-size:18px;color:var(--muted);font-style:normal}
+  .phone__chart{
+    margin-top:14px;height:88px;border-radius:14px;
+    background:linear-gradient(180deg,rgba(127,132,246,.18),rgba(127,132,246,0));
+    position:relative;overflow:hidden;
+  }
+  .phone__chart svg{position:absolute;inset:0;width:100%;height:100%}
+  .phone__row{
+    display:flex;align-items:center;gap:12px;
+    padding:12px 10px;border-radius:14px;
+    margin-top:10px;background:rgba(255,255,255,.04);
+  }
+  .phone__avatar{
+    width:36px;height:36px;border-radius:10px;
+    display:grid;place-items:center;font-weight:600;font-size:14px;
+  }
+  .phone__avatar.a{background:linear-gradient(135deg,#7F84F6,#5A4BFF);color:#fff}
+  .phone__avatar.b{background:linear-gradient(135deg,#FF6B5C,#9A2A2A);color:#fff}
+  .phone__avatar.c{background:linear-gradient(135deg,#D6FF4B,#7BAA12);color:#0E0F11}
+  .phone__row .meta{flex:1;display:flex;flex-direction:column;gap:2px}
+  .phone__row .meta strong{font-size:14px;font-weight:500}
+  .phone__row .meta span{font-size:12px;color:var(--muted)}
+  .phone__row .val{font-size:14px;font-weight:500;font-variant-numeric:tabular-nums}
+  .phone__row .val.pos{color:#A6E14C}
+  .phone__row .val.neg{color:#fff}
+
+  .phone__tabbar{
+    position:absolute;left:18px;right:18px;bottom:14px;height:56px;
+    border-radius:18px;background:rgba(255,255,255,.06);
+    display:flex;align-items:center;justify-content:space-around;
+    border:1px solid rgba(255,255,255,.06);
+  }
+  .phone__tabbar div{width:24px;height:24px;border-radius:6px;background:rgba(255,255,255,.5)}
+  .phone__tabbar div:nth-child(1){background:#fff}
+
+  .card-stack{
+    position:absolute;left:0;top:60px;width:340px;height:auto;
+  }
+  .bcard{
+    width:340px;aspect-ratio:1.586/1;border-radius:22px;
+    box-shadow:
+      0 30px 60px -20px rgba(0,0,0,.6),
+      inset 0 1px 0 rgba(255,255,255,.18);
+    padding:22px;color:#fff;position:relative;overflow:hidden;
+    transform-origin:top left;
+  }
+  .bcard h4{margin:0;font-weight:500;letter-spacing:-0.01em;font-size:18px;display:flex;align-items:center;gap:8px}
+  .bcard .num{
+    margin-top:auto;font-family:'Inter';font-variant-numeric:tabular-nums;
+    letter-spacing:.18em;font-size:14px;color:rgba(255,255,255,.85);
+    display:flex;flex-direction:column;gap:2px;
+  }
+  .bcard .num span{font-size:11px;letter-spacing:.18em;color:rgba(255,255,255,.6);text-transform:uppercase}
+  .bcard__inner{display:flex;flex-direction:column;height:100%}
+  .bcard__chip{
+    width:34px;height:24px;border-radius:5px;
+    background:linear-gradient(135deg,#E6C476,#A87B25);
+    box-shadow:inset 0 0 0 1px rgba(0,0,0,.25);
+  }
+  .bcard__row{display:flex;align-items:center;justify-content:space-between}
+  .bcard.standard{background:linear-gradient(135deg,#2B2F36 0%,#15171B 100%)}
+  .bcard.plus{background:linear-gradient(135deg,#5A4BFF 0%,#1B1B6E 100%);transform:rotate(-6deg) translate(-30px,80px)}
+  .bcard.metal{background:linear-gradient(135deg,#9CA0A6 0%,#2C2C2E 100%);transform:rotate(6deg) translate(60px,40px)}
+
+  /* ======================== Currencies ribbon =============== */
+  .ribbon{
+    border-top:1px solid var(--hairline);
+    border-bottom:1px solid var(--hairline);
+    background:#0B0C0E;
+    overflow:hidden;
+  }
+  .ribbon__track{
+    display:flex;gap:56px;padding:22px 0;white-space:nowrap;
+    animation: marquee 40s linear infinite;
+    color:var(--muted);font-weight:500;letter-spacing:.04em;font-size:14px;
+  }
+  .ribbon__track span{display:inline-flex;align-items:center;gap:10px}
+  .ribbon__track i{
+    width:22px;height:16px;border-radius:3px;display:inline-block;
+    background:linear-gradient(135deg,#7F84F6,#5A4BFF);
+  }
+  @keyframes marquee {
+    from{transform:translateX(0)}
+    to{transform:translateX(-50%)}
+  }
+
+  /* ======================== Generic sections =============== */
+  section.block{padding:120px 0}
+  section.block .h2{max-width:14ch}
+  .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+  .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;align-items:center}
+
+  .feature{
+    background:var(--shark-2);border:1px solid var(--hairline);
+    border-radius:var(--radius-lg);padding:28px;
+    transition:transform .25s ease,border-color .25s ease,background .25s ease;
+  }
+  .feature:hover{transform:translateY(-4px);border-color:rgba(127,132,246,.4)}
+  .feature__icon{
+    width:44px;height:44px;border-radius:12px;
+    background:linear-gradient(135deg,#7F84F6 0%,#5A4BFF 100%);
+    display:grid;place-items:center;color:#fff;
+    box-shadow:0 12px 30px -12px rgba(90,75,255,.7);
+  }
+  .feature h3{margin:18px 0 8px;font-size:22px;font-weight:500;letter-spacing:-0.015em}
+  .feature p{margin:0;color:rgba(255,255,255,.7);font-size:15px;line-height:1.55}
+
+  /* Light contrast band */
+  .light{
+    background:#F5F5F1;color:var(--ink);
+  }
+  .light .body{color:rgba(6,7,10,.72)}
+  .light .h2{color:var(--ink)}
+
+  /* Stocks visual card */
+  .stockcard{
+    background:linear-gradient(180deg,#15171B 0%,#0E0F11 100%);
+    border:1px solid var(--hairline);
+    border-radius:24px;padding:24px;
+    box-shadow:0 30px 60px -30px rgba(0,0,0,.6);
+  }
+  .stockcard__head{display:flex;justify-content:space-between;align-items:center}
+  .stockcard__chart{margin-top:18px;height:220px;border-radius:14px;background:rgba(127,132,246,.06);position:relative;overflow:hidden}
+  .stockcard__chart svg{position:absolute;inset:0;width:100%;height:100%}
+  .stockcard__list{margin-top:18px;display:grid;gap:10px}
+  .stockcard__list .row{
+    display:grid;grid-template-columns:36px 1fr auto auto;align-items:center;gap:14px;
+    padding:12px;background:rgba(255,255,255,.03);border-radius:12px;
+  }
+  .stockcard__list .ticker{
+    width:36px;height:36px;border-radius:8px;
+    display:grid;place-items:center;font-weight:600;font-size:12px;
+    background:linear-gradient(135deg,#7F84F6,#5A4BFF);
+  }
+  .stockcard__list .ticker.aapl{background:linear-gradient(135deg,#fff,#bbb);color:#000}
+  .stockcard__list .ticker.tsla{background:linear-gradient(135deg,#FF6B5C,#7d1410);color:#fff}
+  .stockcard__list .ticker.btc{background:linear-gradient(135deg,#F7931A,#7a4500);color:#fff}
+  .stockcard__list .name{font-size:15px;font-weight:500}
+  .stockcard__list .name span{display:block;color:var(--muted);font-size:12px;font-weight:400;margin-top:2px}
+  .stockcard__list .price{font-variant-numeric:tabular-nums;font-weight:500;font-size:14px}
+  .stockcard__list .delta{font-variant-numeric:tabular-nums;font-weight:500;font-size:13px;padding:4px 8px;border-radius:8px}
+  .stockcard__list .delta.pos{background:rgba(166,225,76,.16);color:#A6E14C}
+  .stockcard__list .delta.neg{background:rgba(255,107,92,.16);color:#FF8A7C}
+
+  /* Plans */
+  .plans{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+  .plan{
+    border-radius:24px;padding:28px;
+    border:1px solid var(--hairline);
+    display:flex;flex-direction:column;gap:16px;
+    background:linear-gradient(180deg,#15171B 0%,#0E0F11 100%);
+    position:relative;overflow:hidden;
+  }
+  .plan.standard{background:linear-gradient(180deg,#1A1D22 0%,#0E0F11 100%)}
+  .plan.plus{background:linear-gradient(160deg,#3a31b8 0%,#0E0F11 80%);border-color:rgba(127,132,246,.4)}
+  .plan.premium{background:linear-gradient(160deg,#7a5e2a 0%,#0E0F11 80%)}
+  .plan.metal{background:linear-gradient(160deg,#3a3a3f 0%,#0E0F11 80%);outline:1px solid rgba(214,255,75,.2);outline-offset:-2px}
+  .plan h3{font-size:22px;margin:0;font-weight:500;letter-spacing:-0.01em}
+  .plan .price{font-size:36px;font-weight:500;letter-spacing:-0.02em;font-variant-numeric:tabular-nums}
+  .plan .price em{font-size:14px;color:var(--muted);font-style:normal;margin-left:6px}
+  .plan ul{margin:8px 0 0;padding:0;list-style:none;display:grid;gap:10px}
+  .plan li{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:rgba(255,255,255,.85)}
+  .plan li svg{flex:none;margin-top:3px}
+  .plan .btn{margin-top:auto;height:46px}
+
+  /* Security */
+  .security{
+    border-radius:32px;
+    background:
+      radial-gradient(60% 80% at 80% 0%, rgba(90,75,255,.35) 0%, transparent 60%),
+      radial-gradient(40% 60% at 0% 100%, rgba(214,255,75,.10) 0%, transparent 60%),
+      #0B0C0E;
+    border:1px solid var(--hairline);
+    padding:64px;
+    display:grid;grid-template-columns:1.2fr .8fr;gap:48px;align-items:center;
+  }
+  .security ul{list-style:none;padding:0;margin:24px 0 0;display:grid;gap:14px}
+  .security li{display:flex;gap:14px;align-items:flex-start;color:rgba(255,255,255,.85);font-size:16px}
+  .security li svg{flex:none;color:var(--lime)}
+
+  /* Download */
+  .download{
+    border-radius:32px;padding:64px;
+    background:linear-gradient(135deg,#5A4BFF 0%,#7F84F6 50%,#D6FF4B 200%);
+    display:grid;grid-template-columns:1fr auto;gap:32px;align-items:center;
+    color:#0a0b14;
+  }
+  .download h2{font-size:clamp(36px,4.4vw,56px);font-weight:500;letter-spacing:-0.03em;margin:0;color:#0a0b14}
+  .download p{margin:14px 0 0;color:rgba(10,11,20,.7);max-width:520px}
+  .download__cta{display:flex;flex-direction:column;gap:12px;min-width:240px}
+  .store-btn{
+    display:flex;align-items:center;gap:12px;
+    height:60px;padding:0 22px;border-radius:16px;
+    background:#0E0F11;color:#fff;
+  }
+  .store-btn small{display:block;font-size:11px;color:rgba(255,255,255,.6);letter-spacing:.06em;text-transform:uppercase}
+  .store-btn strong{font-weight:500;font-size:18px;letter-spacing:-0.01em}
+
+  /* Footer */
+  footer{
+    background:#08090B;border-top:1px solid var(--hairline);
+    padding:80px 0 32px;
+  }
+  .foot__grid{display:grid;grid-template-columns:1.4fr repeat(4,1fr);gap:40px}
+  .foot__col h5{margin:0 0 14px;font-size:13px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:500}
+  .foot__col a{display:block;padding:6px 0;color:rgba(255,255,255,.78);font-size:14px}
+  .foot__col a:hover{color:#fff}
+  .foot__base{
+    margin-top:48px;padding-top:24px;border-top:1px solid var(--hairline);
+    display:flex;justify-content:space-between;color:var(--muted);font-size:13px;flex-wrap:wrap;gap:12px;
+  }
+
+  /* Responsive */
+  @media (max-width: 1024px){
+    .hero__grid{grid-template-columns:1fr;gap:48px}
+    .hero__visual{height:520px}
+    .grid-3{grid-template-columns:1fr 1fr}
+    .plans{grid-template-columns:1fr 1fr}
+    .security{grid-template-columns:1fr;padding:40px}
+    .download{grid-template-columns:1fr;padding:40px}
+    .foot__grid{grid-template-columns:1fr 1fr}
+  }
+  @media (max-width: 640px){
+    .nav__links{display:none}
+    section.block{padding:80px 0}
+    .grid-3,.grid-2,.plans{grid-template-columns:1fr}
+    .hero__visual{height:auto}
+    .phone{position:relative;right:auto;margin:32px auto 0}
+    .card-stack{position:relative;left:auto;top:auto;margin-top:24px}
+    .bcard.plus,.bcard.metal{transform:none}
+    .foot__grid{grid-template-columns:1fr}
+  }
+
+  /* Sticky mobile CTA */
+  .sticky-cta{
+    display:none;position:fixed;left:16px;right:16px;bottom:16px;z-index:60;
+    padding:12px;border-radius:18px;background:rgba(14,15,17,.85);
+    backdrop-filter:blur(16px);border:1px solid var(--hairline);
+    align-items:center;gap:12px;
+  }
+  .sticky-cta .btn{flex:1;height:46px}
+  @media (max-width:640px){.sticky-cta{display:flex}}
+</style>
+</head>
+<body>
+
+<!-- ======================= NAV ======================= -->
+<header class="nav">
+  <div class="nav__inner">
+    <a href="#" class="logo" aria-label="Brand home">
+      <span class="logo__mark" aria-hidden="true"></span>
+      <span>Northwave</span>
+    </a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="#personal">Personal</a>
+      <a href="#business">Business</a>
+      <a href="#cards">Cards</a>
+      <a href="#invest">Invest</a>
+      <a href="#plans">Plans</a>
+      <a href="#help">Help</a>
+    </nav>
+    <div class="nav__cta">
+      <a class="btn btn-ghost" href="#login">Log in</a>
+      <a class="btn btn-primary" href="#signup">Sign up</a>
+    </div>
+  </div>
+</header>
+
+<!-- ======================= HERO ======================= -->
+<section class="hero">
+  <div class="container hero__grid">
+    <div class="hero__copy">
+      <span class="eyebrow">Banking · Investing · Travel</span>
+      <h1 class="h1">One app for all the&nbsp;ways your money moves.</h1>
+      <p class="body">Spend in 150+ currencies at the real exchange rate. Invest in stocks, ETFs and crypto from one balance. Get paid up to two days early. No fees that surprise you.</p>
+      <div class="hero__cta">
+        <a class="btn btn-primary" href="#signup">Get started — it's free
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+        <a class="btn btn-ghost" href="#video">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+          Watch the 60s tour
+        </a>
+      </div>
+      <div class="hero__stats">
+        <div><div class="stat__num">45M+</div><div class="stat__lbl">Customers worldwide</div></div>
+        <div><div class="stat__num">150+</div><div class="stat__lbl">Currencies supported</div></div>
+        <div><div class="stat__num">4.9★</div><div class="stat__lbl">App Store rating</div></div>
+      </div>
+    </div>
+
+    <div class="hero__visual" aria-hidden="true">
+      <!-- Card stack -->
+      <div class="card-stack">
+        <div class="bcard plus">
+          <div class="bcard__inner">
+            <div class="bcard__row">
+              <h4>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+                Plus
+              </h4>
+              <div class="bcard__chip"></div>
+            </div>
+            <div class="num"><span>Member</span>•••• 4827</div>
+          </div>
+        </div>
+        <div class="bcard standard">
+          <div class="bcard__inner">
+            <div class="bcard__row">
+              <h4>Standard</h4>
+              <div class="bcard__chip"></div>
+            </div>
+            <div class="num"><span>Member</span>•••• 1024</div>
+          </div>
+        </div>
+        <div class="bcard metal">
+          <div class="bcard__inner">
+            <div class="bcard__row">
+              <h4>Metal</h4>
+              <div class="bcard__chip"></div>
+            </div>
+            <div class="num"><span>Member</span>•••• 9981</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phone mockup -->
+      <div class="phone">
+        <div class="phone__screen">
+          <div class="phone__notch"></div>
+          <div class="phone__balance">
+            <small>Total balance</small>
+            <div class="amt">€8,420.<em>56</em></div>
+          </div>
+          <div class="phone__chart">
+            <svg viewBox="0 0 320 96" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="g1" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0%" stop-color="#7F84F6" stop-opacity=".55"/>
+                  <stop offset="100%" stop-color="#7F84F6" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <path d="M0,70 C40,60 60,40 90,42 C120,44 140,72 170,60 C200,48 220,18 260,22 C290,26 310,12 320,8 L320,96 L0,96 Z" fill="url(#g1)"/>
+              <path d="M0,70 C40,60 60,40 90,42 C120,44 140,72 170,60 C200,48 220,18 260,22 C290,26 310,12 320,8" fill="none" stroke="#7F84F6" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="phone__row">
+            <div class="phone__avatar a">A</div>
+            <div class="meta"><strong>Apple Music</strong><span>Subscription · Today</span></div>
+            <div class="val neg">−€10.99</div>
+          </div>
+          <div class="phone__row">
+            <div class="phone__avatar b">L</div>
+            <div class="meta"><strong>Lufthansa</strong><span>Travel · Yesterday</span></div>
+            <div class="val neg">−€312.40</div>
+          </div>
+          <div class="phone__row">
+            <div class="phone__avatar c">€</div>
+            <div class="meta"><strong>Salary · ACME</strong><span>Income · 2 days early</span></div>
+            <div class="val pos">+€4,250.00</div>
+          </div>
+          <div class="phone__tabbar"><div></div><div></div><div></div><div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= CURRENCY RIBBON ======================= -->
+<div class="ribbon" aria-hidden="true">
+  <div class="ribbon__track">
+    <span><i></i> EUR</span><span><i></i> USD</span><span><i></i> GBP</span><span><i></i> JPY</span>
+    <span><i></i> CHF</span><span><i></i> SEK</span><span><i></i> SGD</span><span><i></i> AUD</span>
+    <span><i></i> CAD</span><span><i></i> NOK</span><span><i></i> AED</span><span><i></i> MXN</span>
+    <span><i></i> BRL</span><span><i></i> HKD</span><span><i></i> ZAR</span><span><i></i> NZD</span>
+    <span><i></i> EUR</span><span><i></i> USD</span><span><i></i> GBP</span><span><i></i> JPY</span>
+    <span><i></i> CHF</span><span><i></i> SEK</span><span><i></i> SGD</span><span><i></i> AUD</span>
+    <span><i></i> CAD</span><span><i></i> NOK</span><span><i></i> AED</span><span><i></i> MXN</span>
+  </div>
+</div>
+
+<!-- ======================= FEATURES ======================= -->
+<section class="block" id="cards">
+  <div class="container">
+    <span class="eyebrow">What you can do</span>
+    <h2 class="h2" style="margin:18px 0 56px">Money that just&nbsp;works.</h2>
+
+    <div class="grid-3">
+      <div class="feature">
+        <div class="feature__icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="14" rx="3"/><path d="M2 11h20"/></svg>
+        </div>
+        <span class="chip" style="margin-top:4px">Free · No FX fees</span>
+        <h3>Spend abroad like a&nbsp;local</h3>
+        <p>Spend in 150+ currencies at the real exchange rate. No hidden markups, no weekend surcharges on most plans.</p>
+      </div>
+      <div class="feature">
+        <div class="feature__icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l4-4 4 4 4-8 4 8 2-3"/><path d="M3 21h18"/></svg>
+        </div>
+        <h3>Invest from €1</h3>
+        <p>Buy fractional shares of 2,500+ stocks and ETFs. Trade crypto 24/7 from the same balance.</p>
+      </div>
+      <div class="feature">
+        <div class="feature__icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6"/><path d="M12 22v-6"/><path d="M4.93 4.93l4.24 4.24"/><path d="M14.83 14.83l4.24 4.24"/><path d="M2 12h6"/><path d="M16 12h6"/><path d="M4.93 19.07l4.24-4.24"/><path d="M14.83 9.17l4.24-4.24"/></svg>
+        </div>
+        <h3>Send money in seconds</h3>
+        <p>Free instant transfers to other Northwave customers. Local-rail payouts in 30+ countries.</p>
+      </div>
+      <div class="feature">
+        <div class="feature__icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        </div>
+        <span class="chip chip--violet" style="margin-top:4px">Pay up to 2 days early</span>
+        <h3>Get your salary, sooner</h3>
+        <p>Connect your employer and receive your paycheck up to two business days before payday.</p>
+      </div>
+      <div class="feature">
+        <div class="feature__icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l9 5v6c0 5-4 8-9 9-5-1-9-4-9-9V7l9-5z"/><path d="M9 12l2 2 4-4"/></svg>
+        </div>
+        <h3>Built-in protection</h3>
+        <p>Freeze your card in one tap, set per-merchant limits, and get instant fraud alerts.</p>
+      </div>
+      <div class="feature">
+        <div class="feature__icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12c4-7 14-7 18 0"/><path d="M3 12c4 7 14 7 18 0"/><circle cx="12" cy="12" r="3"/></svg>
+        </div>
+        <h3>Vaults that grow</h3>
+        <p>Round-up spare change, set goals, and earn up to 4.5% AER on instant-access savings.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= INVEST ======================= -->
+<section class="block" id="invest" style="padding-top:0">
+  <div class="container grid-2">
+    <div>
+      <span class="eyebrow">Invest</span>
+      <h2 class="h2" style="margin:18px 0 18px">From spare change to your first&nbsp;portfolio.</h2>
+      <p class="body" style="max-width:520px">Open a commission-free trading account in seconds. Buy fractional shares of Apple, Tesla and 2,500+ companies. Auto-invest weekly into a basket you build.</p>
+      <ul style="list-style:none;padding:0;margin:28px 0 0;display:grid;gap:12px;color:rgba(255,255,255,.85)">
+        <li style="display:flex;gap:12px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D6FF4B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> 0% commission on US stocks</li>
+        <li style="display:flex;gap:12px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D6FF4B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Buy crypto 24/7 with your balance</li>
+        <li style="display:flex;gap:12px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D6FF4B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Recurring auto-buy from €1</li>
+      </ul>
+      <a class="btn btn-primary" href="#signup" style="margin-top:32px">Open an investing account</a>
+    </div>
+    <div class="stockcard">
+      <div class="stockcard__head">
+        <div>
+          <div style="color:var(--muted);font-size:12px;letter-spacing:.06em;text-transform:uppercase">Portfolio</div>
+          <div style="font-size:32px;font-weight:500;letter-spacing:-0.02em;font-variant-numeric:tabular-nums;margin-top:4px">$24,318.<em style="font-size:18px;color:var(--muted);font-style:normal">42</em></div>
+          <div style="margin-top:6px;font-size:13px;color:#A6E14C;font-variant-numeric:tabular-nums">+ $642.18 (2.71%) today</div>
+        </div>
+        <span class="chip chip--white">1D · 1W · <strong style="color:#D6FF4B">1M</strong> · 1Y · ALL</span>
+      </div>
+      <div class="stockcard__chart">
+        <svg viewBox="0 0 600 220" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="g2" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stop-color="#7F84F6" stop-opacity=".5"/>
+              <stop offset="100%" stop-color="#7F84F6" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <path d="M0,180 C50,170 90,140 140,150 C180,160 220,80 280,90 C320,98 360,140 410,120 C450,108 490,40 540,55 C570,64 590,30 600,20 L600,220 L0,220 Z" fill="url(#g2)"/>
+          <path d="M0,180 C50,170 90,140 140,150 C180,160 220,80 280,90 C320,98 360,140 410,120 C450,108 490,40 540,55 C570,64 590,30 600,20" fill="none" stroke="#7F84F6" stroke-width="2.5"/>
+          <line x1="0" x2="600" y1="100" y2="100" stroke="rgba(255,255,255,.06)" stroke-dasharray="4 4"/>
+        </svg>
+      </div>
+      <div class="stockcard__list">
+        <div class="row">
+          <div class="ticker aapl">A</div>
+          <div class="name">Apple Inc.<span>AAPL · 14 shares</span></div>
+          <div class="price">$2,612.40</div>
+          <div class="delta pos">+1.84%</div>
+        </div>
+        <div class="row">
+          <div class="ticker tsla">T</div>
+          <div class="name">Tesla<span>TSLA · 6 shares</span></div>
+          <div class="price">$1,184.20</div>
+          <div class="delta neg">−0.62%</div>
+        </div>
+        <div class="row">
+          <div class="ticker btc">฿</div>
+          <div class="name">Bitcoin<span>BTC · 0.084</span></div>
+          <div class="price">$5,488.10</div>
+          <div class="delta pos">+3.12%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= TRAVEL / LIGHT BAND ======================= -->
+<section class="block light">
+  <div class="container grid-2">
+    <div>
+      <span class="eyebrow" style="color:#5A4BFF">Travel</span>
+      <h2 class="h2" style="margin:18px 0 18px">Built for&nbsp;the way you travel.</h2>
+      <p class="body body--ink" style="max-width:520px">Pre-book stays at member-only rates, get airport-lounge access on Premium, and split the bill with friends in any currency — instantly.</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:28px">
+        <span class="chip" style="background:rgba(90,75,255,.10);color:#5A4BFF">Lounge access</span>
+        <span class="chip" style="background:rgba(90,75,255,.10);color:#5A4BFF">Stays from €19</span>
+        <span class="chip" style="background:rgba(90,75,255,.10);color:#5A4BFF">eSIM in 100+ countries</span>
+        <span class="chip" style="background:rgba(90,75,255,.10);color:#5A4BFF">Travel insurance</span>
+      </div>
+      <a class="btn btn-on-light" href="#travel" style="margin-top:32px">Explore travel perks
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+    <div style="position:relative;aspect-ratio:1.1/1;border-radius:24px;overflow:hidden;
+                background:
+                  radial-gradient(70% 80% at 80% 0%, #ffd2c2 0%, transparent 60%),
+                  radial-gradient(50% 60% at 0% 100%, #c2d6ff 0%, transparent 60%),
+                  linear-gradient(180deg,#ECE9DD 0%,#F5F5F1 100%);
+                box-shadow:0 30px 80px -30px rgba(6,7,10,.18)">
+      <div style="position:absolute;left:32px;top:32px;font-size:13px;color:rgba(6,7,10,.55);letter-spacing:.06em;text-transform:uppercase">Boarding pass</div>
+      <div style="position:absolute;left:32px;top:60px;font-size:48px;font-weight:500;letter-spacing:-0.03em;color:#06070A">LHR ✈ JFK</div>
+      <div style="position:absolute;left:32px;bottom:32px;display:flex;gap:32px;color:#06070A">
+        <div><div style="font-size:11px;color:rgba(6,7,10,.55);text-transform:uppercase;letter-spacing:.08em">Gate</div><div style="font-size:22px;font-weight:500">B14</div></div>
+        <div><div style="font-size:11px;color:rgba(6,7,10,.55);text-transform:uppercase;letter-spacing:.08em">Seat</div><div style="font-size:22px;font-weight:500">07A</div></div>
+        <div><div style="font-size:11px;color:rgba(6,7,10,.55);text-transform:uppercase;letter-spacing:.08em">Boards</div><div style="font-size:22px;font-weight:500;font-variant-numeric:tabular-nums">18:25</div></div>
+      </div>
+      <svg width="180" height="180" viewBox="0 0 180 180" style="position:absolute;right:24px;top:24px;color:#5A4BFF;opacity:.85" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="90" cy="90" r="80"/><circle cx="90" cy="90" r="56"/><circle cx="90" cy="90" r="32"/><path d="M10 90h160M90 10v160"/></svg>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= PLANS ======================= -->
+<section class="block" id="plans">
+  <div class="container">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:24px;margin-bottom:48px">
+      <div>
+        <span class="eyebrow">Plans</span>
+        <h2 class="h2" style="margin-top:18px">Pick the one that&nbsp;fits.</h2>
+      </div>
+      <p class="body" style="max-width:420px">Upgrade or downgrade anytime. All plans come with a free virtual card and instant in-app support.</p>
+    </div>
+
+    <div class="plans">
+      <div class="plan standard">
+        <h3>Standard</h3>
+        <div class="price">€0<em>/month</em></div>
+        <p style="margin:0;color:rgba(255,255,255,.7);font-size:14px">Everything you need to start.</p>
+        <ul>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A6E14C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Free virtual card</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A6E14C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Spend in 150+ currencies</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A6E14C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Free transfers to members</li>
+        </ul>
+        <a href="#signup" class="btn btn-ghost">Choose Standard</a>
+      </div>
+
+      <div class="plan plus">
+        <span class="chip">Most popular</span>
+        <h3>Plus</h3>
+        <div class="price">€3.99<em>/month</em></div>
+        <p style="margin:0;color:rgba(255,255,255,.78);font-size:14px">A little more flexibility.</p>
+        <ul>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D6FF4B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Plus debit card</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D6FF4B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Purchase protection up to €1K</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D6FF4B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Multiple savings vaults</li>
+        </ul>
+        <a href="#signup" class="btn btn-primary">Choose Plus</a>
+      </div>
+
+      <div class="plan premium">
+        <h3>Premium</h3>
+        <div class="price">€7.99<em>/month</em></div>
+        <p style="margin:0;color:rgba(255,255,255,.78);font-size:14px">Travel further, save more.</p>
+        <ul>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D6FF4B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Travel insurance</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D6FF4B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> 1% cashback outside Europe</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D6FF4B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Priority customer support</li>
+        </ul>
+        <a href="#signup" class="btn btn-ghost">Choose Premium</a>
+      </div>
+
+      <div class="plan metal">
+        <span class="chip" style="background:rgba(214,255,75,.18);color:#D6FF4B">Metal card</span>
+        <h3>Metal</h3>
+        <div class="price">€13.99<em>/month</em></div>
+        <p style="margin:0;color:rgba(255,255,255,.78);font-size:14px">A reinforced steel card.</p>
+        <ul>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D6FF4B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> 1% cashback worldwide</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D6FF4B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Lounge access for delays</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D6FF4B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Concierge, 24/7</li>
+        </ul>
+        <a href="#signup" class="btn btn-ghost">Choose Metal</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= SECURITY ======================= -->
+<section class="block" style="padding-top:0">
+  <div class="container">
+    <div class="security">
+      <div>
+        <span class="eyebrow">Security &amp; trust</span>
+        <h2 class="h2" style="margin:18px 0 14px">Your money,&nbsp;guarded.</h2>
+        <p class="body" style="max-width:560px">Bank-grade security from day one. Your eligible deposits are protected up to €100,000 by the relevant deposit-guarantee scheme.</p>
+        <ul>
+          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l9 5v6c0 5-4 8-9 9-5-1-9-4-9-9V7l9-5z"/></svg> Two-factor login &amp; biometric unlock</li>
+          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> Card freeze &amp; instant fraud alerts</li>
+          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-7"/></svg> 24/7 in-app human support</li>
+          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l9-7 9 7"/><path d="M5 10v10h14V10"/></svg> Regulated, capital-safe institution</li>
+        </ul>
+      </div>
+      <div style="display:grid;gap:14px">
+        <div style="border:1px solid var(--hairline);border-radius:18px;padding:20px;background:rgba(255,255,255,.02)">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <div style="font-weight:500">Suspicious payment blocked</div>
+            <span class="chip" style="background:rgba(255,107,92,.16);color:#FF8A7C">Blocked</span>
+          </div>
+          <div style="margin-top:8px;color:var(--muted);font-size:14px">Card ending 4827 · 22:14 · Athens</div>
+        </div>
+        <div style="border:1px solid var(--hairline);border-radius:18px;padding:20px;background:rgba(255,255,255,.02)">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <div style="font-weight:500">Card frozen by you</div>
+            <span class="chip chip--violet">In a tap</span>
+          </div>
+          <div style="margin-top:8px;color:var(--muted);font-size:14px">Reactivate anytime in the app</div>
+        </div>
+        <div style="border:1px solid var(--hairline);border-radius:18px;padding:20px;background:rgba(255,255,255,.02)">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <div style="font-weight:500">Login from new device</div>
+            <span class="chip">Approved</span>
+          </div>
+          <div style="margin-top:8px;color:var(--muted);font-size:14px">Face ID confirmed · iPhone 15 · Berlin</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= DOWNLOAD ======================= -->
+<section class="block" style="padding-top:0">
+  <div class="container">
+    <div class="download">
+      <div>
+        <span class="eyebrow" style="color:rgba(10,11,20,.55)">Get the app</span>
+        <h2 class="h2" style="margin-top:18px">Open an account in&nbsp;3 minutes.</h2>
+        <p>Free to sign up. No credit check, no minimum balance. Available on iOS and Android in 38 markets.</p>
+      </div>
+      <div class="download__cta">
+        <a href="#ios" class="store-btn">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M16.6 13.2c0-2.7 2.2-4 2.3-4-.5-.8-1.4-1.8-3.2-1.8-1.5-.1-2.9.9-3.7.9s-2-.8-3.3-.8c-1.7 0-3.3 1-4.2 2.6-1.8 3.1-.5 7.7 1.3 10.2.9 1.2 1.9 2.6 3.3 2.5 1.3-.1 1.8-.9 3.4-.9s2 .9 3.4.8c1.4 0 2.3-1.2 3.2-2.5 1-1.4 1.4-2.8 1.4-2.9-.1 0-2.7-1-2.7-4.1zM14 5.6c.7-.9 1.2-2.1 1.1-3.3-1 0-2.3.7-3 1.5-.7.8-1.3 2-1.1 3.2 1.1.1 2.3-.6 3-1.4z"/></svg>
+          <div><small>Download on the</small><strong>App Store</strong></div>
+        </a>
+        <a href="#android" class="store-btn">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M3.6 1.5l11 6.4-2.5 2.5L3.6 1.5zm0 21l8.5-8.4 2.5 2.5-11 5.9zm17.6-12.4L18 12l3.2 1.9c.7.4.7 1.4 0 1.8L5.7 23.5l9.6-9.6 5.9-3.4c.7-.4.7-1.4 0-1.8z"/></svg>
+          <div><small>Get it on</small><strong>Google Play</strong></div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= FOOTER ======================= -->
+<footer>
+  <div class="container">
+    <div class="foot__grid">
+      <div class="foot__col">
+        <a href="#" class="logo" style="font-size:22px">
+          <span class="logo__mark"></span>
+          <span>Northwave</span>
+        </a>
+        <p style="color:var(--muted);font-size:14px;margin-top:18px;max-width:340px">A Revolut-inspired landing page redesign. Use this page as a reference to recreate the Figma frame in matching style.</p>
+      </div>
+      <div class="foot__col">
+        <h5>Personal</h5>
+        <a href="#">Standard</a><a href="#">Plus</a><a href="#">Premium</a><a href="#">Metal</a>
+      </div>
+      <div class="foot__col">
+        <h5>Products</h5>
+        <a href="#">Cards</a><a href="#">Send money</a><a href="#">Invest</a><a href="#">Travel</a>
+      </div>
+      <div class="foot__col">
+        <h5>Company</h5>
+        <a href="#">About</a><a href="#">Careers</a><a href="#">Press</a><a href="#">Newsroom</a>
+      </div>
+      <div class="foot__col">
+        <h5>Help</h5>
+        <a href="#">Help centre</a><a href="#">Security</a><a href="#">Privacy</a><a href="#">Terms</a>
+      </div>
+    </div>
+    <div class="foot__base">
+      <div>© 2026 Northwave Bank. Reference design — not affiliated with Revolut Ltd.</div>
+      <div>Made for the Figma frame <code style="color:#fff">landingpage / 0:1</code></div>
+    </div>
+  </div>
+</footer>
+
+<div class="sticky-cta" role="region" aria-label="Sticky call to action">
+  <a class="btn btn-primary" href="#signup">Get the app</a>
+  <a class="btn btn-ghost" href="#login" aria-label="Log in">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4"/><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/></svg>
+  </a>
+</div>
+
+</body>
+</html>
