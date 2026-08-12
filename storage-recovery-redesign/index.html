@@ -1,0 +1,644 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>存储恢复 — 重设计原型</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --text-primary: #1A1A1A;
+    --text-secondary: #6B7280;
+    --text-muted: #9CA3AF;
+    --surface: #F3F4F6;
+    --border: #E5E7EB;
+    --primary: #2563EB;
+    --primary-hover: #1D4ED8;
+    --danger: #DC2626;
+    --danger-bg: #FEF2F2;
+    --danger-border: #FECACA;
+    --warning: #B45309;
+    --warning-bg: #FFFBEB;
+    --warning-border: #FDE68A;
+    --success: #059669;
+    --info: #0284C7;
+    --info-bg: #EFF6FF;
+    --info-border: #BFDBFE;
+    --radius-modal: 16px;
+    --radius-card: 12px;
+    --radius-btn: 8px;
+    --shadow: 0 25px 50px -12px rgba(0,0,0,.18);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: Inter, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+    background: linear-gradient(135deg, #E8ECF1 0%, #D1D9E6 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.35);
+  }
+
+  .modal {
+    position: relative;
+    width: 100%;
+    max-width: 560px;
+    background: #fff;
+    border-radius: var(--radius-modal);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  .modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 20px 24px 0;
+    gap: 16px;
+  }
+
+  .modal-title {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.3;
+    margin: 0;
+  }
+
+  .modal-subtitle {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 4px 0 0;
+    line-height: 1.45;
+  }
+
+  .btn-icon {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background .15s;
+  }
+  .btn-icon:hover { background: var(--surface); color: var(--text-primary); }
+
+  .modal-body { padding: 16px 24px 0; }
+
+  .context-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+  .context-bar strong { color: var(--text-primary); font-weight: 500; }
+
+  .bay-card {
+    background: var(--surface);
+    border-radius: var(--radius-card);
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+
+  .bay-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .bay-icon {
+    width: 36px;
+    height: 36px;
+    background: #fff;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+  }
+
+  .bay-label { font-size: 15px; font-weight: 600; }
+  .bay-meta { font-size: 12px; color: var(--text-secondary); }
+
+  .disk-compare {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 8px;
+    align-items: stretch;
+  }
+
+  .disk-panel {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    min-height: 88px;
+  }
+
+  .disk-panel--fault {
+    border-color: #FECACA;
+    background: #FFF5F5;
+  }
+
+  .disk-panel--new {
+    border-color: var(--info-border);
+    background: var(--info-bg);
+  }
+
+  .disk-panel-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    text-transform: none;
+  }
+
+  .disk-name {
+    font-size: 13px;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.4;
+    margin-bottom: 8px;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 999px;
+    line-height: 1.5;
+  }
+  .badge--fault { background: #FEE2E2; color: var(--danger); }
+  .badge--new { background: #DBEAFE; color: var(--info); }
+  .badge--data { background: #FEF3C7; color: #B45309; }
+
+  .arrow-col {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    padding: 0 2px;
+  }
+
+  .critical-banner {
+    margin-top: 14px;
+    padding: 12px 14px;
+    background: var(--danger-bg);
+    border: 1px solid var(--danger-border);
+    border-radius: 10px;
+  }
+
+  .critical-banner-head {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .critical-icon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    color: var(--danger);
+  }
+
+  .critical-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--danger);
+    margin: 0 0 4px;
+  }
+
+  .critical-text {
+    font-size: 12px;
+    color: #991B1B;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .checkbox-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 12px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .checkbox-row input {
+    width: 16px;
+    height: 16px;
+    margin-top: 2px;
+    accent-color: var(--danger);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .checkbox-row span {
+    font-size: 12px;
+    color: #991B1B;
+    line-height: 1.45;
+  }
+
+  .notice {
+    margin-top: 14px;
+    padding: 12px 14px;
+    background: var(--warning-bg);
+    border: 1px solid var(--warning-border);
+    border-radius: 10px;
+  }
+
+  .notice-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--warning);
+    margin: 0 0 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .notice ul {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 12px;
+    color: #92400E;
+    line-height: 1.55;
+  }
+
+  .notice li { margin-bottom: 4px; }
+  .notice li:last-child { margin-bottom: 0; }
+
+  .password-section {
+    margin-top: 16px;
+  }
+
+  .password-label {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    line-height: 1.45;
+  }
+
+  .password-label strong { color: var(--text-primary); font-weight: 500; }
+
+  .password-field {
+    position: relative;
+  }
+
+  .password-input {
+    width: 100%;
+    height: 40px;
+    padding: 0 40px 0 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-btn);
+    font-size: 14px;
+    outline: none;
+    transition: border-color .15s, box-shadow .15s;
+  }
+
+  .password-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  }
+
+  .password-input.error {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.12);
+  }
+
+  .toggle-pw {
+    position: absolute;
+    right: 4px;
+    top: 4px;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: var(--text-muted);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .toggle-pw:hover { color: var(--text-secondary); background: var(--surface); }
+
+  .field-error {
+    font-size: 12px;
+    color: var(--danger);
+    margin-top: 6px;
+    display: none;
+  }
+  .field-error.visible { display: block; }
+
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 20px 24px 24px;
+    margin-top: 4px;
+  }
+
+  .btn {
+    height: 36px;
+    padding: 0 16px;
+    border-radius: var(--radius-btn);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: background .15s, opacity .15s;
+  }
+
+  .btn-secondary {
+    background: #E8EDF3;
+    color: var(--primary);
+  }
+  .btn-secondary:hover { background: #DCE3EC; }
+
+  .btn-primary {
+    background: var(--primary);
+    color: #fff;
+    min-width: 108px;
+  }
+  .btn-primary:hover:not(:disabled) { background: var(--primary-hover); }
+  .btn-primary:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .btn-primary.loading {
+    pointer-events: none;
+    position: relative;
+    color: transparent;
+  }
+  .btn-primary.loading::after {
+    content: "";
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255,255,255,.35);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+    left: 50%;
+    top: 50%;
+    margin: -8px 0 0 -8px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .demo-toggle {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 10;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,.08);
+  }
+
+  .compare-link {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 10;
+    font-size: 12px;
+    color: var(--text-secondary);
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,.08);
+  }
+</style>
+</head>
+<body>
+
+<div class="backdrop" aria-hidden="true"></div>
+
+<div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <header class="modal-header">
+    <div>
+      <h1 id="modal-title" class="modal-title">替换故障盘并同步数据</h1>
+      <p class="modal-subtitle">将新硬盘纳入当前存储池，并从其余健康硬盘同步数据</p>
+    </div>
+    <button type="button" class="btn-icon" id="btn-close" aria-label="关闭">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M18 6L6 18M6 6l12 12"/>
+      </svg>
+    </button>
+  </header>
+
+  <div class="modal-body">
+    <div class="context-bar">
+      <span>存储池 <strong>主存储池</strong></span>
+      <span>模式 <strong>RAID 5</strong></span>
+      <span>预计耗时 <strong>约 2–6 小时</strong></span>
+    </div>
+
+    <div class="bay-card">
+      <div class="bay-header">
+        <div class="bay-icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="1.5">
+            <rect x="4" y="6" width="16" height="12" rx="2"/>
+            <circle cx="8" cy="12" r="1" fill="#6B7280"/>
+            <circle cx="12" cy="12" r="1" fill="#6B7280"/>
+          </svg>
+        </div>
+        <div>
+          <div class="bay-label">盘位 01</div>
+          <div class="bay-meta">机箱前面板 · 左侧第一个槽位</div>
+        </div>
+      </div>
+
+      <div class="disk-compare">
+        <div class="disk-panel disk-panel--fault">
+          <div class="disk-panel-label">已故障的硬盘</div>
+          <div class="disk-name">Mock Bay Disk 03<br><span style="color:var(--text-secondary);font-weight:400">1 TB · HDD</span></div>
+          <span class="badge badge--fault">故障</span>
+        </div>
+
+        <div class="arrow-col" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M13 6l6 6-6 6"/>
+          </svg>
+        </div>
+
+        <div class="disk-panel disk-panel--new">
+          <div class="disk-panel-label">新插入的硬盘</div>
+          <div class="disk-name">Mock Bay Disk 01<br><span style="color:var(--text-secondary);font-weight:400">1 TB · HDD</span></div>
+          <span class="badge badge--new">新盘</span>
+          <span class="badge badge--data" id="data-badge">已有数据</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="critical-banner" id="critical-banner">
+      <div class="critical-banner-head">
+        <svg class="critical-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 2L1 21h22L12 2zm0 4.5l7.5 13.5h-15L12 6.5zM11 10v5h2v-5h-2zm0 7v2h2v-2h-2z"/>
+        </svg>
+        <div>
+          <p class="critical-title">替换盘检测到已有数据</p>
+          <p class="critical-text">同步过程中将<strong>永久删除</strong>该硬盘上的全部文件，且无法恢复。此操作不影响存储池中其余硬盘的数据。</p>
+        </div>
+      </div>
+      <label class="checkbox-row">
+        <input type="checkbox" id="confirm-wipe" />
+        <span>我了解替换盘上的数据将被永久删除，并确认继续操作</span>
+      </label>
+    </div>
+
+    <div class="notice">
+      <p class="notice-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+        操作前请注意
+      </p>
+      <ul>
+        <li>同步完成前，请勿关闭设备或拔出硬盘</li>
+        <li>同步期间存储性能可能下降，但仍可正常访问</li>
+        <li>若同步失败，可在「存储健康」中查看详情或重试</li>
+      </ul>
+    </div>
+
+    <div class="password-section">
+      <label class="password-label" for="password">
+        请输入账号 <strong>everzone</strong> 的密码以确认此操作
+      </label>
+      <div class="password-field">
+        <input
+          type="password"
+          id="password"
+          class="password-input"
+          placeholder="请输入密码"
+          autocomplete="current-password"
+        />
+        <button type="button" class="toggle-pw" id="toggle-pw" aria-label="显示密码">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="eye-icon">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </button>
+      </div>
+      <p class="field-error" id="pw-error">密码不正确，请重试</p>
+    </div>
+  </div>
+
+  <footer class="modal-footer">
+    <button type="button" class="btn btn-secondary" id="btn-cancel">取消</button>
+    <button type="button" class="btn btn-primary" id="btn-submit" disabled>开始同步</button>
+  </footer>
+</div>
+
+<button type="button" class="demo-toggle" id="demo-toggle">切换：替换盘无数据场景</button>
+<a class="compare-link" href="./ANALYSIS.md">查看逻辑分析文档</a>
+
+<script>
+  const password = document.getElementById('password');
+  const confirmWipe = document.getElementById('confirm-wipe');
+  const btnSubmit = document.getElementById('btn-submit');
+  const criticalBanner = document.getElementById('critical-banner');
+  const dataBadge = document.getElementById('data-badge');
+  const pwError = document.getElementById('pw-error');
+  const demoToggle = document.getElementById('demo-toggle');
+  const togglePw = document.getElementById('toggle-pw');
+
+  let hasExistingData = true;
+
+  function canSubmit() {
+    const pwOk = password.value.trim().length > 0;
+    const wipeOk = !hasExistingData || confirmWipe.checked;
+    btnSubmit.disabled = !pwOk || !wipeOk;
+  }
+
+  function setHasData(value) {
+    hasExistingData = value;
+    criticalBanner.style.display = value ? 'block' : 'none';
+    dataBadge.style.display = value ? 'inline-flex' : 'none';
+    if (!value) confirmWipe.checked = false;
+    demoToggle.textContent = value
+      ? '切换：替换盘无数据场景'
+      : '切换：替换盘已有数据场景';
+    canSubmit();
+  }
+
+  password.addEventListener('input', () => {
+    password.classList.remove('error');
+    pwError.classList.remove('visible');
+    canSubmit();
+  });
+
+  confirmWipe.addEventListener('change', canSubmit);
+
+  togglePw.addEventListener('click', () => {
+    const isPassword = password.type === 'password';
+    password.type = isPassword ? 'text' : 'password';
+    togglePw.setAttribute('aria-label', isPassword ? '隐藏密码' : '显示密码');
+  });
+
+  btnSubmit.addEventListener('click', () => {
+    if (btnSubmit.disabled) return;
+    if (password.value !== 'demo') {
+      password.classList.add('error');
+      pwError.classList.add('visible');
+      return;
+    }
+    btnSubmit.classList.add('loading');
+    btnSubmit.disabled = true;
+    setTimeout(() => {
+      alert('演示：同步任务已启动（输入 demo 作为密码可模拟成功）');
+      btnSubmit.classList.remove('loading');
+      btnSubmit.disabled = false;
+      canSubmit();
+    }, 1500);
+  });
+
+  document.getElementById('btn-cancel').addEventListener('click', () => {
+    alert('演示：已取消，返回存储健康页');
+  });
+
+  document.getElementById('btn-close').addEventListener('click', () => {
+    alert('演示：关闭弹窗');
+  });
+
+  demoToggle.addEventListener('click', () => setHasData(!hasExistingData));
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.getElementById('btn-cancel').click();
+    }
+  });
+
+  canSubmit();
+</script>
+</body>
+</html>
