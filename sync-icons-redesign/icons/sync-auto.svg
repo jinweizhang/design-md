@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" role="img" aria-label="????">
+  <style>
+    svg { --ico-1: #c96442; --ico-2: #141413; }
+    .lead { stroke: var(--ico-1); }
+    .lead-f { fill: var(--ico-1); }
+    .trail { stroke: var(--ico-2); }
+    .trail-f { fill: var(--ico-2); }
+    .arc { fill: none; stroke-width: 2; stroke-linecap: round; }
+  </style>
+  <path class="arc lead" d="M4.5 12 A7.5 7.5 0 0 1 17.75 7.18"/>
+  <path class="lead-f" d="M15.75 8.85L20.32 10.24L19.74 5.51Z"/>
+  <path class="arc trail" d="M19.5 12 A7.5 7.5 0 0 1 6.25 16.82"/>
+  <path class="trail-f" d="M8.25 15.15L3.68 13.76L4.26 18.49Z"/>
+</svg>
