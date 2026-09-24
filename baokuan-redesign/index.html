@@ -5,56 +5,87 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>爆款视频AI生成 · Claude 设计语言重设计（41 屏）</title>
 <style>
+/* =========================================================
+   1. Tokens — 唯一事实来源，所有组件由此派生（对应 DESIGN.md §2–§6）
+   ========================================================= */
 :root{
+  /* 表面 */
   --pa:#f5f4ed; --iv:#faf9f5; --wh:#ffffff; --sand:#e8e6dc; --sand2:#dedbcf;
-  --ink:#141413; --ink2:#30302e; --char:#4d4c48; --olive:#5e5d59; --stone:#87867f; --silver:#b0aea5;
-  --bc:#f0eee6; --bw:#e8e6dc; --ring:#d1cfc5;
-  --brand:#c96442; --brand-strong:#ae5230; --brand-ink:#9a4526; --brand-soft:#f3e3da; --coral:#d97757;
-  --ok:#56693f; --ok-icon:#6b7d55; --ok-soft:#e6e9dc;
+  --ink:#141413; --ink2:#30302e;
+  /* 文字 */
+  --char:#4d4c48; --olive:#5e5d59; --stone:#87867f; --silver:#b0aea5;
+  /* 描边 */
+  --bc:#f0eee6; --bw:#e8e6dc; --ring:#d1cfc5; --ring-deep:#c2c0b6;
+  /* 品牌 */
+  --brand:#c96442; --brand-strong:#ae5230; --brand-pressed:#963f22; --brand-ink:#9a4526;
+  --brand-soft:#f3e3da; --brand-line:#ecd3c6; --coral:#d97757;
+  /* 语义 */
+  --ok:#56693f; --ok-icon:#6b7d55; --ok-soft:#e6e9dc; --ok-line:#d7ddc9;
   --err:#b53333; --err-soft:#f5e2dd;
   --warn:#83570f; --warn-soft:#f2e8d3;
-  --focus:#3898ec;
+  --focus:#3898ec; --focus-ring:0 0 0 3px rgba(56,152,236,.35);
+  /* 遮罩 */
+  --scrim:rgba(20,20,19,.42); --ink-72:rgba(20,20,19,.72); --ink-62:rgba(20,20,19,.62); --iv-88:rgba(250,249,245,.88);
+  /* 字体 */
   --serif:"Noto Serif SC","Songti SC","Noto Serif CJK SC",Georgia,serif;
   --sans:-apple-system,"PingFang SC","Noto Sans SC","Noto Sans CJK SC",system-ui,sans-serif;
+  --mono:Georgia,"Noto Serif SC",serif;
+  /* 字阶（px） */
+  --fs-11:11px; --fs-12:12px; --fs-13:13px; --fs-14:14px; --fs-15:15px; --fs-16:16px; --fs-17:17px;
+  --fs-20:20px; --fs-28:28px; --fs-36:36px;
+  --ls-tight:-.01em; --ls-label:.12px;
+  /* 间距比例尺：4 基准 */
+  --s05:2px; --s1:4px; --s15:6px; --s2:8px; --s3:12px; --s4:16px; --s5:20px; --s6:24px; --s8:32px; --s12:48px;
+  /* 圆角比例尺 */
+  --r-2xs:3px; --r-xs:6px; --r-sm:8px; --r-md:12px; --r-lg:16px; --r-xl:20px; --r-2xl:24px; --r-3xl:32px; --r-pill:999px;
+  /* 层级：环形阴影优先，投影只给悬浮层 */
+  --ring-1:0 0 0 1px var(--bc); --ring-2:0 0 0 1px var(--ring); --ring-3:0 0 0 1px var(--bw);
+  --sh-sm:0 1px 2px rgba(20,20,19,.08); --sh-md:rgba(20,20,19,.08) 0 8px 32px; --sh-lg:rgba(20,20,19,.12) 0 8px 24px;
+  /* 动效 */
+  --dur-1:150ms; --dur-2:220ms; --ease:cubic-bezier(.2,.7,.2,1);
+  /* 尺寸 */
+  --hit:44px; --btn-lg:50px; --btn-md:44px; --btn-sm:36px; --icon:20px; --icon-sm:16px; --icon-xs:14px;
+  --w:390px; --h:812px; --sb:47px; --nav:44px; --tabbar:84px; --safe-b:34px; --gutter:20px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-smoothing:antialiased}
-.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.i{width:var(--icon);height:var(--icon);fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
 .i.f{fill:currentColor;stroke:none}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 
 /* ---------------- board ---------------- */
 .board{padding:56px 64px 96px;max-width:1880px;margin:0 auto}
 .b-head h1{font-family:var(--serif);font-weight:500;font-size:44px;line-height:1.15}
-.b-head p{color:var(--olive);font-size:15px;line-height:1.6;margin-top:12px;max-width:92ch}
-.legend{display:flex;gap:16px;margin-top:20px;font-size:13px;color:var(--olive)}
-.legend span{display:inline-flex;align-items:center;gap:6px}
+.b-head p{color:var(--olive);font-size:var(--fs-15);line-height:1.6;margin-top:var(--s3);max-width:92ch}
+.legend{display:flex;gap:var(--s4);margin-top:var(--s5);font-size:var(--fs-13);color:var(--olive)}
+.legend span{display:inline-flex;align-items:center;gap:var(--s1)}
 .sec{margin-top:64px}
-.sec h2{font-family:var(--serif);font-weight:500;font-size:26px;padding-bottom:12px;border-bottom:1px solid var(--ring)}
-.sec h2 small{font-family:var(--sans);font-size:13px;color:var(--olive);font-weight:400;margin-left:10px}
-.grid{display:flex;flex-wrap:wrap;gap:48px 40px;margin-top:28px}
-.fig{width:390px}
-.cap{display:flex;align-items:baseline;gap:8px;margin-bottom:10px}
-.cap .no{font-size:12px;font-weight:600;color:var(--ink);background:var(--wh);border:1px solid var(--ring);border-radius:6px;padding:1px 7px}
-.cap .nm{font-size:14px;font-weight:600}
-.cap .kd{font-size:12px;color:var(--olive)}
-.tag{font-size:11px;font-weight:600;border-radius:20px;padding:2px 8px;margin-left:auto;white-space:nowrap}
+.sec h2{font-family:var(--serif);font-weight:500;font-size:26px;padding-bottom:var(--s3);border-bottom:1px solid var(--ring)}
+.sec h2 small{font-family:var(--sans);font-size:var(--fs-13);color:var(--olive);font-weight:400;margin-left:var(--s3)}
+.grid{display:flex;flex-wrap:wrap;gap:var(--s12) 40px;margin-top:28px}
+.fig{width:var(--w)}
+.cap{display:flex;align-items:baseline;gap:var(--s2);margin-bottom:var(--s3)}
+.cap .no{font-size:var(--fs-12);font-weight:600;color:var(--ink);background:var(--wh);box-shadow:var(--ring-2);border-radius:var(--r-xs);padding:1px 7px}
+.cap .nm{font-size:var(--fs-14);font-weight:600}
+.cap .kd{font-size:var(--fs-12);color:var(--olive)}
+.tag{font-size:var(--fs-11);font-weight:600;letter-spacing:var(--ls-label);border-radius:var(--r-pill);padding:var(--s05) var(--s2);margin-left:auto;white-space:nowrap}
 .tag.re{background:var(--sand);color:var(--char)}
 .tag.np{background:var(--brand-strong);color:var(--iv)}
 .tag.ns{background:var(--ink);color:var(--iv)}
-.note{font-size:12.5px;line-height:1.55;color:var(--olive);margin-top:12px;min-height:38px}
+.note{font-size:12.5px;line-height:1.55;color:var(--olive);margin-top:var(--s3);min-height:38px}
 
 /* ---------------- phone frame ---------------- */
-.scr{position:relative;width:390px;height:812px;background:var(--pa);border-radius:40px;overflow:hidden;
+.scr{position:relative;width:var(--w);height:var(--h);background:var(--pa);border-radius:40px;overflow:hidden;
      box-shadow:0 0 0 1px rgba(20,20,19,.08),rgba(0,0,0,.08) 0 12px 40px;display:flex;flex-direction:column}
 .scr.dark{background:var(--ink);color:var(--iv)}
-.sb{height:47px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 30px 0 34px;font-size:15px;font-weight:600}
-.sb .r{display:flex;gap:6px;align-items:center}
-.nav{height:44px;flex-shrink:0;display:flex;align-items:center;padding:0 110px 0 12px;position:relative}
-.nav .bk{width:36px;height:36px;display:grid;place-items:center;border-radius:12px;color:var(--ink)}
+.sb{height:var(--sb);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 30px 0 34px;font-size:var(--fs-15);font-weight:600}
+.sb .r{display:flex;gap:var(--s15);align-items:center}
+.nav{height:var(--nav);flex-shrink:0;display:flex;align-items:center;padding:0 110px 0 var(--s3);position:relative}
+.nav .bk{width:36px;height:36px;display:grid;place-items:center;border-radius:var(--r-md);color:var(--ink)}
 .dark .nav .bk{color:var(--iv)}
-.nav .tt{font-size:17px;font-weight:600;margin-left:2px}
-.nav .tt.pl{margin-left:12px}
-.capsule{position:absolute;right:8px;top:6px;width:87px;height:32px;border-radius:16px;border:1px solid var(--bw);
+.nav .tt{font-size:var(--fs-17);font-weight:600;margin-left:var(--s05)}
+.nav .tt.pl{margin-left:var(--s3)}
+.capsule{position:absolute;right:var(--s2);top:6px;width:87px;height:32px;border-radius:var(--r-pill);border:1px solid var(--bw);
          background:rgba(255,255,255,.72);display:flex;align-items:center}
 .capsule .d{flex:1;display:flex;justify-content:center;gap:3px}
 .capsule .d i{width:4px;height:4px;border-radius:50%;background:var(--ink)}
@@ -66,123 +97,138 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
 .dark .capsule .d i,.dark .capsule .o i::after{background:var(--iv)}
 .dark .capsule .o i{border-color:var(--iv)}
 .dark .capsule .sep{background:rgba(250,249,245,.18)}
-.body{flex:1;overflow:hidden;padding:4px 20px 0;position:relative}
+.body{flex:1;overflow:hidden;padding:var(--s1) var(--gutter) 0;position:relative}
 .body.np{padding:0}
-.hi{position:absolute;left:50%;bottom:8px;width:134px;height:5px;border-radius:3px;background:var(--ink);transform:translateX(-50%);z-index:30}
+.hi{position:absolute;left:50%;bottom:var(--s2);width:134px;height:5px;border-radius:var(--r-2xs);background:var(--ink);transform:translateX(-50%);z-index:30}
 .dark .hi,.hi.lt{background:var(--iv)}
-.tab{height:84px;flex-shrink:0;background:var(--iv);border-top:1px solid var(--bc);display:flex;padding-top:7px}
-.tab a{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;color:var(--olive);text-decoration:none}
+.tab{height:var(--tabbar);flex-shrink:0;background:var(--iv);border-top:1px solid var(--bc);display:flex;padding-top:7px}
+.tab a{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:var(--fs-11);letter-spacing:var(--ls-label);color:var(--olive);text-decoration:none;border-radius:var(--r-md);transition:color var(--dur-1) var(--ease)}
 .tab a.on{color:var(--brand-strong);font-weight:600}
 .tab .i{width:24px;height:24px}
-.footer{flex-shrink:0;padding:12px 20px 34px;background:var(--pa)}
+.footer{flex-shrink:0;padding:var(--s3) var(--gutter) var(--safe-b);background:var(--pa)}
 .footer.dock{background:var(--iv);border-top:1px solid var(--bc)}
 
 /* ---------------- type ---------------- */
-.h-page{font-family:var(--serif);font-weight:500;font-size:28px;line-height:1.2}
-.h-sec{font-family:var(--serif);font-weight:500;font-size:20px;line-height:1.25}
-.h-card{font-size:16px;font-weight:600;line-height:1.35}
-.t-body{font-size:15px;line-height:1.6;color:var(--char)}
-.t-cap{font-size:13px;line-height:1.45;color:var(--olive)}
-.t-mic{font-size:12px;line-height:1.4;color:var(--olive)}
-.num{font-family:Georgia,var(--serif);font-variant-numeric:tabular-nums}
-.lbl{font-size:13px;font-weight:600;color:var(--char);margin:18px 0 8px;display:flex;justify-content:space-between;align-items:baseline}
+.h-page{font-family:var(--serif);font-weight:500;font-size:var(--fs-28);line-height:1.2;letter-spacing:var(--ls-tight)}
+.h-sec{font-family:var(--serif);font-weight:500;font-size:var(--fs-20);line-height:1.25}
+.h-card{font-size:var(--fs-16);font-weight:600;line-height:1.35}
+.t-body{font-size:var(--fs-15);line-height:1.6;color:var(--char)}
+.t-cap{font-size:var(--fs-13);line-height:1.45;color:var(--olive)}
+.t-mic{font-size:var(--fs-12);line-height:1.4;color:var(--olive);letter-spacing:var(--ls-label)}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.lbl{font-size:var(--fs-13);font-weight:600;color:var(--char);margin:18px 0 var(--s2);display:flex;justify-content:space-between;align-items:baseline}
 .lbl .t-mic{font-weight:400}
 .req{color:var(--brand-strong)}
 .strike{text-decoration:line-through;color:var(--stone)}
 .price{color:var(--brand-strong);font-weight:600}
 
 /* ---------------- components ---------------- */
-.card{background:var(--iv);border:1px solid var(--bc);border-radius:16px}
+.card{background:var(--iv);border:1px solid var(--bc);border-radius:var(--r-lg)}
 .card.wh{background:var(--wh)}
-.pad{padding:16px}
-.btn{height:50px;border-radius:14px;border:0;font:600 16px/1 var(--sans);display:flex;align-items:center;justify-content:center;gap:8px;width:100%}
-.btn.sm{height:36px;border-radius:10px;font-size:14px;width:auto;padding:0 14px}
-.btn.md{height:44px;border-radius:12px;font-size:15px}
+.pad{padding:var(--s4)}
+/* 按钮：默认 / 按下 / 禁用 / 聚焦 */
+.btn{height:var(--btn-lg);border-radius:var(--r-md);border:0;font:600 var(--fs-16)/1 var(--sans);display:flex;align-items:center;justify-content:center;gap:var(--s2);width:100%;cursor:pointer;user-select:none;
+     transition:background-color var(--dur-1) var(--ease),box-shadow var(--dur-1) var(--ease),transform var(--dur-1) var(--ease)}
+.btn.sm{height:var(--btn-sm);border-radius:var(--r-sm);font-size:var(--fs-14);width:auto;padding:0 var(--s3)}
+.btn.md{height:var(--btn-md);border-radius:var(--r-md);font-size:var(--fs-15)}
 .btn-p{background:var(--brand-strong);color:var(--iv)}
-.btn-s{background:var(--sand);color:var(--char);box-shadow:0 0 0 1px var(--ring)}
-.btn-w{background:var(--wh);color:var(--ink);box-shadow:0 0 0 1px var(--bw)}
+.btn-p:active,.btn-p.is-pressed{background:var(--brand-pressed)}
+.btn-s{background:var(--sand);color:var(--char);box-shadow:var(--ring-2)}
+.btn-s:active,.btn-s.is-pressed{background:var(--sand2);box-shadow:0 0 0 1px var(--ring-deep)}
+.btn-w{background:var(--wh);color:var(--ink);box-shadow:var(--ring-3)}
+.btn-w:active,.btn-w.is-pressed{background:var(--sand)}
 .btn-d{background:var(--ink);color:var(--iv)}
-.btn-g{background:none;color:var(--olive);height:40px;font-weight:500;font-size:14px}
-.btn-x{background:var(--sand);color:var(--stone)}
+.btn-d:active,.btn-d.is-pressed{background:var(--ink2)}
+.btn-g{background:none;color:var(--olive);height:40px;font-weight:500;font-size:var(--fs-14)}
+.btn-g:active,.btn-g.is-pressed{color:var(--ink)}
+.btn-x,.btn.is-disabled{background:var(--sand);color:var(--stone);box-shadow:none;pointer-events:none}
 .btn-danger{background:var(--err);color:var(--iv)}
-.row2{display:flex;gap:12px}
-.chip{display:inline-flex;align-items:center;gap:4px;height:30px;padding:0 12px;border-radius:15px;font-size:13px;background:var(--wh);color:var(--char);box-shadow:0 0 0 1px var(--bw)}
+.btn:active:not(.btn-g){transform:translateY(1px)}
+.btn:focus-visible,.chip:focus-visible,.li:focus-visible,.tab a:focus-visible,.field:focus-visible,.seg a:focus-visible{outline:none;box-shadow:var(--focus-ring)}
+.row2{display:flex;gap:var(--s3)}
+.chip{display:inline-flex;align-items:center;gap:var(--s1);height:30px;padding:0 var(--s3);border-radius:var(--r-pill);font-size:var(--fs-13);background:var(--wh);color:var(--char);box-shadow:var(--ring-3);transition:background-color var(--dur-1) var(--ease)}
+.chip:active{background:var(--sand)}
 .chip.on{background:var(--ink);color:var(--iv);box-shadow:none}
-.chip.sm{height:26px;padding:0 10px;font-size:12px}
-.chips{display:flex;flex-wrap:wrap;gap:8px}
-.badge{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:11px;font-size:11.5px;font-weight:600;white-space:nowrap}
+.chip.sm{height:26px;padding:0 var(--s3);font-size:var(--fs-12)}
+.chips{display:flex;flex-wrap:wrap;gap:var(--s2)}
+.badge{display:inline-flex;align-items:center;gap:var(--s1);height:22px;padding:0 var(--s2);border-radius:var(--r-pill);font-size:11.5px;font-weight:600;letter-spacing:var(--ls-label);white-space:nowrap}
 .badge .i{width:13px;height:13px;stroke-width:2}
 .b-q{background:var(--warn-soft);color:var(--warn)}
 .b-g{background:var(--brand-soft);color:var(--brand-ink)}
 .b-ok{background:var(--ok-soft);color:var(--ok)}
 .b-err{background:var(--err-soft);color:var(--err)}
 .b-off{background:var(--sand);color:var(--olive)}
-.b-ink{background:rgba(20,20,19,.72);color:var(--iv)}
-.field{background:var(--wh);border:1px solid var(--bw);border-radius:12px;padding:12px 14px;font-size:15px;line-height:1.5}
+.b-ink{background:var(--ink-72);color:var(--iv)}
+/* 输入框：默认 / 占位 / 聚焦 / 错误 / 禁用 */
+.field{background:var(--wh);border:1px solid var(--bw);border-radius:var(--r-md);padding:var(--s3) var(--s3);font-size:var(--fs-15);line-height:1.5;transition:border-color var(--dur-1) var(--ease),box-shadow var(--dur-1) var(--ease)}
 .field.ph{color:var(--stone)}
+.field.focus{border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
 .field.err{border-color:var(--err);box-shadow:0 0 0 3px var(--err-soft)}
-.errtxt{color:var(--err);font-size:12.5px;margin-top:6px;display:flex;gap:4px;align-items:center}
-.errtxt .i{width:14px;height:14px}
-.list{background:var(--iv);border:1px solid var(--bc);border-radius:16px;overflow:hidden}
-.li{display:flex;align-items:center;gap:12px;padding:15px 16px;border-top:1px solid var(--bc);font-size:15px}
+.field.dis{background:var(--sand);color:var(--stone);border-color:transparent}
+.errtxt{color:var(--err);font-size:12.5px;margin-top:var(--s15);display:flex;gap:var(--s1);align-items:center}
+.errtxt .i{width:var(--icon-xs);height:var(--icon-xs)}
+.list{background:var(--iv);border:1px solid var(--bc);border-radius:var(--r-lg);overflow:hidden}
+.li{display:flex;align-items:center;gap:var(--s3);padding:15px var(--s4);border-top:1px solid var(--bc);font-size:var(--fs-15);min-height:52px;transition:background-color var(--dur-1) var(--ease)}
 .li:first-child{border-top:0}
+.li:active{background:var(--pa)}
 .li .grow{flex:1;min-width:0}
 .li .chev{color:var(--stone)}
 .li .ic{width:32px;height:32px;border-radius:10px;background:var(--sand);display:grid;place-items:center;color:var(--char)}
 .li .ic .i{width:18px;height:18px}
-.hr{height:1px;background:var(--bc);margin:14px 0}
-.bar{height:6px;border-radius:3px;background:var(--sand);overflow:hidden}
-.bar i{display:block;height:100%;border-radius:3px;background:var(--brand)}
-.kv{display:flex;justify-content:space-between;align-items:baseline;font-size:14px;padding:6px 0;color:var(--char)}
+.hr{height:1px;background:var(--bc);margin:var(--s3) 0}
+.bar{height:6px;border-radius:var(--r-2xs);background:var(--sand);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:var(--r-2xs);background:var(--brand);transition:width var(--dur-2) var(--ease)}
+.kv{display:flex;justify-content:space-between;align-items:baseline;font-size:var(--fs-14);padding:var(--s15) 0;color:var(--char)}
 .kv b{font-weight:600;color:var(--ink)}
 .center{text-align:center}
-.mt4{margin-top:4px}.mt8{margin-top:8px}.mt12{margin-top:12px}.mt16{margin-top:16px}.mt20{margin-top:20px}.mt24{margin-top:24px}.mt32{margin-top:32px}
-.flex{display:flex;align-items:center}.gap8{gap:8px}.gap12{gap:12px}.between{justify-content:space-between}.grow{flex:1;min-width:0}
+.mt4{margin-top:var(--s1)}.mt8{margin-top:var(--s2)}.mt12{margin-top:var(--s3)}.mt16{margin-top:var(--s4)}.mt20{margin-top:var(--s5)}.mt24{margin-top:var(--s6)}.mt32{margin-top:var(--s8)}
+.flex{display:flex;align-items:center}.gap8{gap:var(--s2)}.gap12{gap:var(--s3)}.between{justify-content:space-between}.grow{flex:1;min-width:0}
 .ell{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cl2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 
-/* thumbnails: product monogram on a warm tint */
-.th{position:relative;border-radius:12px;display:grid;place-items:center;overflow:hidden;flex-shrink:0}
-.th .mg{font-family:var(--serif);font-weight:500;color:rgba(20,20,19,.55)}
-.th .tl{position:absolute;left:8px;top:8px}
-.th .tr{position:absolute;right:8px;top:8px}
-.th .bl{position:absolute;left:8px;bottom:8px}
-.th .br{position:absolute;right:8px;bottom:8px}
-.th .pl{width:44px;height:44px;border-radius:50%;background:rgba(250,249,245,.88);display:grid;place-items:center;color:var(--ink)}
-.th .pl .i{width:18px;height:18px;margin-left:2px}
-.dur{font-size:11px;font-weight:600;color:var(--iv);background:rgba(20,20,19,.62);border-radius:6px;padding:2px 6px;font-variant-numeric:tabular-nums}
+/* thumbnails: product monogram on a warm tint, with an organic off-center shape */
+.th{position:relative;border-radius:var(--r-md);display:grid;place-items:center;overflow:hidden;flex-shrink:0}
+.th::before{content:"";position:absolute;right:-22%;bottom:-26%;width:82%;aspect-ratio:1;border-radius:50%;background:rgba(20,20,19,.07)}
+.th .mg{position:relative;font-family:var(--serif);font-weight:500;color:rgba(20,20,19,.55)}
+.th .tl{position:absolute;left:var(--s2);top:var(--s2)}
+.th .tr{position:absolute;right:var(--s2);top:var(--s2)}
+.th .bl{position:absolute;left:var(--s2);bottom:var(--s2)}
+.th .br{position:absolute;right:var(--s2);bottom:var(--s2)}
+.th .pl{width:44px;height:44px;border-radius:50%;background:var(--iv-88);display:grid;place-items:center;color:var(--ink)}
+.th .pl .i{width:18px;height:18px;margin-left:var(--s05)}
+.dur{font-size:var(--fs-11);font-weight:600;letter-spacing:var(--ls-label);color:var(--iv);background:var(--ink-62);border-radius:var(--r-xs);padding:var(--s05) var(--s15);font-variant-numeric:tabular-nums}
 
 /* overlays */
-.scrim{position:absolute;inset:0;background:rgba(20,20,19,.42);z-index:10}
-.sheet{position:absolute;left:0;right:0;bottom:0;background:var(--iv);border-radius:24px 24px 0 0;z-index:11;padding:8px 20px 34px}
-.grab{width:36px;height:5px;border-radius:3px;background:var(--ring);margin:0 auto 14px}
-.sheet .sh-h{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px}
+.scrim{position:absolute;inset:0;background:var(--scrim);z-index:10}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:var(--iv);border-radius:var(--r-2xl) var(--r-2xl) 0 0;z-index:11;padding:var(--s2) var(--gutter) var(--safe-b)}
+.grab{width:36px;height:5px;border-radius:var(--r-2xs);background:var(--ring);margin:0 auto var(--s3)}
+.sheet .sh-h{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:var(--s15)}
 .x{width:32px;height:32px;border-radius:50%;background:var(--sand);display:grid;place-items:center;color:var(--char)}
-.x .i{width:16px;height:16px}
-.dlg{position:absolute;left:24px;right:24px;top:50%;transform:translateY(-50%);background:var(--iv);border-radius:24px;z-index:11;padding:24px;box-shadow:rgba(0,0,0,.08) 0 8px 32px}
-.dlg .h-sec{margin-bottom:6px}
-.toast{display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:var(--iv);border-radius:14px;padding:12px 16px;font-size:14px;line-height:1.4;box-shadow:rgba(0,0,0,.12) 0 8px 24px}
+.x .i{width:var(--icon-sm);height:var(--icon-sm)}
+.dlg{position:absolute;left:var(--s6);right:var(--s6);top:50%;transform:translateY(-50%);background:var(--iv);border-radius:var(--r-2xl);z-index:11;padding:var(--s6);box-shadow:var(--sh-md)}
+.dlg .h-sec{margin-bottom:var(--s15)}
+.toast{display:inline-flex;align-items:center;gap:var(--s2);background:var(--ink);color:var(--iv);border-radius:var(--r-md);padding:var(--s3) var(--s4);font-size:var(--fs-14);line-height:1.4;box-shadow:var(--sh-lg)}
 .toast .i{width:18px;height:18px}
-.ill{width:96px;height:96px;border-radius:32px;background:var(--sand);display:grid;place-items:center;margin:0 auto;color:var(--brand)}
+.ill{width:96px;height:96px;border-radius:var(--r-3xl);background:var(--sand);display:grid;place-items:center;margin:0 auto;color:var(--brand)}
 .ill .i{width:40px;height:40px;stroke-width:1.5}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--ring);display:inline-block}
 .dot.on{background:var(--brand)}
-.check{width:20px;height:20px;border-radius:50%;border:1.6px solid var(--ring);display:grid;place-items:center;background:var(--wh);flex-shrink:0}
+.check{width:20px;height:20px;border-radius:50%;border:1.6px solid var(--ring);display:grid;place-items:center;background:var(--wh);flex-shrink:0;transition:background-color var(--dur-1) var(--ease)}
 .check.on{background:var(--brand-strong);border-color:var(--brand-strong);color:var(--iv)}
 .check .i{width:12px;height:12px;stroke-width:2.6}
-.sk{background:linear-gradient(90deg,#ebe8de,#f2f0e8,#ebe8de);border-radius:8px}
-.step{display:flex;gap:12px;align-items:flex-start;padding:10px 0}
-.step .n{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:600;background:var(--sand);color:var(--char);flex-shrink:0}
+.sk{background:linear-gradient(90deg,#ebe8de,#f2f0e8,#ebe8de);border-radius:var(--r-sm)}
+.step{display:flex;gap:var(--s3);align-items:flex-start;padding:var(--s3) 0}
+.step .n{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:var(--fs-12);font-weight:600;background:var(--sand);color:var(--char);flex-shrink:0}
 .step .n.done{background:var(--ok-soft);color:var(--ok)}
 .step .n.now{background:var(--brand-strong);color:var(--iv)}
-.step .n .i{width:14px;height:14px;stroke-width:2.4}
-.seg{display:flex;background:var(--sand);border-radius:12px;padding:3px}
-.seg a{flex:1;text-align:center;font-size:14px;padding:7px 0;border-radius:9px;color:var(--olive)}
-.seg a.on{background:var(--wh);color:var(--ink);font-weight:600;box-shadow:0 1px 2px rgba(20,20,19,.08)}
-.tip{position:absolute;background:var(--ink);color:var(--iv);font-size:13px;border-radius:10px;padding:8px 12px;z-index:5;white-space:nowrap}
+.step .n .i{width:var(--icon-xs);height:var(--icon-xs);stroke-width:2.4}
+.seg{display:flex;background:var(--sand);border-radius:var(--r-md);padding:3px}
+.seg a{flex:1;text-align:center;font-size:var(--fs-14);padding:7px 0;border-radius:9px;color:var(--olive);transition:background-color var(--dur-1) var(--ease)}
+.seg a.on{background:var(--wh);color:var(--ink);font-weight:600;box-shadow:var(--sh-sm)}
+.tip{position:absolute;background:var(--ink);color:var(--iv);font-size:var(--fs-13);border-radius:10px;padding:var(--s2) var(--s3);z-index:5;white-space:nowrap}
 .tip::after{content:"";position:absolute;left:18px;bottom:-5px;width:10px;height:10px;background:var(--ink);transform:rotate(45deg)}
 .player{background:var(--ink);position:relative;display:grid;place-items:center}
-.ai-note{font-size:11.5px;color:var(--stone);text-align:center;margin-top:8px}
+.ai-note{font-size:11.5px;color:var(--stone);text-align:center;margin-top:var(--s2)}
 </style>
 </head>
 <body>
@@ -195,6 +241,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
       <span><b class="tag re">重设计</b>原型已有</span>
       <span><b class="tag np">新增页面</b>原型缺失的页面</span>
       <span><b class="tag ns">新增状态</b>原型缺失的状态</span>
+      <span style="margin-left:auto;display:inline-flex;gap:var(--s3)"><a href="export/index.html" style="color:var(--char);font-weight:600">HTML 导出目录 →</a><a href="export/preview.html" style="color:var(--char);font-weight:600">Token 与组件目录 →</a></span>
     </div>
   </header>
   <div id="board"></div>
@@ -249,7 +296,7 @@ const sb = () => `<div class="sb"><span class="num" style="font-family:var(--san
   <span class="r">${ic('signal')}<svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div>`;
 const capsule = `<div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div>`;
 const nav = (title, back=true, extra='') => `<div class="nav">${back?`<span class="bk">${ic('back')}</span>`:''}<span class="tt ${back?'':'pl'}">${title}</span>${extra}${capsule}</div>`;
-const navBig = (title, extra='') => `<div class="nav" style="height:52px;padding-left:20px"><span class="h-page">${title}</span>${extra}${capsule}</div>`;
+const navBig = (title, extra='') => `<div class="nav" style="height:52px;padding-left:var(--s5)"><span class="h-page">${title}</span>${extra}${capsule}</div>`;
 const tab = on => `<div class="tab">${[['spark','创作'],['video','作品'],['user','我的']].map(([i,t])=>`<a class="${t===on?'on':''}">${ic(i)}${t}</a>`).join('')}</div>`;
 const hi = (lt) => `<div class="hi ${lt?'lt':''}"></div>`;
 const screen = (inner, {dark=false}={}) => `<div class="scr ${dark?'dark':''}">${sb()}${inner}${hi()}</div>`;
@@ -292,7 +339,7 @@ const statusBadge = w => ({
 
 /* ===================== reusable page bodies ===================== */
 const productBar = (extra='') => `
-  <div class="card pad flex gap12" style="padding:12px">
+  <div class="card pad flex gap12" style="padding:var(--s3)">
     ${th('衬','#e9dccb',52,52,{size:.46})}
     <div class="grow"><div class="h-card">夏季棉麻衬衫</div>
       <div class="t-mic mt4 flex gap8">${ic('tag','','width:14px;height:14px')}<span>服装内衣 / 上装</span><span style="color:var(--brand-strong);font-weight:600">更换类目</span></div></div>
@@ -300,46 +347,46 @@ const productBar = (extra='') => `
   </div>`;
 
 const tplCard = t => `
-  <div class="card wh" style="overflow:hidden;border-radius:14px">
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
     ${th(t.c, t.t, 170, 190, {size:.34, tl:`<span class="dur">${t.r}</span>`, br:`<span class="dur">${t.d}</span>`})}
-    <div style="padding:10px 12px 12px">
+    <div style="padding:var(--s3) var(--s3) var(--s3)">
       <div class="cl2" style="font-size:14px;font-weight:600;line-height:1.4;height:39px">${t.title}</div>
-      <div class="flex between mt8"><span style="font-size:13px" class="price">${pts(t.p)}</span><span class="btn sm btn-s" style="height:28px;font-size:13px;padding:0 10px">使用</span></div>
+      <div class="flex between mt8"><span style="font-size:13px" class="price">${pts(t.p)}</span><span class="btn sm btn-s" style="height:28px;font-size:13px;padding:0 var(--s3)">使用</span></div>
     </div>
   </div>`;
 
 const refList = (q='') => `
   ${productBar()}
   <div class="flex gap8 mt12">
-    <div class="field grow flex gap8" style="height:42px;padding:0 12px;${q?'':'color:var(--stone)'}">${ic('search')}<span>${q||'搜索标题或类目'}</span></div>
+    <div class="field grow flex gap8" style="height:42px;padding:0 var(--s3);${q?'':'color:var(--stone)'}">${ic('search')}<span>${q||'搜索标题或类目'}</span></div>
     <span class="btn sm btn-w" style="height:42px">${ic('filter')}筛选</span>
   </div>
   <div class="chips mt12"><span class="chip sm on">全部</span><span class="chip sm">15 秒内</span><span class="chip sm">竖屏</span><span class="chip sm">口播带货</span></div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px">${TPL.map(tplCard).join('')}</div>`;
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--s2);margin-top:var(--s3)">${TPL.map(tplCard).join('')}</div>`;
 
 const s05body = () => `${nav('选择参考视频')}<div class="body">${refList()}</div>
-  <div class="footer dock" style="padding-bottom:34px"><div class="flex gap12"><span class="ill" style="width:36px;height:36px;border-radius:12px;margin:0;color:var(--char)">${ic('upload')}</span>
+  <div class="footer dock" style="padding-bottom:var(--safe-b)"><div class="flex gap12"><span class="ill" style="width:36px;height:36px;border-radius:var(--r-md);margin:0;color:var(--char)">${ic('upload')}</span>
   <div class="grow"><div style="font-size:14px;font-weight:600">没有合适的参考视频？</div><div class="t-mic">手动上传同类型的爆款作参考</div></div>${ic('chev','chev')}</div></div>`;
 
 const homeUpload = (imgs) => `
-  <div class="card pad" style="padding:14px">
+  <div class="card pad" style="padding:var(--s3)">
     <div class="flex between"><div class="h-card">商品图片</div><span class="t-mic">${imgs.length}/4 · 正面 / 细节 / 场景</span></div>
     <div class="flex gap8 mt12">${imgs.map(x=>x).join('')}
-      ${imgs.length<4?`<div style="width:74px;height:74px;border-radius:12px;border:1.5px dashed var(--ring);display:grid;place-items:center;color:var(--olive);background:var(--wh)">${ic('plus')}</div>`:''}
+      ${imgs.length<4?`<div style="width:74px;height:74px;border-radius:var(--r-md);border:1.5px dashed var(--ring);display:grid;place-items:center;color:var(--olive);background:var(--wh)">${ic('plus')}</div>`:''}
     </div>
   </div>`;
 const img = (c,t) => `<div style="position:relative">${th(c,t,74,74,{size:.4})}<span style="position:absolute;right:-6px;top:-6px;width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--iv);display:grid;place-items:center">${ic('close','','width:12px;height:12px;stroke-width:2.4')}</span></div>`;
 
-const tips = `<div class="lbl" style="margin-top:14px">拍摄建议</div>
+const tips = `<div class="lbl" style="margin-top:var(--s3)">拍摄建议</div>
   <div class="chips"><span class="chip sm">正面 1 张</span><span class="chip sm">背面 1 张</span><span class="chip sm">细节/面料 1 张</span><span class="chip sm">使用场景 1 张</span><span class="chip sm">避开拼图与文字水印</span></div>`;
 
-const worksGrid = (mode='') => `<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px">${WORKS.slice(0,6).map((w,i)=>`
-  <div class="card wh" style="overflow:hidden;border-radius:14px;${w.s==='off'?'opacity:.7':''}">
+const worksGrid = (mode='') => `<div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--s3);margin-top:var(--s3)">${WORKS.slice(0,6).map((w,i)=>`
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);${w.s==='off'?'opacity:.7':''}">
     ${th(w.c, w.t, 169, 150, {size:.3, tl:statusBadge(w),
       tr: mode==='select' ? `<span class="check ${[3,4].includes(i)?'on':''}" style="width:24px;height:24px">${[3,4].includes(i)?ic('check'):''}</span>` : '',
       br: w.s==='ok' ? '<span class="dur">0:15</span>' : ''})}
     ${w.s==='g'?`<div class="bar" style="border-radius:0;height:3px"><i style="width:${w.pct}%"></i></div>`:''}
-    <div style="padding:10px 12px 12px" class="flex gap8">
+    <div style="padding:var(--s3) var(--s3) var(--s3)" class="flex gap8">
       <div class="grow"><div class="ell" style="font-size:14px;font-weight:600">${w.title}</div>
         <div class="t-mic mt4">${w.s==='g'?`${w.eta}后完成`:w.time}</div></div>
       ${mode===''?`<span style="color:var(--olive)">${ic('more')}</span>`:''}
@@ -353,17 +400,17 @@ const worksPage = (mode='') => `${navBig('作品', mode==='select'?'':`<span sty
   </div>`;
 
 const previewPage = (extra='') => `${nav('作品预览')}<div class="body np">
-  <div class="player" style="height:360px;margin:4px 20px 0;border-radius:20px;overflow:hidden">
+  <div class="player" style="height:360px;margin:var(--s1) var(--s5) 0;border-radius:var(--r-xl);overflow:hidden">
     ${th('衬','#3a3631',350,360,{size:.3})}
     <span class="pl" style="position:absolute;width:56px;height:56px;border-radius:50%;background:rgba(250,249,245,.9);display:grid;place-items:center">${ic('play')}</span>
     <span class="dur" style="position:absolute;right:12px;bottom:12px">0:15</span>
     <span class="badge b-ink" style="position:absolute;left:12px;top:12px">预览 · 含水印</span>
   </div>
-  <div style="padding:16px 20px 0">
+  <div style="padding:var(--s4) var(--s5) 0">
     <div class="h-sec">每日新款穿搭分享 · 衬衫款</div>
     <div class="t-mic mt4">09-19 18:42 生成 · 9:16 · 15 秒 · 消耗 270 积分</div>
     <div class="row2 mt16"><span class="btn md btn-p">${ic('download')}保存到相册</span><span class="btn md btn-s" style="width:120px">${ic('share')}分享</span></div>
-    <div class="card pad mt12 flex gap12" style="padding:14px;background:var(--brand-soft);border-color:#ecd3c6">
+    <div class="card pad mt12 flex gap12" style="padding:var(--s3);background:var(--brand-soft);border-color:var(--brand-line)">
       <div class="grow"><div style="font-size:14px;font-weight:600">去水印导出，再做 3 条同款</div><div class="t-mic mt4">充 ¥10 得 1,000 积分 · 单条约 ¥2.70</div></div>
       <span class="btn sm btn-p">去充值</span></div>
     <div class="flex between mt16" style="font-size:14px"><span class="flex gap8" style="color:var(--char)">${ic('refresh')}重新生成</span><span class="flex gap8" style="color:var(--err)">${ic('trash')}删除</span></div>
@@ -384,7 +431,7 @@ const mePage = () => `${navBig('我的')}<div class="body">
     <div class="bar mt8"><i style="width:60%"></i></div>
   </div>
   <div class="card pad mt12 flex gap12" style="background:var(--ink);border-color:var(--ink);color:var(--iv)">
-    <span style="color:var(--coral)">${ic('gift')}</span><div class="grow"><div style="font-size:15px;font-weight:600">邀请好友，各得 500 积分</div><div style="font-size:12.5px;color:var(--silver);margin-top:2px">好友首次出片即到账 · 已邀请 3 人</div></div>${ic('chev')}
+    <span style="color:var(--coral)">${ic('gift')}</span><div class="grow"><div style="font-size:15px;font-weight:600">邀请好友，各得 500 积分</div><div style="font-size:12.5px;color:var(--silver);margin-top:var(--s05)">好友首次出片即到账 · 已邀请 3 人</div></div>${ic('chev')}
   </div>
   <div class="list mt12">
     ${[['wallet','充值中心'],['list','积分明细'],['headset','联系客服'],['doc','协议与规则'],['gear','账号设置']].map(([i,t])=>`<div class="li"><span class="ic">${ic(i)}</span><span class="grow">${t}</span>${ic('chev','chev')}</div>`).join('')}
@@ -403,18 +450,18 @@ const settingsPage = () => `${nav('账号设置')}<div class="body">
 const confirmDlg = (enough) => `<div class="scrim"></div><div class="sheet">
   <div class="grab"></div>
   <div class="sh-h"><div><div class="h-sec">确认生成</div><div class="t-mic mt4">生成失败按消耗积分全额返还</div></div><span class="x">${ic('close')}</span></div>
-  <div class="card wh flex gap12 mt12" style="padding:12px">${th('衬','#e9dccb',56,72,{size:.4})}
+  <div class="card wh flex gap12 mt12" style="padding:var(--s3)">${th('衬','#e9dccb',56,72,{size:.4})}
     <div class="grow"><div style="font-size:14px;font-weight:600" class="cl2">每日新款穿搭分享，质感衬衫这样穿</div><div class="t-mic mt4">9:16 · 15 秒 · 夏季棉麻衬衫</div></div></div>
   <div class="mt16">
     <div class="kv"><span>本次消耗</span><span><span class="strike num" style="font-size:13px">990</span>&nbsp; <b class="price" style="font-size:18px">${pts(270)}</b></span></div>
-    <div class="hr" style="margin:8px 0"></div>
+    <div class="hr" style="margin:var(--s2) 0"></div>
     ${enough ? `
     <div class="kv"><span>赠送积分抵扣</span><b class="num">−270</b></div>
     <div class="kv"><span>充值积分抵扣</span><b class="num">0</b></div>
     <div class="kv"><span>生成后剩余</span><span><b class="num">920</b> <span class="t-mic">（赠送 230 · 充值 690）</span></span></div>` : `
     <div class="kv"><span>当前余额</span><b class="num">120</b></div>
     <div class="kv"><span>还差</span><b class="num" style="color:var(--err)">150</b></div>
-    <div class="card flex gap12 mt8" style="padding:12px;background:var(--brand-soft);border-color:#ecd3c6">
+    <div class="card flex gap12 mt8" style="padding:var(--s3);background:var(--brand-soft);border-color:var(--brand-line)">
       <div class="grow"><div style="font-size:14px;font-weight:600">首充礼包 ¥10 → 1,000 积分</div><div class="t-mic mt4">补足后还能再做约 3 条 15 秒</div></div><span class="badge b-g">推荐</span></div>`}
   </div>
   <span class="btn btn-p mt20">${enough?'确认生成 · 270 积分':'充 ¥10 并继续生成'}</span>
@@ -426,7 +473,7 @@ const S = {};
 
 S['01'] = () => screen(`${nav('',false)}<div class="body" style="display:flex;flex-direction:column;padding:0 28px">
   <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
-    <div style="width:64px;height:64px;border-radius:20px;background:var(--brand);display:grid;place-items:center;color:var(--iv)">${ic('play','','width:28px;height:28px;margin-left:3px')}</div>
+    <div style="width:64px;height:64px;border-radius:var(--r-xl);background:var(--brand);display:grid;place-items:center;color:var(--iv)">${ic('play','','width:28px;height:28px;margin-left:3px')}</div>
     <div class="h-page mt24" style="font-size:36px;line-height:1.15">上传一张商品图，<br>复刻同款带货视频</div>
     <div class="t-body mt16" style="color:var(--olive)">新人赠送 500 积分，够做 1 条 15 秒。<br>先免费做一条，看到效果再决定。</div>
     <div class="flex gap8 mt24">${['衬','包','护'].map((c,i)=>th(c,['#e9dccb','#e6d6cd','#dfe3d3'][i],96,128,{size:.34,br:'<span class="dur">0:15</span>'})).join('')}</div>
@@ -443,18 +490,18 @@ S['01a'] = () => S['01']().replace('<div class="flex gap8 mt16 t-mic" style="jus
   .replace('<span class="check" style="width:16px;height:16px"></span>','<span class="check" style="width:16px;height:16px;border-color:var(--err);box-shadow:0 0 0 3px var(--err-soft)"></span>');
 
 const homeBody = (state) => `${navBig('爆款复刻')}<div class="body">
-  ${state==='filled'?`<div class="card flex gap12" style="padding:10px 12px;background:var(--ok-soft);border-color:#d7ddc9;margin-bottom:12px"><span style="color:var(--ok-icon)">${ic('gift')}</span><span class="grow" style="font-size:13.5px;color:var(--ok)"><b>新人 500 积分已到账</b>，够做 1 条 15 秒</span><span style="color:var(--ok)">${ic('close')}</span></div>`:''}
+  ${state==='filled'?`<div class="card flex gap12" style="padding:var(--s3) var(--s3);background:var(--ok-soft);border-color:var(--ok-line);margin-bottom:var(--s3)"><span style="color:var(--ok-icon)">${ic('gift')}</span><span class="grow" style="font-size:13.5px;color:var(--ok)"><b>新人 500 积分已到账</b>，够做 1 条 15 秒</span><span style="color:var(--ok)">${ic('close')}</span></div>`:''}
   ${state==='empty' ? `
-    <div class="card" style="margin-top:4px;padding:24px 16px;text-align:center;border:1.5px dashed var(--ring);background:var(--wh)">
-      <div class="ill" style="width:64px;height:64px;border-radius:20px">${ic('upload')}</div>
+    <div class="card" style="margin-top:var(--s1);padding:var(--s6) var(--s4);text-align:center;border:1.5px dashed var(--ring);background:var(--wh)">
+      <div class="ill" style="width:64px;height:64px;border-radius:var(--r-xl)">${ic('upload')}</div>
       <div class="h-card mt12">上传商品图片</div>
       <div class="t-mic mt4">最多 4 张，AI 会自动识别商品名称与卖点</div>
       <div class="row2 mt16" style="justify-content:center"><span class="btn sm btn-p">${ic('image')}从相册选择</span><span class="btn sm btn-s">${ic('camera')}拍摄</span></div>
     </div>` :
     state==='error' ? homeUpload([
       img('衬','#e9dccb'),
-      `<div style="position:relative">${th('','#e9dccb',74,74)}<div style="position:absolute;inset:0;border-radius:12px;background:rgba(20,20,19,.45);display:grid;place-items:center;color:var(--iv);font-size:13px;font-weight:600" class="num">64%</div></div>`,
-      `<div style="position:relative">${th('','#f5e2dd',74,74)}<div style="position:absolute;inset:0;border-radius:12px;border:1.5px solid var(--err);display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--err);font-size:11.5px;gap:2px">${ic('refresh')}点击重试</div></div>`
+      `<div style="position:relative">${th('','#e9dccb',74,74)}<div style="position:absolute;inset:0;border-radius:var(--r-md);background:rgba(20,20,19,.45);display:grid;place-items:center;color:var(--iv);font-size:13px;font-weight:600" class="num">64%</div></div>`,
+      `<div style="position:relative">${th('','#f5e2dd',74,74)}<div style="position:absolute;inset:0;border-radius:var(--r-md);border:1.5px solid var(--err);display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--err);font-size:11.5px;gap:var(--s05)">${ic('refresh')}点击重试</div></div>`
     ]) + `<div class="errtxt">${ic('alert')}第 3 张上传失败：图片超过 10 MB</div>`
     : homeUpload([img('衬','#e9dccb'), img('领','#e5dac8'), img('景','#e2dccf')])}
   ${state==='empty'?'':tips}
@@ -464,17 +511,17 @@ const homeBody = (state) => `${navBig('爆款复刻')}<div class="body">
   <div class="field ${state==='filled'?'':'ph'} ${state==='error'?'err':''}" style="min-height:${state==='empty'?72:56}px">${state==='filled'?'轻薄透气，抗皱好打理，适合夏季通勤':'如：轻薄透气 · 抗皱好打理 · 适合夏季通勤'}</div>
   ${state==='error'?`<div class="errtxt">${ic('alert')}请填写商品卖点，AI 会据此写口播文案</div>`:''}
   ${state==='empty'?`<div class="lbl mt20">做出来是这样的</div>
-    <div class="card wh flex gap12" style="padding:10px">${th('原','#e3ddcd',64,86,{size:.3})}<span style="color:var(--stone)">${ic('chev')}</span>${th('复','#e9dccb',64,86,{size:.3})}
+    <div class="card wh flex gap12" style="padding:var(--s3)">${th('原','#e3ddcd',64,86,{size:.3})}<span style="color:var(--stone)">${ic('chev')}</span>${th('复','#e9dccb',64,86,{size:.3})}
       <div class="grow t-mic">同一件单品换搭 4 套造型，商品换成你的即可</div></div>`:''}
   </div>
-  <div class="footer" style="padding-bottom:12px"><span class="btn ${state==='filled'?'btn-p':'btn-x'}">下一步 · 选模板</span></div>${tab('创作')}`;
+  <div class="footer" style="padding-bottom:var(--s3)"><span class="btn ${state==='filled'?'btn-p':'btn-x'}">下一步 · 选模板</span></div>${tab('创作')}`;
 
 S['02']  = () => screen(homeBody('filled'));
 S['02a'] = () => screen(homeBody('empty'));
 S['02b'] = () => screen(homeBody('error'));
 
 S['03'] = () => screen(homeBody('filled') + `<div class="scrim" style="background:rgba(20,20,19,.55)"></div>
-  <div class="dlg" style="padding:28px 24px 20px">
+  <div class="dlg" style="padding:28px var(--s6) var(--s5)">
     <div class="t-mic" style="letter-spacing:.5px">新手指引 · 1 分钟上手</div>
     <div class="h-page mt8" style="font-size:26px">三步复刻一条爆款</div>
     <div class="mt16">
@@ -493,17 +540,17 @@ S['04'] = () => screen(`${nav('商品识别')}<div class="body" style="display:f
   </div>
   <div class="h-sec mt32">正在识别你的商品</div>
   <div class="t-cap mt8">约 5 秒，识别后自动匹配同类爆款模板</div>
-  <div class="card wh mt24" style="width:100%;padding:6px 16px">
+  <div class="card wh mt24" style="width:100%;padding:var(--s15) var(--s4)">
     ${[['识别商品主体','done'],['匹配商品类目','now'],['筛选同类爆款模板','']].map(([t,s])=>`
     <div class="step" style="align-items:center"><span class="n ${s}">${s==='done'?ic('check'):s==='now'?'2':'3'}</span><span class="grow" style="font-size:14px;${s?'':'color:var(--olive)'}">${t}</span>
     <span class="t-mic">${s==='done'?'服装 · 衬衫':s==='now'?'进行中':''}</span></div>`).join('')}
   </div></div>`);
 
-S['04a'] = () => screen(`${nav('商品识别')}<div class="body" style="padding-top:48px">
+S['04a'] = () => screen(`${nav('商品识别')}<div class="body" style="padding-top:var(--s12)">
   <div class="ill" style="background:var(--err-soft);color:var(--err)">${ic('alert')}</div>
   <div class="h-sec center mt24">没认出这件商品</div>
   <div class="t-cap center mt8">可能是图片里有多件商品，或主体太小</div>
-  <div class="card wh mt24" style="padding:4px 16px">
+  <div class="card wh mt24" style="padding:var(--s1) var(--s4)">
     ${[['商品主体太小','让商品占画面一半以上'],['画面有多件商品','一张图只拍一件'],['含拼图或文字水印','换一张干净的原图']].map(([a,b])=>`
     <div class="step" style="align-items:center"><span class="n">${ic('info')}</span><div class="grow"><div style="font-size:14px;font-weight:600">${a}</div><div class="t-mic">${b}</div></div></div>`).join('')}
   </div></div>
@@ -512,13 +559,13 @@ S['04a'] = () => screen(`${nav('商品识别')}<div class="body" style="padding-
 S['05']  = () => screen(s05body());
 S['05a'] = () => screen(`${nav('选择参考视频')}<div class="body">
   ${productBar()}
-  <div class="flex gap8 mt12"><div class="field grow flex gap8" style="height:42px;padding:0 12px;border-color:var(--ink)">${ic('search')}<span>真丝睡衣 直播</span><span style="margin-left:auto;color:var(--stone)">${ic('close')}</span></div></div>
+  <div class="flex gap8 mt12"><div class="field grow flex gap8" style="height:42px;padding:0 var(--s3);border-color:var(--ink)">${ic('search')}<span>真丝睡衣 直播</span><span style="margin-left:auto;color:var(--stone)">${ic('close')}</span></div></div>
   <div style="padding-top:56px" class="center">
     <div class="ill">${ic('search')}</div>
     <div class="h-sec mt20">没找到「真丝睡衣 直播」的模板</div>
     <div class="t-cap mt8">试试更短的关键词，或换一个说法</div>
     <div class="chips mt16" style="justify-content:center"><span class="chip">睡衣</span><span class="chip">家居服</span><span class="chip">面料特写</span><span class="chip">口播带货</span></div>
-    <span class="btn md btn-s mt32" style="width:auto;display:inline-flex;padding:0 20px">${ic('upload')}上传自己的参考视频</span>
+    <span class="btn md btn-s mt32" style="width:auto;display:inline-flex;padding:0 var(--s5)">${ic('upload')}上传自己的参考视频</span>
   </div></div>`);
 
 S['05b'] = () => screen(`<div class="nav" style="position:absolute;top:47px;left:0;right:0;z-index:3"><span class="bk" style="background:rgba(20,20,19,.4);color:var(--iv)">${ic('back')}</span>${capsule}</div>
@@ -527,10 +574,10 @@ S['05b'] = () => screen(`<div class="nav" style="position:absolute;top:47px;left
       <span style="position:absolute;width:64px;height:64px;border-radius:50%;background:rgba(250,249,245,.9);display:grid;place-items:center">${ic('play')}</span>
       <div style="position:absolute;left:20px;right:20px;bottom:16px" class="flex gap8"><span class="dur">原视频</span><div class="bar grow" style="background:rgba(250,249,245,.3);height:3px"><i style="width:34%;background:var(--iv)"></i></div><span class="dur">0:05 / 0:15</span></div>
     </div>
-    <div style="padding:18px 20px 0">
+    <div style="padding:18px var(--s5) 0">
       <div class="flex gap8"><span class="badge b-off">9:16</span><span class="badge b-off">15 秒</span><span class="badge b-off">服装 · 上装</span><span class="badge b-ok">同类目 98% 匹配</span></div>
       <div class="h-sec mt12">每日新款穿搭分享，质感衬衫这样穿</div>
-      <div class="card pad mt12" style="padding:12px 14px"><div style="font-size:13px;font-weight:600">复刻点</div>
+      <div class="card pad mt12" style="padding:var(--s3) var(--s3)"><div style="font-size:13px;font-weight:600">复刻点</div>
         <div class="t-cap mt4">开场口播「当我拥有一件有多种穿法的…」+ 同一件单品换搭 4 套造型，同机位全身展示，商品换成你的即可。</div></div>
     </div></div>
   <div class="footer dock"><div class="flex gap12"><div><div class="t-mic">本次消耗</div><div><span class="strike num" style="font-size:12px">990</span> <b class="price">${pts(270)}</b></div></div>
@@ -538,11 +585,11 @@ S['05b'] = () => screen(`<div class="nav" style="position:absolute;top:47px;left
 
 S['05c'] = () => screen(`${nav('上传参考视频')}<div class="body">
   <div class="t-cap">上传一条你觉得好的同类爆款，AI 会学习它的节奏、镜头和口播结构。</div>
-  <div class="card wh mt16 flex gap12" style="padding:12px">${th('','#3a3631',64,86)}
+  <div class="card wh mt16 flex gap12" style="padding:var(--s3)">${th('','#3a3631',64,86)}
     <div class="grow"><div style="font-size:14px;font-weight:600" class="ell">通勤衬衫一周不重样.mp4</div><div class="t-mic mt4">0:32 · 9:16 · 38.6 MB</div>
       <div class="bar mt8"><i style="width:64%"></i></div><div class="t-mic mt4 num">上传中 64%</div></div><span class="x">${ic('close')}</span></div>
   <div class="lbl mt20">上传要求</div>
-  <div class="card pad" style="padding:4px 16px">
+  <div class="card pad" style="padding:var(--s1) var(--s4)">
     ${[['时长 5–90 秒','按生成时长计费，18 积分/秒'],['画幅 9:16 或 16:9','其他比例会自动裁切'],['与商品同类目','跨类目复刻效果会明显变差'],['大小 200 MB 以内','支持 MP4 / MOV']].map(([a,b])=>`
     <div class="step" style="align-items:center"><span class="n done">${ic('check')}</span><div class="grow"><div style="font-size:14px;font-weight:600">${a}</div><div class="t-mic">${b}</div></div></div>`).join('')}
   </div>
@@ -560,11 +607,11 @@ S['06'] = () => screen(s05body() + `<div class="scrim"></div><div class="sheet">
 
 S['07'] = () => screen(s05body() + `<div class="scrim"></div><div class="sheet" style="padding-bottom:0">
   <div class="grab"></div><div class="sh-h"><div><div class="h-sec">修改商品类目</div><div class="t-mic mt4">只影响本次模板匹配，不改写识别结果</div></div><span class="x">${ic('close')}</span></div>
-  <div class="flex mt12" style="height:340px;margin:12px -20px 0;border-top:1px solid var(--bc)">
-    <div style="width:128px;background:var(--pa);font-size:14px">${['服饰鞋包','食品饮料','个护家清','生鲜农产','家居日用','3C 数码','美妆护肤'].map((t,i)=>`<div style="padding:14px 16px;${i===0?'background:var(--iv);font-weight:600;box-shadow:inset 3px 0 0 var(--brand)':'color:var(--olive)'}">${t}</div>`).join('')}</div>
-    <div class="grow" style="font-size:15px">${['上装','裤装','连衣裙','内衣袜子','鞋靴','箱包'].map((t,i)=>`<div class="flex between" style="padding:14px 20px;border-bottom:1px solid var(--bc);${i===0?'color:var(--brand-strong);font-weight:600':''}">${t}${i===0?ic('check'):''}</div>`).join('')}</div>
+  <div class="flex mt12" style="height:340px;margin:var(--s3) -20px 0;border-top:1px solid var(--bc)">
+    <div style="width:128px;background:var(--pa);font-size:14px">${['服饰鞋包','食品饮料','个护家清','生鲜农产','家居日用','3C 数码','美妆护肤'].map((t,i)=>`<div style="padding:var(--s3) var(--s4);${i===0?'background:var(--iv);font-weight:600;box-shadow:inset 3px 0 0 var(--brand)':'color:var(--olive)'}">${t}</div>`).join('')}</div>
+    <div class="grow" style="font-size:15px">${['上装','裤装','连衣裙','内衣袜子','鞋靴','箱包'].map((t,i)=>`<div class="flex between" style="padding:var(--s3) var(--s5);border-bottom:1px solid var(--bc);${i===0?'color:var(--brand-strong);font-weight:600':''}">${t}${i===0?ic('check'):''}</div>`).join('')}</div>
   </div>
-  <div style="padding:12px 0 34px"><span class="btn btn-p">确定 · 服饰鞋包 / 上装</span></div></div>`);
+  <div style="padding:var(--s3) 0 var(--safe-b)"><span class="btn btn-p">确定 · 服饰鞋包 / 上装</span></div></div>`);
 
 S['08'] = () => screen(s05body() + confirmDlg(true));
 S['09'] = () => screen(s05body() + confirmDlg(false));
@@ -576,11 +623,11 @@ S['09a'] = () => screen(`${nav('生成进度')}<div class="body">
     <div class="bar mt12" style="height:8px;border-radius:4px"><i style="width:62%"></i></div>
     <div class="mt12">
       ${[['解析参考视频结构','done','0:08'],['生成分镜与口播文案','done','0:21'],['合成商品画面','now','进行中'],['配音、字幕与导出','','']].map(([t,s,v],i)=>`
-      <div class="step" style="align-items:center;padding:8px 0"><span class="n ${s}">${s==='done'?ic('check'):i+1}</span><span class="grow" style="font-size:14px;${s?'':'color:var(--olive)'}">${t}</span><span class="t-mic num">${v}</span></div>`).join('')}
+      <div class="step" style="align-items:center;padding:var(--s2) 0"><span class="n ${s}">${s==='done'?ic('check'):i+1}</span><span class="grow" style="font-size:14px;${s?'':'color:var(--olive)'}">${t}</span><span class="t-mic num">${v}</span></div>`).join('')}
     </div>
   </div>
-  <div class="card flex gap12 mt12" style="padding:12px 14px;background:var(--wh)"><span style="color:var(--brand)">${ic('shield')}</span><span class="grow t-cap">已冻结 270 积分，生成失败自动全额返还</span></div>
-  <div class="card flex gap12 mt12" style="padding:12px 14px"><span style="color:var(--char)">${ic('chat')}</span><div class="grow"><div style="font-size:14px;font-weight:600">完成后微信通知我</div><div class="t-mic">可以先离开，生成不会中断</div></div><span class="btn sm btn-p">开启</span></div>
+  <div class="card flex gap12 mt12" style="padding:var(--s3) var(--s3);background:var(--wh)"><span style="color:var(--brand)">${ic('shield')}</span><span class="grow t-cap">已冻结 270 积分，生成失败自动全额返还</span></div>
+  <div class="card flex gap12 mt12" style="padding:var(--s3) var(--s3)"><span style="color:var(--char)">${ic('chat')}</span><div class="grow"><div style="font-size:14px;font-weight:600">完成后微信通知我</div><div class="t-mic">可以先离开，生成不会中断</div></div><span class="btn sm btn-p">开启</span></div>
   </div>
   <div class="footer"><div class="row2"><span class="btn btn-s">继续创作</span><span class="btn btn-w">去作品查看</span></div></div>`);
 
@@ -593,11 +640,11 @@ S['10a'] = () => screen(`${navBig('作品')}<div class="body center" style="padd
   <div class="t-cap mt16" style="color:var(--char)">先看看别人做了什么 ›</div>
   </div>${tab('作品')}`);
 
-S['11'] = () => screen(worksPage('select') + `<div class="footer dock" style="padding-bottom:34px"><div class="flex gap12"><span class="check on">${ic('check')}</span><span class="grow" style="font-size:14px">已选 <b>2</b> 个</span><span class="btn sm btn-s" style="height:40px">取消</span><span class="btn sm btn-danger" style="height:40px">${ic('trash')}删除</span></div></div>`);
+S['11'] = () => screen(worksPage('select') + `<div class="footer dock" style="padding-bottom:var(--safe-b)"><div class="flex gap12"><span class="check on">${ic('check')}</span><span class="grow" style="font-size:14px">已选 <b>2</b> 个</span><span class="btn sm btn-s" style="height:40px">取消</span><span class="btn sm btn-danger" style="height:40px">${ic('trash')}删除</span></div></div>`);
 
 S['12']  = () => screen(previewPage());
 S['12a'] = () => screen(previewPage(`<div class="scrim"></div><div class="dlg center">
-  <div class="ill" style="width:64px;height:64px;border-radius:20px">${ic('download')}</div>
+  <div class="ill" style="width:64px;height:64px;border-radius:var(--r-xl)">${ic('download')}</div>
   <div class="h-sec mt16">正在保存到相册</div>
   <div class="t-cap mt4">请不要离开当前页面</div>
   <div class="bar mt20" style="height:8px"><i style="width:68%"></i></div>
@@ -620,9 +667,9 @@ S['14'] = () => screen(worksPage() + tab('作品') + `<div class="scrim"></div><
 
 S['14b'] = () => screen(worksPage() + tab('作品') + `<div class="scrim"></div><div class="sheet">
   <div class="grab"></div>
-  <div class="sh-h"><div class="flex gap12"><span class="ill" style="width:44px;height:44px;border-radius:14px;margin:0;background:var(--err-soft);color:var(--err)">${ic('alert')}</span>
+  <div class="sh-h"><div class="flex gap12"><span class="ill" style="width:44px;height:44px;border-radius:var(--r-lg);margin:0;background:var(--err-soft);color:var(--err)">${ic('alert')}</span>
     <div><div class="h-sec">生成失败</div><div class="t-mic mt4">速食早餐粥推广视频 · 09-18 11:05</div></div></div><span class="x">${ic('close')}</span></div>
-  <div class="card wh pad mt16" style="padding:12px 14px">
+  <div class="card wh pad mt16" style="padding:var(--s3) var(--s3)">
     <div class="kv"><span>失败原因</span><b>商品图主体过小，无法合成</b></div>
     <div class="kv"><span>积分返还</span><b class="num" style="color:var(--ok)">+432 已到账</b></div>
   </div>
@@ -633,31 +680,31 @@ S['14b'] = () => screen(worksPage() + tab('作品') + `<div class="scrim"></div>
 S['15'] = () => screen(mePage());
 
 S['15a'] = () => screen(`${nav('邀请好友')}<div class="body">
-  <div class="card" style="background:var(--ink);border-color:var(--ink);color:var(--iv);padding:24px 20px">
+  <div class="card" style="background:var(--ink);border-color:var(--ink);color:var(--iv);padding:var(--s6) var(--s5)">
     <div style="color:var(--coral);font-size:13px;font-weight:600">邀请有礼 · 长期有效</div>
     <div class="h-page mt8" style="font-size:26px;color:var(--iv)">好友首次出片，<br>你们各得 500 积分</div>
-    <div style="font-size:13px;color:var(--silver);margin-top:10px">500 积分 ≈ 1 条 15 秒视频，进入赠送池</div>
-    <div class="flex mt20" style="border-top:1px solid var(--ink2);padding-top:16px">
-      ${[['3','已邀请'],['1','已出片'],['+500','累计获得']].map(([a,b])=>`<div class="grow center"><div class="num" style="font-size:24px">${a}</div><div style="font-size:12px;color:var(--silver);margin-top:2px">${b}</div></div>`).join('')}
+    <div style="font-size:13px;color:var(--silver);margin-top:var(--s3)">500 积分 ≈ 1 条 15 秒视频，进入赠送池</div>
+    <div class="flex mt20" style="border-top:1px solid var(--ink2);padding-top:var(--s4)">
+      ${[['3','已邀请'],['1','已出片'],['+500','累计获得']].map(([a,b])=>`<div class="grow center"><div class="num" style="font-size:24px">${a}</div><div style="font-size:12px;color:var(--silver);margin-top:var(--s05)">${b}</div></div>`).join('')}
     </div>
   </div>
   <div class="lbl mt20">怎么得积分</div>
-  <div class="card wh" style="padding:4px 16px">
+  <div class="card wh" style="padding:var(--s1) var(--s4)">
     ${[['把小程序分享给好友','微信好友或群聊'],['好友微信登录','好友领 500 新人积分'],['好友完成首条视频','你得 500 积分，自动到账']].map(([a,b],i)=>`<div class="step" style="align-items:center"><span class="n ${i===2?'now':''}">${i+1}</span><div class="grow"><div style="font-size:14px;font-weight:600">${a}</div><div class="t-mic">${b}</div></div></div>`).join('')}
   </div>
   <div class="lbl mt20">邀请记录</div>
   <div class="list">${[['王**','09-19 已出片','+500','ok'],['李**','09-18 已登录，未出片','待出片','q'],['陈**','09-18 已登录，未出片','待出片','q']].map(([n,d,v,s])=>`
-    <div class="li" style="padding:12px 16px"><span class="ic" style="border-radius:50%">${ic('user')}</span><div class="grow"><div style="font-size:14px">${n}</div><div class="t-mic">${d}</div></div><span class="badge ${s==='ok'?'b-ok':'b-q'}">${v}</span></div>`).join('')}</div>
+    <div class="li" style="padding:var(--s3) var(--s4)"><span class="ic" style="border-radius:50%">${ic('user')}</span><div class="grow"><div style="font-size:14px">${n}</div><div class="t-mic">${d}</div></div><span class="badge ${s==='ok'?'b-ok':'b-q'}">${v}</span></div>`).join('')}</div>
   </div>
   <div class="footer"><div class="row2"><span class="btn btn-s" style="width:132px">生成海报</span><span class="btn btn-p grow">${ic('wechat')}分享给好友</span></div></div>`);
 
 S['15b'] = () => screen(`${nav('联系客服')}<div class="body">
-  <div class="card pad flex gap12" style="padding:16px"><span class="ill" style="width:48px;height:48px;border-radius:16px;margin:0">${ic('headset')}</span>
+  <div class="card pad flex gap12" style="padding:var(--s4)"><span class="ill" style="width:48px;height:48px;border-radius:var(--r-lg);margin:0">${ic('headset')}</span>
     <div class="grow"><div class="h-card">在线客服</div><div class="t-mic mt4">每天 9:00–22:00 · 平均 2 分钟回复</div></div><span class="btn sm btn-p">咨询</span></div>
   <div class="lbl mt20">常见问题</div>
   <div class="list">${['生成失败了，积分会退吗？','赠送积分和充值积分有什么区别？','视频可以商用吗？会不会侵权？','为什么生成的商品和原图不一样？','积分有有效期吗？','如何开具发票？'].map((q,i)=>`
     <div class="li"><span class="grow" style="font-size:14.5px">${q}</span>${ic(i===0?'down':'chev','chev')}</div>
-    ${i===0?`<div style="padding:0 16px 14px;margin-top:-6px" class="t-cap">会。任何原因导致的生成失败，本次消耗的积分都会在 1 分钟内原路返还到对应积分池，可在「积分明细」查看。</div>`:''}`).join('')}</div>
+    ${i===0?`<div style="padding:0 var(--s4) var(--s3);margin-top:-6px" class="t-cap">会。任何原因导致的生成失败，本次消耗的积分都会在 1 分钟内原路返还到对应积分池，可在「积分明细」查看。</div>`:''}`).join('')}</div>
   <div class="t-mic center mt16">没找到答案？<span style="color:var(--brand-strong);font-weight:600">提交反馈 ›</span></div>
   </div>`);
 
@@ -666,14 +713,14 @@ S['16'] = () => screen(`${nav('充值中心', true, `<span style="position:absol
     <div class="flex between mt4" style="align-items:flex-end"><span class="num" style="font-size:40px;line-height:1.05">1,190</span><span class="t-mic">≈ 4 条 15 秒</span></div>
     <div class="flex gap12 mt8 t-mic"><span>赠送 <b class="num" style="color:var(--ink)">500</b></span><span>充值 <b class="num" style="color:var(--ink)">690</b></span><span>优先扣赠送</span></div></div>
   <div class="lbl mt16">选择充值档位</div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--s2)">
     ${[['首充礼包','¥10','1,000','≈3 条','首次专享',1],['轻量包','¥30','3,000','≈11 条','月出 5 条内',0],['常用包','¥50','5,000','≈18 条','月出 8–20 条',0],['超值包','¥120','12,000','≈44 条','量大更省',0]].map(([n,p,a,c,t,on])=>`
-    <div class="card wh" style="padding:14px;${on?'box-shadow:0 0 0 2px var(--brand-strong);border-color:transparent':''}">
+    <div class="card wh" style="padding:var(--s3);${on?'box-shadow:0 0 0 2px var(--brand-strong);border-color:transparent':''}">
       <div class="flex between"><span style="font-size:13px;font-weight:600">${n}</span>${on?`<span class="badge b-g">${t}</span>`:`<span class="t-mic">${t}</span>`}</div>
       <div class="num mt8" style="font-size:28px;line-height:1">${p}</div>
       <div class="t-mic mt8">到账 <b class="num" style="color:var(--ink)">${a}</b> 积分 · ${c} 15 秒</div></div>`).join('')}
   </div>
-  <div class="card pad mt12" style="padding:12px 14px">
+  <div class="card pad mt12" style="padding:var(--s3) var(--s3)">
     <div class="flex between"><span style="font-size:13px;font-weight:600">计费规则</span><span class="t-mic">优惠价 18 积分/秒</span></div>
     <div class="mt8">${TPL.map(t=>`<div class="kv" style="padding:3px 0;font-size:13px"><span>${t.s} 秒</span><span><span class="strike num">${fmt(t.o)}</span>&nbsp; <b class="num price">${fmt(t.p)}</b></span></div>`).join('')}</div>
   </div></div>
@@ -683,7 +730,7 @@ S['16a'] = () => screen(`${nav('支付结果')}<div class="body center" style="p
   <div class="ill" style="background:var(--ok-soft);color:var(--ok-icon)">${ic('check')}</div>
   <div class="h-page mt24">充值成功</div>
   <div class="mt12"><span class="num" style="font-size:32px;color:var(--ok)">+1,000</span> <span class="t-cap">积分已到账</span></div>
-  <div class="card wh mt32" style="padding:6px 16px;text-align:left">
+  <div class="card wh mt32" style="padding:var(--s15) var(--s4);text-align:left">
     <div class="kv"><span>支付金额</span><b class="num">¥10.00</b></div>
     <div class="kv"><span>当前余额</span><b class="num">2,190</b></div>
     <div class="kv"><span>其中充值池</span><b class="num">1,690</b></div>
@@ -695,7 +742,7 @@ S['16b'] = () => screen(`${nav('支付结果')}<div class="body center" style="p
   <div class="ill" style="background:var(--warn-soft);color:var(--warn)">${ic('info')}</div>
   <div class="h-page mt24">支付未完成</div>
   <div class="t-cap mt12">你已取消支付，<b style="color:var(--ink)">未产生任何扣款</b>。<br>刚才选的模板已为你保留。</div>
-  <div class="card wh mt32" style="padding:6px 16px;text-align:left">
+  <div class="card wh mt32" style="padding:var(--s15) var(--s4);text-align:left">
     <div class="kv"><span>档位</span><b>首充礼包 ¥10 · 1,000 积分</b></div>
     <div class="kv"><span>首充优惠</span><b>仍可使用</b></div>
   </div></div>
@@ -706,7 +753,7 @@ S['17'] = () => screen(`${nav('积分明细')}<div class="body">
   <div class="flex gap12 mt12 t-mic"><span>9 月 · 获得 <b class="num" style="color:var(--ink)">+2,432</b></span><span>消耗 <b class="num" style="color:var(--ink)">−1,242</b></span></div>
   <div class="list mt12">
     ${[['gift','新人首次登录赠送','09-20 17:05 · 赠送池','+500',1],['video','创作消耗 · 15 秒模板','09-19 20:18 · 余额 690','−270',0],['video','创作消耗 · 15 秒模板','09-19 18:42 · 余额 960','−270',0],['video','创作消耗 · 15 秒模板','09-19 15:40 · 余额 1,230','−270',0],['invite','邀请好友奖励 · 好友出片','09-19 12:30 · 赠送池','+500',1],['refresh','生成失败自动返还 · 24 秒','09-18 11:07 · 余额 1,000','+432',1],['video','创作消耗 · 24 秒模板','09-18 10:55 · 余额 568','−432',0],['wallet','充值到账 · ¥10','09-17 09:20 · 充值池','+1,000',1]].map(([i,a,b,v,up])=>`
-    <div class="li" style="padding:12px 16px"><span class="ic">${ic(i)}</span><div class="grow"><div style="font-size:14px">${a}</div><div class="t-mic num">${b}</div></div><b class="num" style="font-size:16px;${up?'color:var(--ok)':''}">${v}</b></div>`).join('')}
+    <div class="li" style="padding:var(--s3) var(--s4)"><span class="ic">${ic(i)}</span><div class="grow"><div style="font-size:14px">${a}</div><div class="t-mic num">${b}</div></div><b class="num" style="font-size:16px;${up?'color:var(--ok)':''}">${v}</b></div>`).join('')}
   </div>
   <div class="t-mic center mt12">已显示全部 8 条记录</div></div>`);
 
@@ -727,10 +774,10 @@ S['21'] = () => screen(`${nav('协议与规则')}<div class="body">
     <div class="li"><span class="grow">${a}</span><span class="t-mic">${b}</span>${ic('chev','chev')}</div>`).join('')}</div>
   <div class="t-mic center mt16">ICP 备案号 粤ICP备 2025000000 号</div></div>`);
 
-S['21a'] = () => screen(`${nav('计费与积分规则')}<div class="body" style="padding:8px 24px 0">
+S['21a'] = () => screen(`${nav('计费与积分规则')}<div class="body" style="padding:var(--s2) var(--s6) 0">
   <div class="h-page">计费与积分规则</div>
   <div class="t-mic mt8">更新于 2025-09-01 · 生效于 2025-09-08</div>
-  <div class="card pad mt16" style="padding:12px 14px"><div class="t-mic" style="font-weight:600;color:var(--char)">本页要点</div>
+  <div class="card pad mt16" style="padding:var(--s3) var(--s3)"><div class="t-mic" style="font-weight:600;color:var(--char)">本页要点</div>
     <div class="t-cap mt4">1 元 = 100 积分；按生成时长计费 18 积分/秒；先扣赠送、后扣充值；失败全额返还。</div></div>
   ${[['一、积分获取','充值积分通过微信支付购买，1 元 = 100 积分，即时到账。赠送积分通过新人登录、邀请好友等活动获得。'],['二、消耗规则','每次生成按视频时长计费，优惠价 18 积分/秒，以确认弹框显示的数额为准。消耗时优先扣除赠送积分，不足部分再扣除充值积分。'],['三、失败返还','因任何原因导致生成失败，本次消耗的积分将在 1 分钟内原路返还至对应积分池。'],['四、有效期','充值积分长期有效；赠送积分自获得之日起 90 天内有效，过期自动清零。']].map(([h,t])=>`
     <div class="h-card mt20" style="font-family:var(--serif);font-weight:500;font-size:17px">${h}</div><div class="t-body mt8" style="font-size:14.5px">${t}</div>`).join('')}
@@ -745,12 +792,12 @@ S['22'] = () => screen(`${nav('模板案例')}<div class="body">
     ['纸','#e3ddcd','爆款钩子','开学好物 · 口播带货','前 3 秒用「开学必备」提问开场，介绍 85 克加厚、抑菌温和的便携湿厕纸。'],
     ['鞋','#e8dcc3','AI 生成图片','拖鞋带货 · 口播带货','主播直播间推荐厚底防滑拖鞋，通过试穿、防滑与弹性测试完成种草。'],
     ['带','#e6d6cd','爆款钩子','七夕礼物 · 口播带货','百家姓扣头男士皮带礼盒，深情旁白 + 浪漫 BGM，送男友的走心礼物。'],
-  ].map(([c,t,k,cat,d])=>`<div class="flex gap12" style="padding:12px 0;border-bottom:1px solid var(--bw);align-items:flex-start">
+  ].map(([c,t,k,cat,d])=>`<div class="flex gap12" style="padding:var(--s3) 0;border-bottom:1px solid var(--bw);align-items:flex-start">
       ${th(c,t,84,112,{size:.34,play:false,br:'<span class="dur">0:15</span>'})}
-      <div class="grow"><div class="flex gap8"><span class="badge b-g">${k}</span></div><div style="font-size:14.5px;font-weight:600;margin-top:6px">${cat}</div><div class="t-mic mt4 cl2" style="-webkit-line-clamp:3">${d}</div></div></div>`).join('')}</div>
+      <div class="grow"><div class="flex gap8"><span class="badge b-g">${k}</span></div><div style="font-size:14.5px;font-weight:600;margin-top:var(--s15)">${cat}</div><div class="t-mic mt4 cl2" style="-webkit-line-clamp:3">${d}</div></div></div>`).join('')}</div>
   </div>`);
 
-S['23'] = () => screen(previewPage(`<div style="position:absolute;left:0;right:0;top:128px;display:flex;flex-direction:column;align-items:center;gap:12px;z-index:12">
+S['23'] = () => screen(previewPage(`<div style="position:absolute;left:0;right:0;top:128px;display:flex;flex-direction:column;align-items:center;gap:var(--s3);z-index:12">
   <span class="toast"><span style="color:#a9bf8e">${ic('check')}</span>已保存到手机相册</span>
   <span class="toast">${ic('copy')}邀请链接已复制</span>
   <span class="toast"><span style="color:#e4b86a">${ic('info')}</span>图片较大，已自动压缩</span>
@@ -766,11 +813,11 @@ S['23a'] = () => screen(`${nav('选择参考视频')}<div class="body center" st
 
 S['23b'] = () => screen(`${nav('选择参考视频')}<div class="body">
   ${productBar()}
-  <div class="sk mt12" style="height:42px;border-radius:12px"></div>
-  <div class="flex gap8 mt12">${[60,72,56,80].map(w=>`<div class="sk" style="width:${w}px;height:26px;border-radius:13px"></div>`).join('')}</div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px">${[0,1,2,3].map(()=>`
-    <div class="card wh" style="overflow:hidden;border-radius:14px"><div class="sk" style="height:190px;border-radius:0"></div>
-      <div style="padding:12px"><div class="sk" style="height:12px"></div><div class="sk mt8" style="height:12px;width:70%"></div><div class="sk mt12" style="height:22px;width:50%"></div></div></div>`).join('')}</div>
+  <div class="sk mt12" style="height:42px;border-radius:var(--r-md)"></div>
+  <div class="flex gap8 mt12">${[60,72,56,80].map(w=>`<div class="sk" style="width:${w}px;height:26px;border-radius:var(--r-pill)"></div>`).join('')}</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--s2);margin-top:var(--s3)">${[0,1,2,3].map(()=>`
+    <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)"><div class="sk" style="height:190px;border-radius:0"></div>
+      <div style="padding:var(--s3)"><div class="sk" style="height:12px"></div><div class="sk mt8" style="height:12px;width:70%"></div><div class="sk mt12" style="height:22px;width:50%"></div></div></div>`).join('')}</div>
   </div>`);
 
 /* ===================== board layout ===================== */

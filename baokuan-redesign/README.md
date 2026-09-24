@@ -1,12 +1,16 @@
 # 爆款视频 AI 生成 · Claude 设计语言重设计
 
-把 [原型画板](https://baokuan-deliverables.app.workbuddy.host/figma-board.html)（微信小程序，23 屏，黑紫主题）按 Claude 设计语言重做，并补齐缺失的页面和状态，共 41 屏。
+把 [原型画板](https://baokuan-deliverables.app.workbuddy.host/figma-board.html)（微信小程序，23 屏，黑紫主题）按 Claude 设计语言重做，并补齐缺失的页面和状态，共 41 屏。设计流程遵循仓库 `skills/ui-designer` 技能：先定 Token，再拼组件，DESIGN.md 是唯一事实来源，HTML 是可视化证明。
 
 | 文件 | 内容 |
 | --- | --- |
 | `ANALYSIS.md` | 原型分析：流程图、断点与信息缺失问题清单、补充清单、逐屏改动 |
-| `DESIGN.md` | 本产品的设计规范：色彩 Token、字体、组件、布局、对比度依据 |
-| `index.html` | 41 屏画板，单文件、无依赖，直接用浏览器打开 |
+| `DESIGN.md` | 设计规范（9 节）：主题、Token、字体层级、组件全状态、布局、层级、护栏、响应式、智能体提示 |
+| `index.html` | 41 屏设计画板，单文件、无依赖，所有页面与 Token 的唯一源 |
+| `build.mjs` | 从 `index.html` 生成 `export/` 的脚本（Node ≥ 18，无第三方依赖） |
+| `export/index.html` | HTML 导出目录页：41 屏缩略预览，点击进入单页 |
+| `export/screens/*.html` | 41 个独立 HTML 页面，每屏一个文件，可在浏览器或手机直接打开 |
+| `export/preview.html` | Token 与组件目录：色板与对比度、字体层级、间距 / 圆角比例尺、按钮与输入框全状态、徽标、卡片、面板 |
 
 ## 屏幕构成
 
@@ -16,12 +20,21 @@
 
 画板分四组：A 主流程、A 作品、B 我的与账户、C 隐蔽入口与全局状态。
 
-## 预览
+## 预览与导出
 
 ```bash
-# 任选其一
+# 画板 / 导出目录 / 组件目录，任选其一直接打开
 open baokuan-redesign/index.html
-python3 -m http.server -d baokuan-redesign 8000   # 访问 http://localhost:8000
+open baokuan-redesign/export/index.html
+open baokuan-redesign/export/preview.html
+
+# 或起一个静态服务
+python3 -m http.server -d baokuan-redesign 8000   # http://localhost:8000/export/
+
+# 修改 index.html 后重新生成 export/
+node baokuan-redesign/build.mjs
 ```
+
+独立页面在 480px 以下视口自动铺满屏幕（适合手机直接打开或嵌入 iframe），桌面视口居中显示手机框并附上一页 / 下一页导航。
 
 画板需要中文字体（PingFang SC / Noto Sans SC / Noto Serif SC）。Linux 下可安装 `fonts-noto-cjk`。

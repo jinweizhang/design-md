@@ -1,0 +1,2003 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>爆款视频 AI 生成 · 41 屏 HTML 导出</title>
+<style>
+/* =========================================================
+   1. Tokens — 唯一事实来源，所有组件由此派生（对应 DESIGN.md §2–§6）
+   ========================================================= */
+:root{
+  /* 表面 */
+  --pa:#f5f4ed; --iv:#faf9f5; --wh:#ffffff; --sand:#e8e6dc; --sand2:#dedbcf;
+  --ink:#141413; --ink2:#30302e;
+  /* 文字 */
+  --char:#4d4c48; --olive:#5e5d59; --stone:#87867f; --silver:#b0aea5;
+  /* 描边 */
+  --bc:#f0eee6; --bw:#e8e6dc; --ring:#d1cfc5; --ring-deep:#c2c0b6;
+  /* 品牌 */
+  --brand:#c96442; --brand-strong:#ae5230; --brand-pressed:#963f22; --brand-ink:#9a4526;
+  --brand-soft:#f3e3da; --brand-line:#ecd3c6; --coral:#d97757;
+  /* 语义 */
+  --ok:#56693f; --ok-icon:#6b7d55; --ok-soft:#e6e9dc; --ok-line:#d7ddc9;
+  --err:#b53333; --err-soft:#f5e2dd;
+  --warn:#83570f; --warn-soft:#f2e8d3;
+  --focus:#3898ec; --focus-ring:0 0 0 3px rgba(56,152,236,.35);
+  /* 遮罩 */
+  --scrim:rgba(20,20,19,.42); --ink-72:rgba(20,20,19,.72); --ink-62:rgba(20,20,19,.62); --iv-88:rgba(250,249,245,.88);
+  /* 字体 */
+  --serif:"Noto Serif SC","Songti SC","Noto Serif CJK SC",Georgia,serif;
+  --sans:-apple-system,"PingFang SC","Noto Sans SC","Noto Sans CJK SC",system-ui,sans-serif;
+  --mono:Georgia,"Noto Serif SC",serif;
+  /* 字阶（px） */
+  --fs-11:11px; --fs-12:12px; --fs-13:13px; --fs-14:14px; --fs-15:15px; --fs-16:16px; --fs-17:17px;
+  --fs-20:20px; --fs-28:28px; --fs-36:36px;
+  --ls-tight:-.01em; --ls-label:.12px;
+  /* 间距比例尺：4 基准 */
+  --s05:2px; --s1:4px; --s15:6px; --s2:8px; --s3:12px; --s4:16px; --s5:20px; --s6:24px; --s8:32px; --s12:48px;
+  /* 圆角比例尺 */
+  --r-2xs:3px; --r-xs:6px; --r-sm:8px; --r-md:12px; --r-lg:16px; --r-xl:20px; --r-2xl:24px; --r-3xl:32px; --r-pill:999px;
+  /* 层级：环形阴影优先，投影只给悬浮层 */
+  --ring-1:0 0 0 1px var(--bc); --ring-2:0 0 0 1px var(--ring); --ring-3:0 0 0 1px var(--bw);
+  --sh-sm:0 1px 2px rgba(20,20,19,.08); --sh-md:rgba(20,20,19,.08) 0 8px 32px; --sh-lg:rgba(20,20,19,.12) 0 8px 24px;
+  /* 动效 */
+  --dur-1:150ms; --dur-2:220ms; --ease:cubic-bezier(.2,.7,.2,1);
+  /* 尺寸 */
+  --hit:44px; --btn-lg:50px; --btn-md:44px; --btn-sm:36px; --icon:20px; --icon-sm:16px; --icon-xs:14px;
+  --w:390px; --h:812px; --sb:47px; --nav:44px; --tabbar:84px; --safe-b:34px; --gutter:20px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-smoothing:antialiased}
+.i{width:var(--icon);height:var(--icon);fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.i.f{fill:currentColor;stroke:none}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* ---------------- board ---------------- */
+.board{padding:56px 64px 96px;max-width:1880px;margin:0 auto}
+.b-head h1{font-family:var(--serif);font-weight:500;font-size:44px;line-height:1.15}
+.b-head p{color:var(--olive);font-size:var(--fs-15);line-height:1.6;margin-top:var(--s3);max-width:92ch}
+.legend{display:flex;gap:var(--s4);margin-top:var(--s5);font-size:var(--fs-13);color:var(--olive)}
+.legend span{display:inline-flex;align-items:center;gap:var(--s1)}
+.sec{margin-top:64px}
+.sec h2{font-family:var(--serif);font-weight:500;font-size:26px;padding-bottom:var(--s3);border-bottom:1px solid var(--ring)}
+.sec h2 small{font-family:var(--sans);font-size:var(--fs-13);color:var(--olive);font-weight:400;margin-left:var(--s3)}
+.grid{display:flex;flex-wrap:wrap;gap:var(--s12) 40px;margin-top:28px}
+.fig{width:var(--w)}
+.cap{display:flex;align-items:baseline;gap:var(--s2);margin-bottom:var(--s3)}
+.cap .no{font-size:var(--fs-12);font-weight:600;color:var(--ink);background:var(--wh);box-shadow:var(--ring-2);border-radius:var(--r-xs);padding:1px 7px}
+.cap .nm{font-size:var(--fs-14);font-weight:600}
+.cap .kd{font-size:var(--fs-12);color:var(--olive)}
+.tag{font-size:var(--fs-11);font-weight:600;letter-spacing:var(--ls-label);border-radius:var(--r-pill);padding:var(--s05) var(--s2);margin-left:auto;white-space:nowrap}
+.tag.re{background:var(--sand);color:var(--char)}
+.tag.np{background:var(--brand-strong);color:var(--iv)}
+.tag.ns{background:var(--ink);color:var(--iv)}
+.note{font-size:12.5px;line-height:1.55;color:var(--olive);margin-top:var(--s3);min-height:38px}
+
+/* ---------------- phone frame ---------------- */
+.scr{position:relative;width:var(--w);height:var(--h);background:var(--pa);border-radius:40px;overflow:hidden;
+     box-shadow:0 0 0 1px rgba(20,20,19,.08),rgba(0,0,0,.08) 0 12px 40px;display:flex;flex-direction:column}
+.scr.dark{background:var(--ink);color:var(--iv)}
+.sb{height:var(--sb);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 30px 0 34px;font-size:var(--fs-15);font-weight:600}
+.sb .r{display:flex;gap:var(--s15);align-items:center}
+.nav{height:var(--nav);flex-shrink:0;display:flex;align-items:center;padding:0 110px 0 var(--s3);position:relative}
+.nav .bk{width:36px;height:36px;display:grid;place-items:center;border-radius:var(--r-md);color:var(--ink)}
+.dark .nav .bk{color:var(--iv)}
+.nav .tt{font-size:var(--fs-17);font-weight:600;margin-left:var(--s05)}
+.nav .tt.pl{margin-left:var(--s3)}
+.capsule{position:absolute;right:var(--s2);top:6px;width:87px;height:32px;border-radius:var(--r-pill);border:1px solid var(--bw);
+         background:rgba(255,255,255,.72);display:flex;align-items:center}
+.capsule .d{flex:1;display:flex;justify-content:center;gap:3px}
+.capsule .d i{width:4px;height:4px;border-radius:50%;background:var(--ink)}
+.capsule .sep{width:1px;height:18px;background:var(--bw)}
+.capsule .o{flex:1;display:grid;place-items:center}
+.capsule .o i{width:16px;height:16px;border-radius:50%;border:1.6px solid var(--ink);display:grid;place-items:center}
+.capsule .o i::after{content:"";width:6px;height:6px;border-radius:50%;background:var(--ink)}
+.dark .capsule{background:rgba(20,20,19,.5);border-color:rgba(250,249,245,.18)}
+.dark .capsule .d i,.dark .capsule .o i::after{background:var(--iv)}
+.dark .capsule .o i{border-color:var(--iv)}
+.dark .capsule .sep{background:rgba(250,249,245,.18)}
+.body{flex:1;overflow:hidden;padding:var(--s1) var(--gutter) 0;position:relative}
+.body.np{padding:0}
+.hi{position:absolute;left:50%;bottom:var(--s2);width:134px;height:5px;border-radius:var(--r-2xs);background:var(--ink);transform:translateX(-50%);z-index:30}
+.dark .hi,.hi.lt{background:var(--iv)}
+.tab{height:var(--tabbar);flex-shrink:0;background:var(--iv);border-top:1px solid var(--bc);display:flex;padding-top:7px}
+.tab a{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:var(--fs-11);letter-spacing:var(--ls-label);color:var(--olive);text-decoration:none;border-radius:var(--r-md);transition:color var(--dur-1) var(--ease)}
+.tab a.on{color:var(--brand-strong);font-weight:600}
+.tab .i{width:24px;height:24px}
+.footer{flex-shrink:0;padding:var(--s3) var(--gutter) var(--safe-b);background:var(--pa)}
+.footer.dock{background:var(--iv);border-top:1px solid var(--bc)}
+
+/* ---------------- type ---------------- */
+.h-page{font-family:var(--serif);font-weight:500;font-size:var(--fs-28);line-height:1.2;letter-spacing:var(--ls-tight)}
+.h-sec{font-family:var(--serif);font-weight:500;font-size:var(--fs-20);line-height:1.25}
+.h-card{font-size:var(--fs-16);font-weight:600;line-height:1.35}
+.t-body{font-size:var(--fs-15);line-height:1.6;color:var(--char)}
+.t-cap{font-size:var(--fs-13);line-height:1.45;color:var(--olive)}
+.t-mic{font-size:var(--fs-12);line-height:1.4;color:var(--olive);letter-spacing:var(--ls-label)}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.lbl{font-size:var(--fs-13);font-weight:600;color:var(--char);margin:18px 0 var(--s2);display:flex;justify-content:space-between;align-items:baseline}
+.lbl .t-mic{font-weight:400}
+.req{color:var(--brand-strong)}
+.strike{text-decoration:line-through;color:var(--stone)}
+.price{color:var(--brand-strong);font-weight:600}
+
+/* ---------------- components ---------------- */
+.card{background:var(--iv);border:1px solid var(--bc);border-radius:var(--r-lg)}
+.card.wh{background:var(--wh)}
+.pad{padding:var(--s4)}
+/* 按钮：默认 / 按下 / 禁用 / 聚焦 */
+.btn{height:var(--btn-lg);border-radius:var(--r-md);border:0;font:600 var(--fs-16)/1 var(--sans);display:flex;align-items:center;justify-content:center;gap:var(--s2);width:100%;cursor:pointer;user-select:none;
+     transition:background-color var(--dur-1) var(--ease),box-shadow var(--dur-1) var(--ease),transform var(--dur-1) var(--ease)}
+.btn.sm{height:var(--btn-sm);border-radius:var(--r-sm);font-size:var(--fs-14);width:auto;padding:0 var(--s3)}
+.btn.md{height:var(--btn-md);border-radius:var(--r-md);font-size:var(--fs-15)}
+.btn-p{background:var(--brand-strong);color:var(--iv)}
+.btn-p:active,.btn-p.is-pressed{background:var(--brand-pressed)}
+.btn-s{background:var(--sand);color:var(--char);box-shadow:var(--ring-2)}
+.btn-s:active,.btn-s.is-pressed{background:var(--sand2);box-shadow:0 0 0 1px var(--ring-deep)}
+.btn-w{background:var(--wh);color:var(--ink);box-shadow:var(--ring-3)}
+.btn-w:active,.btn-w.is-pressed{background:var(--sand)}
+.btn-d{background:var(--ink);color:var(--iv)}
+.btn-d:active,.btn-d.is-pressed{background:var(--ink2)}
+.btn-g{background:none;color:var(--olive);height:40px;font-weight:500;font-size:var(--fs-14)}
+.btn-g:active,.btn-g.is-pressed{color:var(--ink)}
+.btn-x,.btn.is-disabled{background:var(--sand);color:var(--stone);box-shadow:none;pointer-events:none}
+.btn-danger{background:var(--err);color:var(--iv)}
+.btn:active:not(.btn-g){transform:translateY(1px)}
+.btn:focus-visible,.chip:focus-visible,.li:focus-visible,.tab a:focus-visible,.field:focus-visible,.seg a:focus-visible{outline:none;box-shadow:var(--focus-ring)}
+.row2{display:flex;gap:var(--s3)}
+.chip{display:inline-flex;align-items:center;gap:var(--s1);height:30px;padding:0 var(--s3);border-radius:var(--r-pill);font-size:var(--fs-13);background:var(--wh);color:var(--char);box-shadow:var(--ring-3);transition:background-color var(--dur-1) var(--ease)}
+.chip:active{background:var(--sand)}
+.chip.on{background:var(--ink);color:var(--iv);box-shadow:none}
+.chip.sm{height:26px;padding:0 var(--s3);font-size:var(--fs-12)}
+.chips{display:flex;flex-wrap:wrap;gap:var(--s2)}
+.badge{display:inline-flex;align-items:center;gap:var(--s1);height:22px;padding:0 var(--s2);border-radius:var(--r-pill);font-size:11.5px;font-weight:600;letter-spacing:var(--ls-label);white-space:nowrap}
+.badge .i{width:13px;height:13px;stroke-width:2}
+.b-q{background:var(--warn-soft);color:var(--warn)}
+.b-g{background:var(--brand-soft);color:var(--brand-ink)}
+.b-ok{background:var(--ok-soft);color:var(--ok)}
+.b-err{background:var(--err-soft);color:var(--err)}
+.b-off{background:var(--sand);color:var(--olive)}
+.b-ink{background:var(--ink-72);color:var(--iv)}
+/* 输入框：默认 / 占位 / 聚焦 / 错误 / 禁用 */
+.field{background:var(--wh);border:1px solid var(--bw);border-radius:var(--r-md);padding:var(--s3) var(--s3);font-size:var(--fs-15);line-height:1.5;transition:border-color var(--dur-1) var(--ease),box-shadow var(--dur-1) var(--ease)}
+.field.ph{color:var(--stone)}
+.field.focus{border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
+.field.err{border-color:var(--err);box-shadow:0 0 0 3px var(--err-soft)}
+.field.dis{background:var(--sand);color:var(--stone);border-color:transparent}
+.errtxt{color:var(--err);font-size:12.5px;margin-top:var(--s15);display:flex;gap:var(--s1);align-items:center}
+.errtxt .i{width:var(--icon-xs);height:var(--icon-xs)}
+.list{background:var(--iv);border:1px solid var(--bc);border-radius:var(--r-lg);overflow:hidden}
+.li{display:flex;align-items:center;gap:var(--s3);padding:15px var(--s4);border-top:1px solid var(--bc);font-size:var(--fs-15);min-height:52px;transition:background-color var(--dur-1) var(--ease)}
+.li:first-child{border-top:0}
+.li:active{background:var(--pa)}
+.li .grow{flex:1;min-width:0}
+.li .chev{color:var(--stone)}
+.li .ic{width:32px;height:32px;border-radius:10px;background:var(--sand);display:grid;place-items:center;color:var(--char)}
+.li .ic .i{width:18px;height:18px}
+.hr{height:1px;background:var(--bc);margin:var(--s3) 0}
+.bar{height:6px;border-radius:var(--r-2xs);background:var(--sand);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:var(--r-2xs);background:var(--brand);transition:width var(--dur-2) var(--ease)}
+.kv{display:flex;justify-content:space-between;align-items:baseline;font-size:var(--fs-14);padding:var(--s15) 0;color:var(--char)}
+.kv b{font-weight:600;color:var(--ink)}
+.center{text-align:center}
+.mt4{margin-top:var(--s1)}.mt8{margin-top:var(--s2)}.mt12{margin-top:var(--s3)}.mt16{margin-top:var(--s4)}.mt20{margin-top:var(--s5)}.mt24{margin-top:var(--s6)}.mt32{margin-top:var(--s8)}
+.flex{display:flex;align-items:center}.gap8{gap:var(--s2)}.gap12{gap:var(--s3)}.between{justify-content:space-between}.grow{flex:1;min-width:0}
+.ell{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cl2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+/* thumbnails: product monogram on a warm tint, with an organic off-center shape */
+.th{position:relative;border-radius:var(--r-md);display:grid;place-items:center;overflow:hidden;flex-shrink:0}
+.th::before{content:"";position:absolute;right:-22%;bottom:-26%;width:82%;aspect-ratio:1;border-radius:50%;background:rgba(20,20,19,.07)}
+.th .mg{position:relative;font-family:var(--serif);font-weight:500;color:rgba(20,20,19,.55)}
+.th .tl{position:absolute;left:var(--s2);top:var(--s2)}
+.th .tr{position:absolute;right:var(--s2);top:var(--s2)}
+.th .bl{position:absolute;left:var(--s2);bottom:var(--s2)}
+.th .br{position:absolute;right:var(--s2);bottom:var(--s2)}
+.th .pl{width:44px;height:44px;border-radius:50%;background:var(--iv-88);display:grid;place-items:center;color:var(--ink)}
+.th .pl .i{width:18px;height:18px;margin-left:var(--s05)}
+.dur{font-size:var(--fs-11);font-weight:600;letter-spacing:var(--ls-label);color:var(--iv);background:var(--ink-62);border-radius:var(--r-xs);padding:var(--s05) var(--s15);font-variant-numeric:tabular-nums}
+
+/* overlays */
+.scrim{position:absolute;inset:0;background:var(--scrim);z-index:10}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:var(--iv);border-radius:var(--r-2xl) var(--r-2xl) 0 0;z-index:11;padding:var(--s2) var(--gutter) var(--safe-b)}
+.grab{width:36px;height:5px;border-radius:var(--r-2xs);background:var(--ring);margin:0 auto var(--s3)}
+.sheet .sh-h{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:var(--s15)}
+.x{width:32px;height:32px;border-radius:50%;background:var(--sand);display:grid;place-items:center;color:var(--char)}
+.x .i{width:var(--icon-sm);height:var(--icon-sm)}
+.dlg{position:absolute;left:var(--s6);right:var(--s6);top:50%;transform:translateY(-50%);background:var(--iv);border-radius:var(--r-2xl);z-index:11;padding:var(--s6);box-shadow:var(--sh-md)}
+.dlg .h-sec{margin-bottom:var(--s15)}
+.toast{display:inline-flex;align-items:center;gap:var(--s2);background:var(--ink);color:var(--iv);border-radius:var(--r-md);padding:var(--s3) var(--s4);font-size:var(--fs-14);line-height:1.4;box-shadow:var(--sh-lg)}
+.toast .i{width:18px;height:18px}
+.ill{width:96px;height:96px;border-radius:var(--r-3xl);background:var(--sand);display:grid;place-items:center;margin:0 auto;color:var(--brand)}
+.ill .i{width:40px;height:40px;stroke-width:1.5}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--ring);display:inline-block}
+.dot.on{background:var(--brand)}
+.check{width:20px;height:20px;border-radius:50%;border:1.6px solid var(--ring);display:grid;place-items:center;background:var(--wh);flex-shrink:0;transition:background-color var(--dur-1) var(--ease)}
+.check.on{background:var(--brand-strong);border-color:var(--brand-strong);color:var(--iv)}
+.check .i{width:12px;height:12px;stroke-width:2.6}
+.sk{background:linear-gradient(90deg,#ebe8de,#f2f0e8,#ebe8de);border-radius:var(--r-sm)}
+.step{display:flex;gap:var(--s3);align-items:flex-start;padding:var(--s3) 0}
+.step .n{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:var(--fs-12);font-weight:600;background:var(--sand);color:var(--char);flex-shrink:0}
+.step .n.done{background:var(--ok-soft);color:var(--ok)}
+.step .n.now{background:var(--brand-strong);color:var(--iv)}
+.step .n .i{width:var(--icon-xs);height:var(--icon-xs);stroke-width:2.4}
+.seg{display:flex;background:var(--sand);border-radius:var(--r-md);padding:3px}
+.seg a{flex:1;text-align:center;font-size:var(--fs-14);padding:7px 0;border-radius:9px;color:var(--olive);transition:background-color var(--dur-1) var(--ease)}
+.seg a.on{background:var(--wh);color:var(--ink);font-weight:600;box-shadow:var(--sh-sm)}
+.tip{position:absolute;background:var(--ink);color:var(--iv);font-size:var(--fs-13);border-radius:10px;padding:var(--s2) var(--s3);z-index:5;white-space:nowrap}
+.tip::after{content:"";position:absolute;left:18px;bottom:-5px;width:10px;height:10px;background:var(--ink);transform:rotate(45deg)}
+.player{background:var(--ink);position:relative;display:grid;place-items:center}
+.ai-note{font-size:11.5px;color:var(--stone);text-align:center;margin-top:var(--s2)}
+
+.gal{padding:56px 48px 96px;max-width:1680px;margin:0 auto}
+.gal h1{font-family:var(--serif);font-weight:500;font-size:40px;line-height:1.15}
+.gal .lead{color:var(--olive);font-size:var(--fs-15);line-height:1.6;margin-top:var(--s3);max-width:80ch}
+.gal .links{display:flex;gap:var(--s3);margin-top:var(--s5);flex-wrap:wrap}
+.gal .links a{font-size:var(--fs-14);font-weight:600;color:var(--char);text-decoration:none;background:var(--wh);box-shadow:var(--ring-3);border-radius:var(--r-sm);padding:var(--s2) var(--s3)}
+.gal .links a:hover{background:var(--sand)}
+.gal h2{font-family:var(--serif);font-weight:500;font-size:24px;margin-top:56px;padding-bottom:var(--s3);border-bottom:1px solid var(--ring)}
+.gal h2 small{font-family:var(--sans);font-size:var(--fs-13);color:var(--olive);font-weight:400;margin-left:10px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:var(--s8) var(--s6);margin-top:var(--s6)}
+.gc{position:relative;color:inherit}
+.gc .hit{position:absolute;inset:0;z-index:2;border-radius:var(--r-xl)}
+.gc .hit:focus-visible{outline:none;box-shadow:var(--focus-ring)}
+.gc .shot{width:195px;height:406px;overflow:hidden;border-radius:var(--r-xl);box-shadow:0 0 0 1px rgba(20,20,19,.08),rgba(0,0,0,.08) 0 8px 24px;background:var(--pa);position:relative;transition:transform var(--dur-2) var(--ease)}
+.gc:hover .shot{transform:translateY(-3px)}
+.gc .shot .mini{width:390px;height:812px;transform:scale(.5);transform-origin:0 0;pointer-events:none}
+.gc .cap{margin-top:var(--s3)}
+.gc .note{min-height:0}
+</style>
+</head>
+<body>
+<div class="gal">
+  <h1>爆款视频 AI 生成 · 页面导出</h1>
+  <p class="lead">共 41 屏，每屏一个独立 HTML 文件，可直接在浏览器或手机上打开；在 390px 以下视口自动铺满屏幕。点击任意卡片进入该页，页面底部可前后翻页。</p>
+  <div class="links"><a href="preview.html">Token 与组件目录 →</a><a href="../index.html">完整设计画板 →</a><a href="../DESIGN.md">DESIGN.md</a><a href="../ANALYSIS.md">ANALYSIS.md</a></div>
+  
+  <h2>A · 主流程<small>登录 → 上传 → 识别 → 选模板 → 生成 · 17 屏</small></h2>
+  <div class="cards">
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="tt pl"></span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body" style="display:flex;flex-direction:column;padding:0 28px">
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
+    <div style="width:64px;height:64px;border-radius:var(--r-xl);background:var(--brand);display:grid;place-items:center;color:var(--iv)"><svg class="i f" style="width:28px;height:28px;margin-left:3px" viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z"/></svg></div>
+    <div class="h-page mt24" style="font-size:36px;line-height:1.15">上传一张商品图，<br>复刻同款带货视频</div>
+    <div class="t-body mt16" style="color:var(--olive)">新人赠送 500 积分，够做 1 条 15 秒。<br>先免费做一条，看到效果再决定。</div>
+    <div class="flex gap8 mt24"><div class="th" style="width:96px;height:128px;background:#e9dccb">
+     <span class="mg" style="font-size:33px">衬</span>
+     
+     
+     <span class="br"><span class="dur">0:15</span></span>
+   </div><div class="th" style="width:96px;height:128px;background:#e6d6cd">
+     <span class="mg" style="font-size:33px">包</span>
+     
+     
+     <span class="br"><span class="dur">0:15</span></span>
+   </div><div class="th" style="width:96px;height:128px;background:#dfe3d3">
+     <span class="mg" style="font-size:33px">护</span>
+     
+     
+     <span class="br"><span class="dur">0:15</span></span>
+   </div></div>
+    <div class="t-mic mt8">这些都是用户用同款模板做出来的</div>
+  </div>
+  <div style="padding-bottom:42px">
+    <span class="btn btn-p"><svg class="i" viewBox="0 0 24 24"><path d="M9 5C5.4 5 3 7.3 3 10c0 1.6.9 3 2.3 3.9L4.8 16l2.4-1.2c.6.1 1.2.2 1.8.2M15 9.5c3.3 0 6 2.1 6 4.8 0 1.4-.8 2.7-2 3.6l.4 1.8-2.1-1.1c-.7.2-1.5.3-2.3.3-3.3 0-6-2.1-6-4.6s2.7-4.8 6-4.8z"/></svg>微信一键登录</span>
+    <div class="flex gap8 mt16 t-mic" style="justify-content:center"><span class="check" style="width:16px;height:16px"></span>我已阅读并同意 <u style="color:var(--char)">《用户协议》</u>和<u style="color:var(--char)">《隐私政策》</u></div>
+    <div class="center t-mic mt12" style="color:var(--char)">先看看模板案例 ›</div>
+  </div></div><div class="hi "></div></div></div><a class="hit" href="screens/01.html" aria-label="01 首屏 · 微信一键登录"></a></div>
+      <div class="cap"><span class="no">01</span><span class="nm">首屏 · 微信一键登录</span><span class="tag re">重设计</span></div>
+      <p class="note">价值主张改为一句话 + 真实案例缩略图；新人 500 积分直接写明“够做 1 条”。</p>
+    </div>
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="tt pl"></span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body" style="display:flex;flex-direction:column;padding:0 28px">
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
+    <div style="width:64px;height:64px;border-radius:var(--r-xl);background:var(--brand);display:grid;place-items:center;color:var(--iv)"><svg class="i f" style="width:28px;height:28px;margin-left:3px" viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z"/></svg></div>
+    <div class="h-page mt24" style="font-size:36px;line-height:1.15">上传一张商品图，<br>复刻同款带货视频</div>
+    <div class="t-body mt16" style="color:var(--olive)">新人赠送 500 积分，够做 1 条 15 秒。<br>先免费做一条，看到效果再决定。</div>
+    <div class="flex gap8 mt24"><div class="th" style="width:96px;height:128px;background:#e9dccb">
+     <span class="mg" style="font-size:33px">衬</span>
+     
+     
+     <span class="br"><span class="dur">0:15</span></span>
+   </div><div class="th" style="width:96px;height:128px;background:#e6d6cd">
+     <span class="mg" style="font-size:33px">包</span>
+     
+     
+     <span class="br"><span class="dur">0:15</span></span>
+   </div><div class="th" style="width:96px;height:128px;background:#dfe3d3">
+     <span class="mg" style="font-size:33px">护</span>
+     
+     
+     <span class="br"><span class="dur">0:15</span></span>
+   </div></div>
+    <div class="t-mic mt8">这些都是用户用同款模板做出来的</div>
+  </div>
+  <div style="padding-bottom:42px">
+    <span class="btn btn-p"><svg class="i" viewBox="0 0 24 24"><path d="M9 5C5.4 5 3 7.3 3 10c0 1.6.9 3 2.3 3.9L4.8 16l2.4-1.2c.6.1 1.2.2 1.8.2M15 9.5c3.3 0 6 2.1 6 4.8 0 1.4-.8 2.7-2 3.6l.4 1.8-2.1-1.1c-.7.2-1.5.3-2.3.3-3.3 0-6-2.1-6-4.6s2.7-4.8 6-4.8z"/></svg>微信一键登录</span>
+    <div style="position:relative"><div class="tip" style="left:40px;top:-6px">请先阅读并勾选同意协议</div></div><div class="flex gap8 mt16 t-mic" style="justify-content:center;margin-top:44px"><span class="check" style="width:16px;height:16px;border-color:var(--err);box-shadow:0 0 0 3px var(--err-soft)"></span>我已阅读并同意 <u style="color:var(--char)">《用户协议》</u>和<u style="color:var(--char)">《隐私政策》</u></div>
+    <div class="center t-mic mt12" style="color:var(--char)">先看看模板案例 ›</div>
+  </div></div><div class="hi "></div></div></div><a class="hit" href="screens/01a.html" aria-label="01a 登录 · 未勾选协议"></a></div>
+      <div class="cap"><span class="no">01a</span><span class="nm">登录 · 未勾选协议</span><span class="kd">状态</span><span class="tag ns">新增状态</span></div>
+      <p class="note">点登录但未勾选协议：复选框红色描边 + 气泡提示，不弹窗打断。</p>
+    </div>
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav" style="height:52px;padding-left:var(--s5)"><span class="h-page">爆款复刻</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body">
+  <div class="card flex gap12" style="padding:var(--s3) var(--s3);background:var(--ok-soft);border-color:var(--ok-line);margin-bottom:var(--s3)"><span style="color:var(--ok-icon)"><svg class="i" viewBox="0 0 24 24"><path d="M4.5 11h15v9h-15zM3.5 7.5h17V11h-17zM12 7.5V20M12 7.5C10.5 4.5 7 4 7 6.2 7 7.5 9 7.5 12 7.5zm0 0c1.5-3 5-3.5 5-1.3 0 1.3-2 1.3-5 1.3z"/></svg></span><span class="grow" style="font-size:13.5px;color:var(--ok)"><b>新人 500 积分已到账</b>，够做 1 条 15 秒</span><span style="color:var(--ok)"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div>
+  
+  <div class="card pad" style="padding:var(--s3)">
+    <div class="flex between"><div class="h-card">商品图片</div><span class="t-mic">3/4 · 正面 / 细节 / 场景</span></div>
+    <div class="flex gap8 mt12"><div style="position:relative"><div class="th" style="width:74px;height:74px;background:#e9dccb">
+     <span class="mg" style="font-size:30px">衬</span>
+     
+     
+     
+   </div><span style="position:absolute;right:-6px;top:-6px;width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--iv);display:grid;place-items:center"><svg class="i" style="width:12px;height:12px;stroke-width:2.4" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div><div style="position:relative"><div class="th" style="width:74px;height:74px;background:#e5dac8">
+     <span class="mg" style="font-size:30px">领</span>
+     
+     
+     
+   </div><span style="position:absolute;right:-6px;top:-6px;width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--iv);display:grid;place-items:center"><svg class="i" style="width:12px;height:12px;stroke-width:2.4" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div><div style="position:relative"><div class="th" style="width:74px;height:74px;background:#e2dccf">
+     <span class="mg" style="font-size:30px">景</span>
+     
+     
+     
+   </div><span style="position:absolute;right:-6px;top:-6px;width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--iv);display:grid;place-items:center"><svg class="i" style="width:12px;height:12px;stroke-width:2.4" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div>
+      <div style="width:74px;height:74px;border-radius:var(--r-md);border:1.5px dashed var(--ring);display:grid;place-items:center;color:var(--olive);background:var(--wh)"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></div>
+    </div>
+  </div>
+  <div class="lbl" style="margin-top:var(--s3)">拍摄建议</div>
+  <div class="chips"><span class="chip sm">正面 1 张</span><span class="chip sm">背面 1 张</span><span class="chip sm">细节/面料 1 张</span><span class="chip sm">使用场景 1 张</span><span class="chip sm">避开拼图与文字水印</span></div>
+  <div class="lbl">商品名称 <span class="req">*</span><span class="t-mic" style="margin-left:auto">6/30</span></div>
+  <div class="field ">夏季棉麻衬衫</div>
+  <div class="lbl">商品卖点 <span class="req">*</span><span class="t-mic" style="margin-left:auto">17/100</span></div>
+  <div class="field  " style="min-height:56px">轻薄透气，抗皱好打理，适合夏季通勤</div>
+  
+  
+  </div>
+  <div class="footer" style="padding-bottom:var(--s3)"><span class="btn btn-p">下一步 · 选模板</span></div><div class="tab"><a class="on"><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5l1.9 5.1 5.1 1.9-5.1 1.9L12 17.5l-1.9-5.1L5 10.5l5.1-1.9zM18.5 16l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/></svg>创作</a><a class=""><svg class="i" viewBox="0 0 24 24"><path d="M3.5 6h17v12h-17zM10.5 9.5v5l4-2.5z"/></svg>作品</a><a class=""><svg class="i" viewBox="0 0 24 24"><path d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM4.5 20c1-3.8 4-5.5 7.5-5.5s6.5 1.7 7.5 5.5"/></svg>我的</a></div><div class="hi "></div></div></div><a class="hit" href="screens/02.html" aria-label="02 首页 · 上传商品素材"></a></div>
+      <div class="cap"><span class="no">02</span><span class="nm">首页 · 上传商品素材</span><span class="tag re">重设计</span></div>
+      <p class="note">上传区、拍摄建议、必填表单分层；新人积分横幅改为成功色，文案带出可用条数。</p>
+    </div>
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav" style="height:52px;padding-left:var(--s5)"><span class="h-page">爆款复刻</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body">
+  
+  
+    <div class="card" style="margin-top:var(--s1);padding:var(--s6) var(--s4);text-align:center;border:1.5px dashed var(--ring);background:var(--wh)">
+      <div class="ill" style="width:64px;height:64px;border-radius:var(--r-xl)"><svg class="i" viewBox="0 0 24 24"><path d="M12 15.5V5M7.5 9.5L12 5l4.5 4.5M5 19h14"/></svg></div>
+      <div class="h-card mt12">上传商品图片</div>
+      <div class="t-mic mt4">最多 4 张，AI 会自动识别商品名称与卖点</div>
+      <div class="row2 mt16" style="justify-content:center"><span class="btn sm btn-p"><svg class="i" viewBox="0 0 24 24"><path d="M4 5h16v14H4zM4 16l4.5-4.5 3.5 3.5 2.5-2.5 5.5 5M15.5 8.5h.01"/></svg>从相册选择</span><span class="btn sm btn-s"><svg class="i" viewBox="0 0 24 24"><path d="M4 8h3l1.5-2.2h7L17 8h3v11H4zM12 10.3a3.3 3.3 0 1 0 0 6.6 3.3 3.3 0 0 0 0-6.6z"/></svg>拍摄</span></div>
+    </div>
+  
+  <div class="lbl">商品名称 <span class="req">*</span><span class="t-mic" style="margin-left:auto">0/30</span></div>
+  <div class="field ph">如：夏季棉麻衬衫</div>
+  <div class="lbl">商品卖点 <span class="req">*</span><span class="t-mic" style="margin-left:auto">0/100</span></div>
+  <div class="field ph " style="min-height:72px">如：轻薄透气 · 抗皱好打理 · 适合夏季通勤</div>
+  
+  <div class="lbl mt20">做出来是这样的</div>
+    <div class="card wh flex gap12" style="padding:var(--s3)"><div class="th" style="width:64px;height:86px;background:#e3ddcd">
+     <span class="mg" style="font-size:19px">原</span>
+     
+     
+     
+   </div><span style="color:var(--stone)"><svg class="i" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span><div class="th" style="width:64px;height:86px;background:#e9dccb">
+     <span class="mg" style="font-size:19px">复</span>
+     
+     
+     
+   </div>
+      <div class="grow t-mic">同一件单品换搭 4 套造型，商品换成你的即可</div></div>
+  </div>
+  <div class="footer" style="padding-bottom:var(--s3)"><span class="btn btn-x">下一步 · 选模板</span></div><div class="tab"><a class="on"><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5l1.9 5.1 5.1 1.9-5.1 1.9L12 17.5l-1.9-5.1L5 10.5l5.1-1.9zM18.5 16l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/></svg>创作</a><a class=""><svg class="i" viewBox="0 0 24 24"><path d="M3.5 6h17v12h-17zM10.5 9.5v5l4-2.5z"/></svg>作品</a><a class=""><svg class="i" viewBox="0 0 24 24"><path d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM4.5 20c1-3.8 4-5.5 7.5-5.5s6.5 1.7 7.5 5.5"/></svg>我的</a></div><div class="hi "></div></div></div><a class="hit" href="screens/02a.html" aria-label="02a 首页 · 初次进入空态"></a></div>
+      <div class="cap"><span class="no">02a</span><span class="nm">首页 · 初次进入空态</span><span class="kd">状态</span><span class="tag ns">新增状态</span></div>
+      <p class="note">首次进入没有图片时，上传区成为页面主角，底部给“做出来是这样”的示例。</p>
+    </div>
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav" style="height:52px;padding-left:var(--s5)"><span class="h-page">爆款复刻</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body">
+  
+  
+  <div class="card pad" style="padding:var(--s3)">
+    <div class="flex between"><div class="h-card">商品图片</div><span class="t-mic">3/4 · 正面 / 细节 / 场景</span></div>
+    <div class="flex gap8 mt12"><div style="position:relative"><div class="th" style="width:74px;height:74px;background:#e9dccb">
+     <span class="mg" style="font-size:30px">衬</span>
+     
+     
+     
+   </div><span style="position:absolute;right:-6px;top:-6px;width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--iv);display:grid;place-items:center"><svg class="i" style="width:12px;height:12px;stroke-width:2.4" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div><div style="position:relative"><div class="th" style="width:74px;height:74px;background:#e9dccb">
+     <span class="mg" style="font-size:31px"></span>
+     
+     
+     
+   </div><div style="position:absolute;inset:0;border-radius:var(--r-md);background:rgba(20,20,19,.45);display:grid;place-items:center;color:var(--iv);font-size:13px;font-weight:600" class="num">64%</div></div><div style="position:relative"><div class="th" style="width:74px;height:74px;background:#f5e2dd">
+     <span class="mg" style="font-size:31px"></span>
+     
+     
+     
+   </div><div style="position:absolute;inset:0;border-radius:var(--r-md);border:1.5px solid var(--err);display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--err);font-size:11.5px;gap:var(--s05)"><svg class="i" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4.5V8H16"/></svg>点击重试</div></div>
+      <div style="width:74px;height:74px;border-radius:var(--r-md);border:1.5px dashed var(--ring);display:grid;place-items:center;color:var(--olive);background:var(--wh)"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></div>
+    </div>
+  </div><div class="errtxt"><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zM12 8v4.8M12 16h.01"/></svg>第 3 张上传失败：图片超过 10 MB</div>
+  <div class="lbl" style="margin-top:var(--s3)">拍摄建议</div>
+  <div class="chips"><span class="chip sm">正面 1 张</span><span class="chip sm">背面 1 张</span><span class="chip sm">细节/面料 1 张</span><span class="chip sm">使用场景 1 张</span><span class="chip sm">避开拼图与文字水印</span></div>
+  <div class="lbl">商品名称 <span class="req">*</span><span class="t-mic" style="margin-left:auto">6/30</span></div>
+  <div class="field ">夏季棉麻衬衫</div>
+  <div class="lbl">商品卖点 <span class="req">*</span><span class="t-mic" style="margin-left:auto">0/100</span></div>
+  <div class="field ph err" style="min-height:56px">如：轻薄透气 · 抗皱好打理 · 适合夏季通勤</div>
+  <div class="errtxt"><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zM12 8v4.8M12 16h.01"/></svg>请填写商品卖点，AI 会据此写口播文案</div>
+  
+  </div>
+  <div class="footer" style="padding-bottom:var(--s3)"><span class="btn btn-x">下一步 · 选模板</span></div><div class="tab"><a class="on"><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5l1.9 5.1 5.1 1.9-5.1 1.9L12 17.5l-1.9-5.1L5 10.5l5.1-1.9zM18.5 16l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/></svg>创作</a><a class=""><svg class="i" viewBox="0 0 24 24"><path d="M3.5 6h17v12h-17zM10.5 9.5v5l4-2.5z"/></svg>作品</a><a class=""><svg class="i" viewBox="0 0 24 24"><path d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM4.5 20c1-3.8 4-5.5 7.5-5.5s6.5 1.7 7.5 5.5"/></svg>我的</a></div><div class="hi "></div></div></div><a class="hit" href="screens/02b.html" aria-label="02b 首页 · 上传中 / 失败 / 校验"></a></div>
+      <div class="cap"><span class="no">02b</span><span class="nm">首页 · 上传中 / 失败 / 校验</span><span class="kd">状态</span><span class="tag ns">新增状态</span></div>
+      <p class="note">单图上传进度、单图失败点击重试、必填项红框 + 原因说明；主按钮置灰。</p>
+    </div>
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav" style="height:52px;padding-left:var(--s5)"><span class="h-page">爆款复刻</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body">
+  <div class="card flex gap12" style="padding:var(--s3) var(--s3);background:var(--ok-soft);border-color:var(--ok-line);margin-bottom:var(--s3)"><span style="color:var(--ok-icon)"><svg class="i" viewBox="0 0 24 24"><path d="M4.5 11h15v9h-15zM3.5 7.5h17V11h-17zM12 7.5V20M12 7.5C10.5 4.5 7 4 7 6.2 7 7.5 9 7.5 12 7.5zm0 0c1.5-3 5-3.5 5-1.3 0 1.3-2 1.3-5 1.3z"/></svg></span><span class="grow" style="font-size:13.5px;color:var(--ok)"><b>新人 500 积分已到账</b>，够做 1 条 15 秒</span><span style="color:var(--ok)"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div>
+  
+  <div class="card pad" style="padding:var(--s3)">
+    <div class="flex between"><div class="h-card">商品图片</div><span class="t-mic">3/4 · 正面 / 细节 / 场景</span></div>
+    <div class="flex gap8 mt12"><div style="position:relative"><div class="th" style="width:74px;height:74px;background:#e9dccb">
+     <span class="mg" style="font-size:30px">衬</span>
+     
+     
+     
+   </div><span style="position:absolute;right:-6px;top:-6px;width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--iv);display:grid;place-items:center"><svg class="i" style="width:12px;height:12px;stroke-width:2.4" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div><div style="position:relative"><div class="th" style="width:74px;height:74px;background:#e5dac8">
+     <span class="mg" style="font-size:30px">领</span>
+     
+     
+     
+   </div><span style="position:absolute;right:-6px;top:-6px;width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--iv);display:grid;place-items:center"><svg class="i" style="width:12px;height:12px;stroke-width:2.4" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div><div style="position:relative"><div class="th" style="width:74px;height:74px;background:#e2dccf">
+     <span class="mg" style="font-size:30px">景</span>
+     
+     
+     
+   </div><span style="position:absolute;right:-6px;top:-6px;width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--iv);display:grid;place-items:center"><svg class="i" style="width:12px;height:12px;stroke-width:2.4" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div>
+      <div style="width:74px;height:74px;border-radius:var(--r-md);border:1.5px dashed var(--ring);display:grid;place-items:center;color:var(--olive);background:var(--wh)"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></div>
+    </div>
+  </div>
+  <div class="lbl" style="margin-top:var(--s3)">拍摄建议</div>
+  <div class="chips"><span class="chip sm">正面 1 张</span><span class="chip sm">背面 1 张</span><span class="chip sm">细节/面料 1 张</span><span class="chip sm">使用场景 1 张</span><span class="chip sm">避开拼图与文字水印</span></div>
+  <div class="lbl">商品名称 <span class="req">*</span><span class="t-mic" style="margin-left:auto">6/30</span></div>
+  <div class="field ">夏季棉麻衬衫</div>
+  <div class="lbl">商品卖点 <span class="req">*</span><span class="t-mic" style="margin-left:auto">17/100</span></div>
+  <div class="field  " style="min-height:56px">轻薄透气，抗皱好打理，适合夏季通勤</div>
+  
+  
+  </div>
+  <div class="footer" style="padding-bottom:var(--s3)"><span class="btn btn-p">下一步 · 选模板</span></div><div class="tab"><a class="on"><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5l1.9 5.1 5.1 1.9-5.1 1.9L12 17.5l-1.9-5.1L5 10.5l5.1-1.9zM18.5 16l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/></svg>创作</a><a class=""><svg class="i" viewBox="0 0 24 24"><path d="M3.5 6h17v12h-17zM10.5 9.5v5l4-2.5z"/></svg>作品</a><a class=""><svg class="i" viewBox="0 0 24 24"><path d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM4.5 20c1-3.8 4-5.5 7.5-5.5s6.5 1.7 7.5 5.5"/></svg>我的</a></div><div class="scrim" style="background:rgba(20,20,19,.55)"></div>
+  <div class="dlg" style="padding:28px var(--s6) var(--s5)">
+    <div class="t-mic" style="letter-spacing:.5px">新手指引 · 1 分钟上手</div>
+    <div class="h-page mt8" style="font-size:26px">三步复刻一条爆款</div>
+    <div class="mt16">
+      
+      <div class="step"><span class="n now">1</span><div><div style="font-size:15px;font-weight:600">上传商品图</div><div class="t-mic mt4">AI 自动识别商品名称与卖点</div></div></div>
+      <div class="step"><span class="n ">2</span><div><div style="font-size:15px;font-weight:600">选择参考视频</div><div class="t-mic mt4">挑一条同类目的爆款作模板</div></div></div>
+      <div class="step"><span class="n ">3</span><div><div style="font-size:15px;font-weight:600">生成同款视频</div><div class="t-mic mt4">预览满意再保存，失败积分全额返还</div></div></div>
+    </div>
+    <span class="btn btn-p mt16">开始上传</span>
+    <span class="btn btn-g">跳过</span>
+  </div><div class="hi "></div></div></div><a class="hit" href="screens/03.html" aria-label="03 引导浮层 · 三步复刻爆款"></a></div>
+      <div class="cap"><span class="no">03</span><span class="nm">引导浮层 · 三步复刻爆款</span><span class="kd">浮层</span><span class="tag re">重设计</span></div>
+      <p class="note">三步用编号步骤条呈现，第三步写明“失败积分全额返还”消除顾虑；可跳过。</p>
+    </div>
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">商品识别</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body" style="display:flex;flex-direction:column;align-items:center;padding-top:80px">
+  <div style="position:relative;width:180px;height:180px">
+    <div class="th" style="width:180px;height:180px;background:#e9dccb">
+     <span class="mg" style="font-size:65px">衬</span>
+     
+     
+     
+   </div>
+    <div style="position:absolute;left:0;right:0;top:46%;height:2px;background:var(--brand);box-shadow:0 0 0 4px rgba(201,100,66,.15)"></div>
+    <span class="badge b-g" style="position:absolute;left:50%;bottom:-11px;transform:translateX(-50%)">AI 识别中</span>
+  </div>
+  <div class="h-sec mt32">正在识别你的商品</div>
+  <div class="t-cap mt8">约 5 秒，识别后自动匹配同类爆款模板</div>
+  <div class="card wh mt24" style="width:100%;padding:var(--s15) var(--s4)">
+    
+    <div class="step" style="align-items:center"><span class="n done"><svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span class="grow" style="font-size:14px;">识别商品主体</span>
+    <span class="t-mic">服装 · 衬衫</span></div>
+    <div class="step" style="align-items:center"><span class="n now">2</span><span class="grow" style="font-size:14px;">匹配商品类目</span>
+    <span class="t-mic">进行中</span></div>
+    <div class="step" style="align-items:center"><span class="n ">3</span><span class="grow" style="font-size:14px;color:var(--olive)">筛选同类爆款模板</span>
+    <span class="t-mic"></span></div>
+  </div></div><div class="hi "></div></div></div><a class="hit" href="screens/04.html" aria-label="04 商品识别（过渡页）"></a></div>
+      <div class="cap"><span class="no">04</span><span class="nm">商品识别（过渡页）</span><span class="tag re">重设计</span></div>
+      <p class="note">用商品图本身 + 扫描线代替抽象 AI 圆环，分步显示识别到的类目。</p>
+    </div>
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">商品识别</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body" style="padding-top:var(--s12)">
+  <div class="ill" style="background:var(--err-soft);color:var(--err)"><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zM12 8v4.8M12 16h.01"/></svg></div>
+  <div class="h-sec center mt24">没认出这件商品</div>
+  <div class="t-cap center mt8">可能是图片里有多件商品，或主体太小</div>
+  <div class="card wh mt24" style="padding:var(--s1) var(--s4)">
+    
+    <div class="step" style="align-items:center"><span class="n"><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zM12 11v5M12 8h.01"/></svg></span><div class="grow"><div style="font-size:14px;font-weight:600">商品主体太小</div><div class="t-mic">让商品占画面一半以上</div></div></div>
+    <div class="step" style="align-items:center"><span class="n"><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zM12 11v5M12 8h.01"/></svg></span><div class="grow"><div style="font-size:14px;font-weight:600">画面有多件商品</div><div class="t-mic">一张图只拍一件</div></div></div>
+    <div class="step" style="align-items:center"><span class="n"><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zM12 11v5M12 8h.01"/></svg></span><div class="grow"><div style="font-size:14px;font-weight:600">含拼图或文字水印</div><div class="t-mic">换一张干净的原图</div></div></div>
+  </div></div>
+  <div class="footer"><span class="btn btn-p"><svg class="i" viewBox="0 0 24 24"><path d="M4 8h3l1.5-2.2h7L17 8h3v11H4zM12 10.3a3.3 3.3 0 1 0 0 6.6 3.3 3.3 0 0 0 0-6.6z"/></svg>重新上传</span><span class="btn btn-s mt12">手动选择商品类目</span></div><div class="hi "></div></div></div><a class="hit" href="screens/04a.html" aria-label="04a 商品识别失败"></a></div>
+      <div class="cap"><span class="no">04a</span><span class="nm">商品识别失败</span><span class="kd">状态</span><span class="tag ns">新增状态</span></div>
+      <p class="note">给出三种常见原因和对应拍法，出口：重新上传 / 手动选类目。</p>
+    </div>
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">选择参考视频</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body">
+  
+  <div class="card pad flex gap12" style="padding:var(--s3)">
+    <div class="th" style="width:52px;height:52px;background:#e9dccb">
+     <span class="mg" style="font-size:24px">衬</span>
+     
+     
+     
+   </div>
+    <div class="grow"><div class="h-card">夏季棉麻衬衫</div>
+      <div class="t-mic mt4 flex gap8"><svg class="i" style="width:14px;height:14px" viewBox="0 0 24 24"><path d="M4 4h7.5l8.5 8.5-7.5 7.5L4 11.5zM8 8h.01"/></svg><span>服装内衣 / 上装</span><span style="color:var(--brand-strong);font-weight:600">更换类目</span></div></div>
+    <span class="btn sm btn-w">修改</span>
+  </div>
+  <div class="flex gap8 mt12">
+    <div class="field grow flex gap8" style="height:42px;padding:0 var(--s3);color:var(--stone)"><svg class="i" viewBox="0 0 24 24"><path d="M10.5 4a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM20 20l-4.6-4.6"/></svg><span>搜索标题或类目</span></div>
+    <span class="btn sm btn-w" style="height:42px"><svg class="i" viewBox="0 0 24 24"><path d="M4 6.5h16M7 12h10M10 17.5h4"/></svg>筛选</span>
+  </div>
+  <div class="chips mt12"><span class="chip sm on">全部</span><span class="chip sm">15 秒内</span><span class="chip sm">竖屏</span><span class="chip sm">口播带货</span></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--s2);margin-top:var(--s3)">
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
+    <div class="th" style="width:170px;height:190px;background:#e9dccb">
+     <span class="mg" style="font-size:58px">衬</span>
+     
+     <span class="tl"><span class="dur">9:16</span></span>
+     <span class="br"><span class="dur">0:15</span></span>
+   </div>
+    <div style="padding:var(--s3) var(--s3) var(--s3)">
+      <div class="cl2" style="font-size:14px;font-weight:600;line-height:1.4;height:39px">每日新款穿搭分享，质感衬衫这样穿</div>
+      <div class="flex between mt8"><span style="font-size:13px" class="price"><span class="num ">270</span> 积分</span><span class="btn sm btn-s" style="height:28px;font-size:13px;padding:0 var(--s3)">使用</span></div>
+    </div>
+  </div>
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
+    <div class="th" style="width:170px;height:190px;background:#dfe3d3">
+     <span class="mg" style="font-size:58px">夏</span>
+     
+     <span class="tl"><span class="dur">9:16</span></span>
+     <span class="br"><span class="dur">0:24</span></span>
+   </div>
+    <div style="padding:var(--s3) var(--s3) var(--s3)">
+      <div class="cl2" style="font-size:14px;font-weight:600;line-height:1.4;height:39px">夏日轻薄单品种草，透气到像没穿</div>
+      <div class="flex between mt8"><span style="font-size:13px" class="price"><span class="num ">432</span> 积分</span><span class="btn sm btn-s" style="height:28px;font-size:13px;padding:0 var(--s3)">使用</span></div>
+    </div>
+  </div>
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
+    <div class="th" style="width:170px;height:190px;background:#e6d6cd">
+     <span class="mg" style="font-size:58px">通</span>
+     
+     <span class="tl"><span class="dur">16:9</span></span>
+     <span class="br"><span class="dur">0:38</span></span>
+   </div>
+    <div style="padding:var(--s3) var(--s3) var(--s3)">
+      <div class="cl2" style="font-size:14px;font-weight:600;line-height:1.4;height:39px">一衣三穿的通勤穿搭公式，快码住</div>
+      <div class="flex between mt8"><span style="font-size:13px" class="price"><span class="num ">684</span> 积分</span><span class="btn sm btn-s" style="height:28px;font-size:13px;padding:0 var(--s3)">使用</span></div>
+    </div>
+  </div>
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
+    <div class="th" style="width:170px;height:190px;background:#e8dcc3">
+     <span class="mg" style="font-size:58px">料</span>
+     
+     <span class="tl"><span class="dur">9:16</span></span>
+     <span class="br"><span class="dur">1:05</span></span>
+   </div>
+    <div style="padding:var(--s3) var(--s3) var(--s3)">
+      <div class="cl2" style="font-size:14px;font-weight:600;line-height:1.4;height:39px">近距离看面料细节，摸过的都说好</div>
+      <div class="flex between mt8"><span style="font-size:13px" class="price"><span class="num ">1,170</span> 积分</span><span class="btn sm btn-s" style="height:28px;font-size:13px;padding:0 var(--s3)">使用</span></div>
+    </div>
+  </div></div></div>
+  <div class="footer dock" style="padding-bottom:var(--safe-b)"><div class="flex gap12"><span class="ill" style="width:36px;height:36px;border-radius:var(--r-md);margin:0;color:var(--char)"><svg class="i" viewBox="0 0 24 24"><path d="M12 15.5V5M7.5 9.5L12 5l4.5 4.5M5 19h14"/></svg></span>
+  <div class="grow"><div style="font-size:14px;font-weight:600">没有合适的参考视频？</div><div class="t-mic">手动上传同类型的爆款作参考</div></div><svg class="i chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div></div><div class="hi "></div></div></div><a class="hit" href="screens/05.html" aria-label="05 选择参考视频"></a></div>
+      <div class="cap"><span class="no">05</span><span class="nm">选择参考视频</span><span class="tag re">重设计</span></div>
+      <p class="note">双列 9:16 卡片，价格固定陶土色；手动上传入口固定在底栏。</p>
+    </div>
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">选择参考视频</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body">
+  
+  <div class="card pad flex gap12" style="padding:var(--s3)">
+    <div class="th" style="width:52px;height:52px;background:#e9dccb">
+     <span class="mg" style="font-size:24px">衬</span>
+     
+     
+     
+   </div>
+    <div class="grow"><div class="h-card">夏季棉麻衬衫</div>
+      <div class="t-mic mt4 flex gap8"><svg class="i" style="width:14px;height:14px" viewBox="0 0 24 24"><path d="M4 4h7.5l8.5 8.5-7.5 7.5L4 11.5zM8 8h.01"/></svg><span>服装内衣 / 上装</span><span style="color:var(--brand-strong);font-weight:600">更换类目</span></div></div>
+    <span class="btn sm btn-w">修改</span>
+  </div>
+  <div class="flex gap8 mt12"><div class="field grow flex gap8" style="height:42px;padding:0 var(--s3);border-color:var(--ink)"><svg class="i" viewBox="0 0 24 24"><path d="M10.5 4a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM20 20l-4.6-4.6"/></svg><span>真丝睡衣 直播</span><span style="margin-left:auto;color:var(--stone)"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div></div>
+  <div style="padding-top:56px" class="center">
+    <div class="ill"><svg class="i" viewBox="0 0 24 24"><path d="M10.5 4a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM20 20l-4.6-4.6"/></svg></div>
+    <div class="h-sec mt20">没找到「真丝睡衣 直播」的模板</div>
+    <div class="t-cap mt8">试试更短的关键词，或换一个说法</div>
+    <div class="chips mt16" style="justify-content:center"><span class="chip">睡衣</span><span class="chip">家居服</span><span class="chip">面料特写</span><span class="chip">口播带货</span></div>
+    <span class="btn md btn-s mt32" style="width:auto;display:inline-flex;padding:0 var(--s5)"><svg class="i" viewBox="0 0 24 24"><path d="M12 15.5V5M7.5 9.5L12 5l4.5 4.5M5 19h14"/></svg>上传自己的参考视频</span>
+  </div></div><div class="hi "></div></div></div><a class="hit" href="screens/05a.html" aria-label="05a 搜索无结果"></a></div>
+      <div class="cap"><span class="no">05a</span><span class="nm">搜索无结果</span><span class="kd">状态</span><span class="tag ns">新增状态</span></div>
+      <p class="note">推荐更短的替代关键词，并引导上传自己的参考视频。</p>
+    </div>
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav" style="position:absolute;top:47px;left:0;right:0;z-index:3"><span class="bk" style="background:rgba(20,20,19,.4);color:var(--iv)"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div>
+  <div class="body np" style="margin-top:-47px">
+    <div class="player" style="height:470px"><div class="th" style="width:390px;height:470px;background:#3a3631">
+     <span class="mg" style="font-size:109px">衬</span>
+     
+     
+     
+   </div>
+      <span style="position:absolute;width:64px;height:64px;border-radius:50%;background:rgba(250,249,245,.9);display:grid;place-items:center"><svg class="i f" viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z"/></svg></span>
+      <div style="position:absolute;left:20px;right:20px;bottom:16px" class="flex gap8"><span class="dur">原视频</span><div class="bar grow" style="background:rgba(250,249,245,.3);height:3px"><i style="width:34%;background:var(--iv)"></i></div><span class="dur">0:05 / 0:15</span></div>
+    </div>
+    <div style="padding:18px var(--s5) 0">
+      <div class="flex gap8"><span class="badge b-off">9:16</span><span class="badge b-off">15 秒</span><span class="badge b-off">服装 · 上装</span><span class="badge b-ok">同类目 98% 匹配</span></div>
+      <div class="h-sec mt12">每日新款穿搭分享，质感衬衫这样穿</div>
+      <div class="card pad mt12" style="padding:var(--s3) var(--s3)"><div style="font-size:13px;font-weight:600">复刻点</div>
+        <div class="t-cap mt4">开场口播「当我拥有一件有多种穿法的…」+ 同一件单品换搭 4 套造型，同机位全身展示，商品换成你的即可。</div></div>
+    </div></div>
+  <div class="footer dock"><div class="flex gap12"><div><div class="t-mic">本次消耗</div><div><span class="strike num" style="font-size:12px">990</span> <b class="price"><span class="num ">270</span> 积分</b></div></div>
+    <span class="btn btn-p grow">用这个模板生成</span></div></div><div class="hi "></div></div></div><a class="hit" href="screens/05b.html" aria-label="05b 参考视频详情"></a></div>
+      <div class="cap"><span class="no">05b</span><span class="nm">参考视频详情</span><span class="kd">页面</span><span class="tag np">新增页面</span></div>
+      <p class="note">选模板前先看原视频与复刻点，底栏常驻消耗积分与“用这个模板生成”。</p>
+    </div>
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">上传参考视频</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body">
+  <div class="t-cap">上传一条你觉得好的同类爆款，AI 会学习它的节奏、镜头和口播结构。</div>
+  <div class="card wh mt16 flex gap12" style="padding:var(--s3)"><div class="th" style="width:64px;height:86px;background:#3a3631">
+     <span class="mg" style="font-size:27px"></span>
+     
+     
+     
+   </div>
+    <div class="grow"><div style="font-size:14px;font-weight:600" class="ell">通勤衬衫一周不重样.mp4</div><div class="t-mic mt4">0:32 · 9:16 · 38.6 MB</div>
+      <div class="bar mt8"><i style="width:64%"></i></div><div class="t-mic mt4 num">上传中 64%</div></div><span class="x"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div>
+  <div class="lbl mt20">上传要求</div>
+  <div class="card pad" style="padding:var(--s1) var(--s4)">
+    
+    <div class="step" style="align-items:center"><span class="n done"><svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><div class="grow"><div style="font-size:14px;font-weight:600">时长 5–90 秒</div><div class="t-mic">按生成时长计费，18 积分/秒</div></div></div>
+    <div class="step" style="align-items:center"><span class="n done"><svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><div class="grow"><div style="font-size:14px;font-weight:600">画幅 9:16 或 16:9</div><div class="t-mic">其他比例会自动裁切</div></div></div>
+    <div class="step" style="align-items:center"><span class="n done"><svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><div class="grow"><div style="font-size:14px;font-weight:600">与商品同类目</div><div class="t-mic">跨类目复刻效果会明显变差</div></div></div>
+    <div class="step" style="align-items:center"><span class="n done"><svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><div class="grow"><div style="font-size:14px;font-weight:600">大小 200 MB 以内</div><div class="t-mic">支持 MP4 / MOV</div></div></div>
+  </div>
+  <div class="flex gap8 mt16 t-mic" style="align-items:flex-start"><span class="check on" style="width:18px;height:18px"><svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>我确认拥有该视频的使用权，不含他人肖像或版权素材的侵权使用</span></div>
+  </div>
+  <div class="footer"><span class="btn btn-x">上传完成后继续</span></div><div class="hi "></div></div></div><a class="hit" href="screens/05c.html" aria-label="05c 手动上传参考视频"></a></div>
+      <div class="cap"><span class="no">05c</span><span class="nm">手动上传参考视频</span><span class="kd">页面</span><span class="tag np">新增页面</span></div>
+      <p class="note">补齐原型断链：上传进度、四条要求、版权确认勾选。</p>
+    </div>
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">选择参考视频</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body">
+  
+  <div class="card pad flex gap12" style="padding:var(--s3)">
+    <div class="th" style="width:52px;height:52px;background:#e9dccb">
+     <span class="mg" style="font-size:24px">衬</span>
+     
+     
+     
+   </div>
+    <div class="grow"><div class="h-card">夏季棉麻衬衫</div>
+      <div class="t-mic mt4 flex gap8"><svg class="i" style="width:14px;height:14px" viewBox="0 0 24 24"><path d="M4 4h7.5l8.5 8.5-7.5 7.5L4 11.5zM8 8h.01"/></svg><span>服装内衣 / 上装</span><span style="color:var(--brand-strong);font-weight:600">更换类目</span></div></div>
+    <span class="btn sm btn-w">修改</span>
+  </div>
+  <div class="flex gap8 mt12">
+    <div class="field grow flex gap8" style="height:42px;padding:0 var(--s3);color:var(--stone)"><svg class="i" viewBox="0 0 24 24"><path d="M10.5 4a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM20 20l-4.6-4.6"/></svg><span>搜索标题或类目</span></div>
+    <span class="btn sm btn-w" style="height:42px"><svg class="i" viewBox="0 0 24 24"><path d="M4 6.5h16M7 12h10M10 17.5h4"/></svg>筛选</span>
+  </div>
+  <div class="chips mt12"><span class="chip sm on">全部</span><span class="chip sm">15 秒内</span><span class="chip sm">竖屏</span><span class="chip sm">口播带货</span></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--s2);margin-top:var(--s3)">
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
+    <div class="th" style="width:170px;height:190px;background:#e9dccb">
+     <span class="mg" style="font-size:58px">衬</span>
+     
+     <span class="tl"><span class="dur">9:16</span></span>
+     <span class="br"><span class="dur">0:15</span></span>
+   </div>
+    <div style="padding:var(--s3) var(--s3) var(--s3)">
+      <div class="cl2" style="font-size:14px;font-weight:600;line-height:1.4;height:39px">每日新款穿搭分享，质感衬衫这样穿</div>
+      <div class="flex between mt8"><span style="font-size:13px" class="price"><span class="num ">270</span> 积分</span><span class="btn sm btn-s" style="height:28px;font-size:13px;padding:0 var(--s3)">使用</span></div>
+    </div>
+  </div>
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
+    <div class="th" style="width:170px;height:190px;background:#dfe3d3">
+     <span class="mg" style="font-size:58px">夏</span>
+     
+     <span class="tl"><span class="dur">9:16</span></span>
+     <span class="br"><span class="dur">0:24</span></span>
+   </div>
+    <div style="padding:var(--s3) var(--s3) var(--s3)">
+      <div class="cl2" style="font-size:14px;font-weight:600;line-height:1.4;height:39px">夏日轻薄单品种草，透气到像没穿</div>
+      <div class="flex between mt8"><span style="font-size:13px" class="price"><span class="num ">432</span> 积分</span><span class="btn sm btn-s" style="height:28px;font-size:13px;padding:0 var(--s3)">使用</span></div>
+    </div>
+  </div>
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
+    <div class="th" style="width:170px;height:190px;background:#e6d6cd">
+     <span class="mg" style="font-size:58px">通</span>
+     
+     <span class="tl"><span class="dur">16:9</span></span>
+     <span class="br"><span class="dur">0:38</span></span>
+   </div>
+    <div style="padding:var(--s3) var(--s3) var(--s3)">
+      <div class="cl2" style="font-size:14px;font-weight:600;line-height:1.4;height:39px">一衣三穿的通勤穿搭公式，快码住</div>
+      <div class="flex between mt8"><span style="font-size:13px" class="price"><span class="num ">684</span> 积分</span><span class="btn sm btn-s" style="height:28px;font-size:13px;padding:0 var(--s3)">使用</span></div>
+    </div>
+  </div>
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
+    <div class="th" style="width:170px;height:190px;background:#e8dcc3">
+     <span class="mg" style="font-size:58px">料</span>
+     
+     <span class="tl"><span class="dur">9:16</span></span>
+     <span class="br"><span class="dur">1:05</span></span>
+   </div>
+    <div style="padding:var(--s3) var(--s3) var(--s3)">
+      <div class="cl2" style="font-size:14px;font-weight:600;line-height:1.4;height:39px">近距离看面料细节，摸过的都说好</div>
+      <div class="flex between mt8"><span style="font-size:13px" class="price"><span class="num ">1,170</span> 积分</span><span class="btn sm btn-s" style="height:28px;font-size:13px;padding:0 var(--s3)">使用</span></div>
+    </div>
+  </div></div></div>
+  <div class="footer dock" style="padding-bottom:var(--safe-b)"><div class="flex gap12"><span class="ill" style="width:36px;height:36px;border-radius:var(--r-md);margin:0;color:var(--char)"><svg class="i" viewBox="0 0 24 24"><path d="M12 15.5V5M7.5 9.5L12 5l4.5 4.5M5 19h14"/></svg></span>
+  <div class="grow"><div style="font-size:14px;font-weight:600">没有合适的参考视频？</div><div class="t-mic">手动上传同类型的爆款作参考</div></div><svg class="i chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div></div><div class="scrim"></div><div class="sheet">
+  <div class="grab"></div><div class="sh-h"><div class="h-sec">筛选</div><span class="x"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div>
+  <div class="lbl">类型</div><div class="chips"><span class="chip on">全部</span><span class="chip">推荐</span><span class="chip">口播带货</span><span class="chip">效果演示</span></div>
+  <div class="lbl">时长 <span class="t-mic">时长决定消耗积分</span></div>
+  <div class="chips"><span class="chip">全部</span><span class="chip on">15 秒内 · ≤270</span><span class="chip">15–30 秒</span><span class="chip">30 秒–1 分钟</span><span class="chip">1 分钟以上</span></div>
+  <div class="lbl">画幅</div><div class="chips"><span class="chip on">全部</span><span class="chip">竖屏 9:16</span><span class="chip">横屏 16:9</span></div>
+  <div class="row2 mt24"><span class="btn btn-s" style="width:120px">重置</span><span class="btn btn-p grow">查看 12 个结果</span></div></div><div class="hi "></div></div></div><a class="hit" href="screens/06.html" aria-label="06 筛选面板（时长 / 画幅）"></a></div>
+      <div class="cap"><span class="no">06</span><span class="nm">筛选面板（时长 / 画幅）</span><span class="kd">面板</span><span class="tag re">重设计</span></div>
+      <p class="note">时长选项直接标注对应积分上限；确定按钮显示结果数量。</p>
+    </div>
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">选择参考视频</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body">
+  
+  <div class="card pad flex gap12" style="padding:var(--s3)">
+    <div class="th" style="width:52px;height:52px;background:#e9dccb">
+     <span class="mg" style="font-size:24px">衬</span>
+     
+     
+     
+   </div>
+    <div class="grow"><div class="h-card">夏季棉麻衬衫</div>
+      <div class="t-mic mt4 flex gap8"><svg class="i" style="width:14px;height:14px" viewBox="0 0 24 24"><path d="M4 4h7.5l8.5 8.5-7.5 7.5L4 11.5zM8 8h.01"/></svg><span>服装内衣 / 上装</span><span style="color:var(--brand-strong);font-weight:600">更换类目</span></div></div>
+    <span class="btn sm btn-w">修改</span>
+  </div>
+  <div class="flex gap8 mt12">
+    <div class="field grow flex gap8" style="height:42px;padding:0 var(--s3);color:var(--stone)"><svg class="i" viewBox="0 0 24 24"><path d="M10.5 4a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM20 20l-4.6-4.6"/></svg><span>搜索标题或类目</span></div>
+    <span class="btn sm btn-w" style="height:42px"><svg class="i" viewBox="0 0 24 24"><path d="M4 6.5h16M7 12h10M10 17.5h4"/></svg>筛选</span>
+  </div>
+  <div class="chips mt12"><span class="chip sm on">全部</span><span class="chip sm">15 秒内</span><span class="chip sm">竖屏</span><span class="chip sm">口播带货</span></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--s2);margin-top:var(--s3)">
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
+    <div class="th" style="width:170px;height:190px;background:#e9dccb">
+     <span class="mg" style="font-size:58px">衬</span>
+     
+     <span class="tl"><span class="dur">9:16</span></span>
+     <span class="br"><span class="dur">0:15</span></span>
+   </div>
+    <div style="padding:var(--s3) var(--s3) var(--s3)">
+      <div class="cl2" style="font-size:14px;font-weight:600;line-height:1.4;height:39px">每日新款穿搭分享，质感衬衫这样穿</div>
+      <div class="flex between mt8"><span style="font-size:13px" class="price"><span class="num ">270</span> 积分</span><span class="btn sm btn-s" style="height:28px;font-size:13px;padding:0 var(--s3)">使用</span></div>
+    </div>
+  </div>
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
+    <div class="th" style="width:170px;height:190px;background:#dfe3d3">
+     <span class="mg" style="font-size:58px">夏</span>
+     
+     <span class="tl"><span class="dur">9:16</span></span>
+     <span class="br"><span class="dur">0:24</span></span>
+   </div>
+    <div style="padding:var(--s3) var(--s3) var(--s3)">
+      <div class="cl2" style="font-size:14px;font-weight:600;line-height:1.4;height:39px">夏日轻薄单品种草，透气到像没穿</div>
+      <div class="flex between mt8"><span style="font-size:13px" class="price"><span class="num ">432</span> 积分</span><span class="btn sm btn-s" style="height:28px;font-size:13px;padding:0 var(--s3)">使用</span></div>
+    </div>
+  </div>
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
+    <div class="th" style="width:170px;height:190px;background:#e6d6cd">
+     <span class="mg" style="font-size:58px">通</span>
+     
+     <span class="tl"><span class="dur">16:9</span></span>
+     <span class="br"><span class="dur">0:38</span></span>
+   </div>
+    <div style="padding:var(--s3) var(--s3) var(--s3)">
+      <div class="cl2" style="font-size:14px;font-weight:600;line-height:1.4;height:39px">一衣三穿的通勤穿搭公式，快码住</div>
+      <div class="flex between mt8"><span style="font-size:13px" class="price"><span class="num ">684</span> 积分</span><span class="btn sm btn-s" style="height:28px;font-size:13px;padding:0 var(--s3)">使用</span></div>
+    </div>
+  </div>
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
+    <div class="th" style="width:170px;height:190px;background:#e8dcc3">
+     <span class="mg" style="font-size:58px">料</span>
+     
+     <span class="tl"><span class="dur">9:16</span></span>
+     <span class="br"><span class="dur">1:05</span></span>
+   </div>
+    <div style="padding:var(--s3) var(--s3) var(--s3)">
+      <div class="cl2" style="font-size:14px;font-weight:600;line-height:1.4;height:39px">近距离看面料细节，摸过的都说好</div>
+      <div class="flex between mt8"><span style="font-size:13px" class="price"><span class="num ">1,170</span> 积分</span><span class="btn sm btn-s" style="height:28px;font-size:13px;padding:0 var(--s3)">使用</span></div>
+    </div>
+  </div></div></div>
+  <div class="footer dock" style="padding-bottom:var(--safe-b)"><div class="flex gap12"><span class="ill" style="width:36px;height:36px;border-radius:var(--r-md);margin:0;color:var(--char)"><svg class="i" viewBox="0 0 24 24"><path d="M12 15.5V5M7.5 9.5L12 5l4.5 4.5M5 19h14"/></svg></span>
+  <div class="grow"><div style="font-size:14px;font-weight:600">没有合适的参考视频？</div><div class="t-mic">手动上传同类型的爆款作参考</div></div><svg class="i chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div></div><div class="scrim"></div><div class="sheet" style="padding-bottom:0">
+  <div class="grab"></div><div class="sh-h"><div><div class="h-sec">修改商品类目</div><div class="t-mic mt4">只影响本次模板匹配，不改写识别结果</div></div><span class="x"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div>
+  <div class="flex mt12" style="height:340px;margin:var(--s3) -20px 0;border-top:1px solid var(--bc)">
+    <div style="width:128px;background:var(--pa);font-size:14px"><div style="padding:var(--s3) var(--s4);background:var(--iv);font-weight:600;box-shadow:inset 3px 0 0 var(--brand)">服饰鞋包</div><div style="padding:var(--s3) var(--s4);color:var(--olive)">食品饮料</div><div style="padding:var(--s3) var(--s4);color:var(--olive)">个护家清</div><div style="padding:var(--s3) var(--s4);color:var(--olive)">生鲜农产</div><div style="padding:var(--s3) var(--s4);color:var(--olive)">家居日用</div><div style="padding:var(--s3) var(--s4);color:var(--olive)">3C 数码</div><div style="padding:var(--s3) var(--s4);color:var(--olive)">美妆护肤</div></div>
+    <div class="grow" style="font-size:15px"><div class="flex between" style="padding:var(--s3) var(--s5);border-bottom:1px solid var(--bc);color:var(--brand-strong);font-weight:600">上装<svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div><div class="flex between" style="padding:var(--s3) var(--s5);border-bottom:1px solid var(--bc);">裤装</div><div class="flex between" style="padding:var(--s3) var(--s5);border-bottom:1px solid var(--bc);">连衣裙</div><div class="flex between" style="padding:var(--s3) var(--s5);border-bottom:1px solid var(--bc);">内衣袜子</div><div class="flex between" style="padding:var(--s3) var(--s5);border-bottom:1px solid var(--bc);">鞋靴</div><div class="flex between" style="padding:var(--s3) var(--s5);border-bottom:1px solid var(--bc);">箱包</div></div>
+  </div>
+  <div style="padding:var(--s3) 0 var(--safe-b)"><span class="btn btn-p">确定 · 服饰鞋包 / 上装</span></div></div><div class="hi "></div></div></div><a class="hit" href="screens/07.html" aria-label="07 修改商品类目（双级）"></a></div>
+      <div class="cap"><span class="no">07</span><span class="nm">修改商品类目（双级）</span><span class="kd">面板</span><span class="tag re">重设计</span></div>
+      <p class="note">左侧一级类目用陶土竖线标记选中；确定按钮回显完整路径。</p>
+    </div>
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">选择参考视频</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body">
+  
+  <div class="card pad flex gap12" style="padding:var(--s3)">
+    <div class="th" style="width:52px;height:52px;background:#e9dccb">
+     <span class="mg" style="font-size:24px">衬</span>
+     
+     
+     
+   </div>
+    <div class="grow"><div class="h-card">夏季棉麻衬衫</div>
+      <div class="t-mic mt4 flex gap8"><svg class="i" style="width:14px;height:14px" viewBox="0 0 24 24"><path d="M4 4h7.5l8.5 8.5-7.5 7.5L4 11.5zM8 8h.01"/></svg><span>服装内衣 / 上装</span><span style="color:var(--brand-strong);font-weight:600">更换类目</span></div></div>
+    <span class="btn sm btn-w">修改</span>
+  </div>
+  <div class="flex gap8 mt12">
+    <div class="field grow flex gap8" style="height:42px;padding:0 var(--s3);color:var(--stone)"><svg class="i" viewBox="0 0 24 24"><path d="M10.5 4a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM20 20l-4.6-4.6"/></svg><span>搜索标题或类目</span></div>
+    <span class="btn sm btn-w" style="height:42px"><svg class="i" viewBox="0 0 24 24"><path d="M4 6.5h16M7 12h10M10 17.5h4"/></svg>筛选</span>
+  </div>
+  <div class="chips mt12"><span class="chip sm on">全部</span><span class="chip sm">15 秒内</span><span class="chip sm">竖屏</span><span class="chip sm">口播带货</span></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--s2);margin-top:var(--s3)">
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
+    <div class="th" style="width:170px;height:190px;background:#e9dccb">
+     <span class="mg" style="font-size:58px">衬</span>
+     
+     <span class="tl"><span class="dur">9:16</span></span>
+     <span class="br"><span class="dur">0:15</span></span>
+   </div>
+    <div style="padding:var(--s3) var(--s3) var(--s3)">
+      <div class="cl2" style="font-size:14px;font-weight:600;line-height:1.4;height:39px">每日新款穿搭分享，质感衬衫这样穿</div>
+      <div class="flex between mt8"><span style="font-size:13px" class="price"><span class="num ">270</span> 积分</span><span class="btn sm btn-s" style="height:28px;font-size:13px;padding:0 var(--s3)">使用</span></div>
+    </div>
+  </div>
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
+    <div class="th" style="width:170px;height:190px;background:#dfe3d3">
+     <span class="mg" style="font-size:58px">夏</span>
+     
+     <span class="tl"><span class="dur">9:16</span></span>
+     <span class="br"><span class="dur">0:24</span></span>
+   </div>
+    <div style="padding:var(--s3) var(--s3) var(--s3)">
+      <div class="cl2" style="font-size:14px;font-weight:600;line-height:1.4;height:39px">夏日轻薄单品种草，透气到像没穿</div>
+      <div class="flex between mt8"><span style="font-size:13px" class="price"><span class="num ">432</span> 积分</span><span class="btn sm btn-s" style="height:28px;font-size:13px;padding:0 var(--s3)">使用</span></div>
+    </div>
+  </div>
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
+    <div class="th" style="width:170px;height:190px;background:#e6d6cd">
+     <span class="mg" style="font-size:58px">通</span>
+     
+     <span class="tl"><span class="dur">16:9</span></span>
+     <span class="br"><span class="dur">0:38</span></span>
+   </div>
+    <div style="padding:var(--s3) var(--s3) var(--s3)">
+      <div class="cl2" style="font-size:14px;font-weight:600;line-height:1.4;height:39px">一衣三穿的通勤穿搭公式，快码住</div>
+      <div class="flex between mt8"><span style="font-size:13px" class="price"><span class="num ">684</span> 积分</span><span class="btn sm btn-s" style="height:28px;font-size:13px;padding:0 var(--s3)">使用</span></div>
+    </div>
+  </div>
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
+    <div class="th" style="width:170px;height:190px;background:#e8dcc3">
+     <span class="mg" style="font-size:58px">料</span>
+     
+     <span class="tl"><span class="dur">9:16</span></span>
+     <span class="br"><span class="dur">1:05</span></span>
+   </div>
+    <div style="padding:var(--s3) var(--s3) var(--s3)">
+      <div class="cl2" style="font-size:14px;font-weight:600;line-height:1.4;height:39px">近距离看面料细节，摸过的都说好</div>
+      <div class="flex between mt8"><span style="font-size:13px" class="price"><span class="num ">1,170</span> 积分</span><span class="btn sm btn-s" style="height:28px;font-size:13px;padding:0 var(--s3)">使用</span></div>
+    </div>
+  </div></div></div>
+  <div class="footer dock" style="padding-bottom:var(--safe-b)"><div class="flex gap12"><span class="ill" style="width:36px;height:36px;border-radius:var(--r-md);margin:0;color:var(--char)"><svg class="i" viewBox="0 0 24 24"><path d="M12 15.5V5M7.5 9.5L12 5l4.5 4.5M5 19h14"/></svg></span>
+  <div class="grow"><div style="font-size:14px;font-weight:600">没有合适的参考视频？</div><div class="t-mic">手动上传同类型的爆款作参考</div></div><svg class="i chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div></div><div class="scrim"></div><div class="sheet">
+  <div class="grab"></div>
+  <div class="sh-h"><div><div class="h-sec">确认生成</div><div class="t-mic mt4">生成失败按消耗积分全额返还</div></div><span class="x"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div>
+  <div class="card wh flex gap12 mt12" style="padding:var(--s3)"><div class="th" style="width:56px;height:72px;background:#e9dccb">
+     <span class="mg" style="font-size:22px">衬</span>
+     
+     
+     
+   </div>
+    <div class="grow"><div style="font-size:14px;font-weight:600" class="cl2">每日新款穿搭分享，质感衬衫这样穿</div><div class="t-mic mt4">9:16 · 15 秒 · 夏季棉麻衬衫</div></div></div>
+  <div class="mt16">
+    <div class="kv"><span>本次消耗</span><span><span class="strike num" style="font-size:13px">990</span>&nbsp; <b class="price" style="font-size:18px"><span class="num ">270</span> 积分</b></span></div>
+    <div class="hr" style="margin:var(--s2) 0"></div>
+    
+    <div class="kv"><span>赠送积分抵扣</span><b class="num">−270</b></div>
+    <div class="kv"><span>充值积分抵扣</span><b class="num">0</b></div>
+    <div class="kv"><span>生成后剩余</span><span><b class="num">920</b> <span class="t-mic">（赠送 230 · 充值 690）</span></span></div>
+  </div>
+  <span class="btn btn-p mt20">确认生成 · 270 积分</span>
+  <span class="btn btn-g mt4">再看看其他模板</span>
+  </div><div class="hi "></div></div></div><a class="hit" href="screens/08.html" aria-label="08 确认生成 · 赠送积分抵扣"></a></div>
+      <div class="cap"><span class="no">08</span><span class="nm">确认生成 · 赠送积分抵扣</span><span class="kd">面板</span><span class="tag re">重设计</span></div>
+      <p class="note">补上双池抵扣明细：赠送扣 270、充值不动、生成后剩余多少。</p>
+    </div>
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">选择参考视频</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body">
+  
+  <div class="card pad flex gap12" style="padding:var(--s3)">
+    <div class="th" style="width:52px;height:52px;background:#e9dccb">
+     <span class="mg" style="font-size:24px">衬</span>
+     
+     
+     
+   </div>
+    <div class="grow"><div class="h-card">夏季棉麻衬衫</div>
+      <div class="t-mic mt4 flex gap8"><svg class="i" style="width:14px;height:14px" viewBox="0 0 24 24"><path d="M4 4h7.5l8.5 8.5-7.5 7.5L4 11.5zM8 8h.01"/></svg><span>服装内衣 / 上装</span><span style="color:var(--brand-strong);font-weight:600">更换类目</span></div></div>
+    <span class="btn sm btn-w">修改</span>
+  </div>
+  <div class="flex gap8 mt12">
+    <div class="field grow flex gap8" style="height:42px;padding:0 var(--s3);color:var(--stone)"><svg class="i" viewBox="0 0 24 24"><path d="M10.5 4a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM20 20l-4.6-4.6"/></svg><span>搜索标题或类目</span></div>
+    <span class="btn sm btn-w" style="height:42px"><svg class="i" viewBox="0 0 24 24"><path d="M4 6.5h16M7 12h10M10 17.5h4"/></svg>筛选</span>
+  </div>
+  <div class="chips mt12"><span class="chip sm on">全部</span><span class="chip sm">15 秒内</span><span class="chip sm">竖屏</span><span class="chip sm">口播带货</span></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--s2);margin-top:var(--s3)">
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
+    <div class="th" style="width:170px;height:190px;background:#e9dccb">
+     <span class="mg" style="font-size:58px">衬</span>
+     
+     <span class="tl"><span class="dur">9:16</span></span>
+     <span class="br"><span class="dur">0:15</span></span>
+   </div>
+    <div style="padding:var(--s3) var(--s3) var(--s3)">
+      <div class="cl2" style="font-size:14px;font-weight:600;line-height:1.4;height:39px">每日新款穿搭分享，质感衬衫这样穿</div>
+      <div class="flex between mt8"><span style="font-size:13px" class="price"><span class="num ">270</span> 积分</span><span class="btn sm btn-s" style="height:28px;font-size:13px;padding:0 var(--s3)">使用</span></div>
+    </div>
+  </div>
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
+    <div class="th" style="width:170px;height:190px;background:#dfe3d3">
+     <span class="mg" style="font-size:58px">夏</span>
+     
+     <span class="tl"><span class="dur">9:16</span></span>
+     <span class="br"><span class="dur">0:24</span></span>
+   </div>
+    <div style="padding:var(--s3) var(--s3) var(--s3)">
+      <div class="cl2" style="font-size:14px;font-weight:600;line-height:1.4;height:39px">夏日轻薄单品种草，透气到像没穿</div>
+      <div class="flex between mt8"><span style="font-size:13px" class="price"><span class="num ">432</span> 积分</span><span class="btn sm btn-s" style="height:28px;font-size:13px;padding:0 var(--s3)">使用</span></div>
+    </div>
+  </div>
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
+    <div class="th" style="width:170px;height:190px;background:#e6d6cd">
+     <span class="mg" style="font-size:58px">通</span>
+     
+     <span class="tl"><span class="dur">16:9</span></span>
+     <span class="br"><span class="dur">0:38</span></span>
+   </div>
+    <div style="padding:var(--s3) var(--s3) var(--s3)">
+      <div class="cl2" style="font-size:14px;font-weight:600;line-height:1.4;height:39px">一衣三穿的通勤穿搭公式，快码住</div>
+      <div class="flex between mt8"><span style="font-size:13px" class="price"><span class="num ">684</span> 积分</span><span class="btn sm btn-s" style="height:28px;font-size:13px;padding:0 var(--s3)">使用</span></div>
+    </div>
+  </div>
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
+    <div class="th" style="width:170px;height:190px;background:#e8dcc3">
+     <span class="mg" style="font-size:58px">料</span>
+     
+     <span class="tl"><span class="dur">9:16</span></span>
+     <span class="br"><span class="dur">1:05</span></span>
+   </div>
+    <div style="padding:var(--s3) var(--s3) var(--s3)">
+      <div class="cl2" style="font-size:14px;font-weight:600;line-height:1.4;height:39px">近距离看面料细节，摸过的都说好</div>
+      <div class="flex between mt8"><span style="font-size:13px" class="price"><span class="num ">1,170</span> 积分</span><span class="btn sm btn-s" style="height:28px;font-size:13px;padding:0 var(--s3)">使用</span></div>
+    </div>
+  </div></div></div>
+  <div class="footer dock" style="padding-bottom:var(--safe-b)"><div class="flex gap12"><span class="ill" style="width:36px;height:36px;border-radius:var(--r-md);margin:0;color:var(--char)"><svg class="i" viewBox="0 0 24 24"><path d="M12 15.5V5M7.5 9.5L12 5l4.5 4.5M5 19h14"/></svg></span>
+  <div class="grow"><div style="font-size:14px;font-weight:600">没有合适的参考视频？</div><div class="t-mic">手动上传同类型的爆款作参考</div></div><svg class="i chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div></div><div class="scrim"></div><div class="sheet">
+  <div class="grab"></div>
+  <div class="sh-h"><div><div class="h-sec">确认生成</div><div class="t-mic mt4">生成失败按消耗积分全额返还</div></div><span class="x"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div>
+  <div class="card wh flex gap12 mt12" style="padding:var(--s3)"><div class="th" style="width:56px;height:72px;background:#e9dccb">
+     <span class="mg" style="font-size:22px">衬</span>
+     
+     
+     
+   </div>
+    <div class="grow"><div style="font-size:14px;font-weight:600" class="cl2">每日新款穿搭分享，质感衬衫这样穿</div><div class="t-mic mt4">9:16 · 15 秒 · 夏季棉麻衬衫</div></div></div>
+  <div class="mt16">
+    <div class="kv"><span>本次消耗</span><span><span class="strike num" style="font-size:13px">990</span>&nbsp; <b class="price" style="font-size:18px"><span class="num ">270</span> 积分</b></span></div>
+    <div class="hr" style="margin:var(--s2) 0"></div>
+    
+    <div class="kv"><span>当前余额</span><b class="num">120</b></div>
+    <div class="kv"><span>还差</span><b class="num" style="color:var(--err)">150</b></div>
+    <div class="card flex gap12 mt8" style="padding:var(--s3);background:var(--brand-soft);border-color:var(--brand-line)">
+      <div class="grow"><div style="font-size:14px;font-weight:600">首充礼包 ¥10 → 1,000 积分</div><div class="t-mic mt4">补足后还能再做约 3 条 15 秒</div></div><span class="badge b-g">推荐</span></div>
+  </div>
+  <span class="btn btn-p mt20">充 ¥10 并继续生成</span>
+  <span class="btn btn-g mt4">选择其他充值档位</span>
+  </div><div class="hi "></div></div></div><a class="hit" href="screens/09.html" aria-label="09 确认生成 · 积分不足"></a></div>
+      <div class="cap"><span class="no">09</span><span class="nm">确认生成 · 积分不足</span><span class="kd">面板</span><span class="tag re">重设计</span></div>
+      <p class="note">写明“还差 150”，直接推荐首充 ¥10，一步充值并继续生成。</p>
+    </div>
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">生成进度</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body">
+  <div class="flex gap12 mt8"><div class="th" style="width:64px;height:86px;background:#e9dccb">
+     <span class="mg" style="font-size:23px">衬</span>
+     
+     
+     
+   </div><div class="grow"><div class="h-sec" style="font-size:19px">已提交，正在生成</div><div class="t-cap mt4">每日新款穿搭分享 · 衬衫款</div></div></div>
+  <div class="card pad mt20">
+    <div class="flex between" style="align-items:baseline"><span class="num" style="font-size:40px;line-height:1">62<span style="font-size:20px">%</span></span><span class="t-cap">预计还需 2 分钟</span></div>
+    <div class="bar mt12" style="height:8px;border-radius:4px"><i style="width:62%"></i></div>
+    <div class="mt12">
+      
+      <div class="step" style="align-items:center;padding:var(--s2) 0"><span class="n done"><svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span class="grow" style="font-size:14px;">解析参考视频结构</span><span class="t-mic num">0:08</span></div>
+      <div class="step" style="align-items:center;padding:var(--s2) 0"><span class="n done"><svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span class="grow" style="font-size:14px;">生成分镜与口播文案</span><span class="t-mic num">0:21</span></div>
+      <div class="step" style="align-items:center;padding:var(--s2) 0"><span class="n now">3</span><span class="grow" style="font-size:14px;">合成商品画面</span><span class="t-mic num">进行中</span></div>
+      <div class="step" style="align-items:center;padding:var(--s2) 0"><span class="n ">4</span><span class="grow" style="font-size:14px;color:var(--olive)">配音、字幕与导出</span><span class="t-mic num"></span></div>
+    </div>
+  </div>
+  <div class="card flex gap12 mt12" style="padding:var(--s3) var(--s3);background:var(--wh)"><span style="color:var(--brand)"><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5l7 2.5v5.5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/></svg></span><span class="grow t-cap">已冻结 270 积分，生成失败自动全额返还</span></div>
+  <div class="card flex gap12 mt12" style="padding:var(--s3) var(--s3)"><span style="color:var(--char)"><svg class="i" viewBox="0 0 24 24"><path d="M4.5 5h15v10.5H10l-5.5 4z"/></svg></span><div class="grow"><div style="font-size:14px;font-weight:600">完成后微信通知我</div><div class="t-mic">可以先离开，生成不会中断</div></div><span class="btn sm btn-p">开启</span></div>
+  </div>
+  <div class="footer"><div class="row2"><span class="btn btn-s">继续创作</span><span class="btn btn-w">去作品查看</span></div></div><div class="hi "></div></div></div><a class="hit" href="screens/09a.html" aria-label="09a 已提交 · 生成进度"></a></div>
+      <div class="cap"><span class="no">09a</span><span class="nm">已提交 · 生成进度</span><span class="kd">页面</span><span class="tag np">新增页面</span></div>
+      <p class="note">补齐 08 之后的落地页：分步进度、预计时长、积分冻结说明、订阅完成通知。</p>
+    </div></div>
+  <h2>A · 作品<small>列表 → 管理 → 预览 → 保存 · 8 屏</small></h2>
+  <div class="cards">
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav" style="height:52px;padding-left:var(--s5)"><span class="h-page">作品</span><span style="position:absolute;right:108px;top:14px;font-size:15px;font-weight:600;color:var(--brand-strong)">管理</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div>
+  <div class="body">
+    <div class="seg"><a class="on">全部 8</a><a>已完成</a><a>生成中</a><a>失败</a></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--s3);margin-top:var(--s3)">
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
+    <div class="th" style="width:169px;height:150px;background:#dfe3d3">
+     <span class="mg" style="font-size:45px">护</span>
+     
+     <span class="tl"><span class="badge b-q"><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zM12 7.5V12l3 2"/></svg>排队中</span></span>
+     
+   </div>
+    
+    <div style="padding:var(--s3) var(--s3) var(--s3)" class="flex gap8">
+      <div class="grow"><div class="ell" style="font-size:14px;font-weight:600">国货护肤新品开箱</div>
+        <div class="t-mic mt4">09-19 21:20</div></div>
+      <span style="color:var(--olive)"><svg class="i" viewBox="0 0 24 24"><path d="M5.5 12h.01M12 12h.01M18.5 12h.01"/></svg></span>
+    </div>
+  </div>
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
+    <div class="th" style="width:169px;height:150px;background:#e8dcc3">
+     <span class="mg" style="font-size:45px">针</span>
+     
+     <span class="tl"><span class="badge b-g"><svg class="i" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4.5V8H16"/></svg>生成中 62%</span></span>
+     
+   </div>
+    <div class="bar" style="border-radius:0;height:3px"><i style="width:62%"></i></div>
+    <div style="padding:var(--s3) var(--s3) var(--s3)" class="flex gap8">
+      <div class="grow"><div class="ell" style="font-size:14px;font-weight:600">秋季针织开衫试穿</div>
+        <div class="t-mic mt4">约 2 分钟后完成</div></div>
+      <span style="color:var(--olive)"><svg class="i" viewBox="0 0 24 24"><path d="M5.5 12h.01M12 12h.01M18.5 12h.01"/></svg></span>
+    </div>
+  </div>
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
+    <div class="th" style="width:169px;height:150px;background:#e2e4d6">
+     <span class="mg" style="font-size:45px">夏</span>
+     
+     <span class="tl"><span class="badge b-g"><svg class="i" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4.5V8H16"/></svg>生成中 18%</span></span>
+     
+   </div>
+    <div class="bar" style="border-radius:0;height:3px"><i style="width:18%"></i></div>
+    <div style="padding:var(--s3) var(--s3) var(--s3)" class="flex gap8">
+      <div class="grow"><div class="ell" style="font-size:14px;font-weight:600">夏日轻薄单品种草</div>
+        <div class="t-mic mt4">约 6 分钟后完成</div></div>
+      <span style="color:var(--olive)"><svg class="i" viewBox="0 0 24 24"><path d="M5.5 12h.01M12 12h.01M18.5 12h.01"/></svg></span>
+    </div>
+  </div>
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
+    <div class="th" style="width:169px;height:150px;background:#e9dccb">
+     <span class="mg" style="font-size:45px">衬</span>
+     
+     <span class="tl"><span class="badge b-ok"><svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>已完成</span></span>
+     <span class="br"><span class="dur">0:15</span></span>
+   </div>
+    
+    <div style="padding:var(--s3) var(--s3) var(--s3)" class="flex gap8">
+      <div class="grow"><div class="ell" style="font-size:14px;font-weight:600">每日新款穿搭分享 · 衬衫款</div>
+        <div class="t-mic mt4">09-19 18:42</div></div>
+      <span style="color:var(--olive)"><svg class="i" viewBox="0 0 24 24"><path d="M5.5 12h.01M12 12h.01M18.5 12h.01"/></svg></span>
+    </div>
+  </div>
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
+    <div class="th" style="width:169px;height:150px;background:#e6d6cd">
+     <span class="mg" style="font-size:45px">包</span>
+     
+     <span class="tl"><span class="badge b-ok"><svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>已完成</span></span>
+     <span class="br"><span class="dur">0:15</span></span>
+   </div>
+    
+    <div style="padding:var(--s3) var(--s3) var(--s3)" class="flex gap8">
+      <div class="grow"><div class="ell" style="font-size:14px;font-weight:600">轻奢通勤包合集</div>
+        <div class="t-mic mt4">09-19 12:30</div></div>
+      <span style="color:var(--olive)"><svg class="i" viewBox="0 0 24 24"><path d="M5.5 12h.01M12 12h.01M18.5 12h.01"/></svg></span>
+    </div>
+  </div>
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
+    <div class="th" style="width:169px;height:150px;background:#ece1c9">
+     <span class="mg" style="font-size:45px">粥</span>
+     
+     <span class="tl"><span class="badge b-err"><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zM12 8v4.8M12 16h.01"/></svg>失败 · 已返还</span></span>
+     
+   </div>
+    
+    <div style="padding:var(--s3) var(--s3) var(--s3)" class="flex gap8">
+      <div class="grow"><div class="ell" style="font-size:14px;font-weight:600">速食早餐粥推广视频</div>
+        <div class="t-mic mt4">09-18 11:05</div></div>
+      <span style="color:var(--olive)"><svg class="i" viewBox="0 0 24 24"><path d="M5.5 12h.01M12 12h.01M18.5 12h.01"/></svg></span>
+    </div>
+  </div></div>
+  </div><div class="tab"><a class=""><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5l1.9 5.1 5.1 1.9-5.1 1.9L12 17.5l-1.9-5.1L5 10.5l5.1-1.9zM18.5 16l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/></svg>创作</a><a class="on"><svg class="i" viewBox="0 0 24 24"><path d="M3.5 6h17v12h-17zM10.5 9.5v5l4-2.5z"/></svg>作品</a><a class=""><svg class="i" viewBox="0 0 24 24"><path d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM4.5 20c1-3.8 4-5.5 7.5-5.5s6.5 1.7 7.5 5.5"/></svg>我的</a></div><div class="hi "></div></div></div><a class="hit" href="screens/10.html" aria-label="10 作品列表（8 张 · 倒序）"></a></div>
+      <div class="cap"><span class="no">10</span><span class="nm">作品列表（8 张 · 倒序）</span><span class="tag re">重设计</span></div>
+      <p class="note">改为双列网格，卡片只保留状态；操作收进“···”，去掉 24 个平铺按钮。</p>
+    </div>
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav" style="height:52px;padding-left:var(--s5)"><span class="h-page">作品</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body center" style="padding-top:110px">
+  <div class="flex gap8" style="justify-content:center"><div class="th" style="width:60px;height:80px;background:#e9dccb">
+     <span class="mg" style="font-size:25px"></span>
+     
+     
+     
+   </div><div class="th" style="width:60px;height:80px;background:#dfe3d3">
+     <span class="mg" style="font-size:25px"></span>
+     
+     
+     
+   </div><div class="th" style="width:60px;height:80px;background:#e6d6cd">
+     <span class="mg" style="font-size:25px"></span>
+     
+     
+     
+   </div></div>
+  <div class="h-sec mt24">还没有作品</div>
+  <div class="t-cap mt8">上传一张商品图，复刻你的第一条带货视频<br>新人 500 积分够做 1 条 15 秒</div>
+  <span class="btn btn-p mt24" style="width:200px;margin-left:auto;margin-right:auto">去创作</span>
+  <div class="t-cap mt16" style="color:var(--char)">先看看别人做了什么 ›</div>
+  </div><div class="tab"><a class=""><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5l1.9 5.1 5.1 1.9-5.1 1.9L12 17.5l-1.9-5.1L5 10.5l5.1-1.9zM18.5 16l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/></svg>创作</a><a class="on"><svg class="i" viewBox="0 0 24 24"><path d="M3.5 6h17v12h-17zM10.5 9.5v5l4-2.5z"/></svg>作品</a><a class=""><svg class="i" viewBox="0 0 24 24"><path d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM4.5 20c1-3.8 4-5.5 7.5-5.5s6.5 1.7 7.5 5.5"/></svg>我的</a></div><div class="hi "></div></div></div><a class="hit" href="screens/10a.html" aria-label="10a 作品列表空态"></a></div>
+      <div class="cap"><span class="no">10a</span><span class="nm">作品列表空态</span><span class="kd">状态</span><span class="tag ns">新增状态</span></div>
+      <p class="note">新用户进入作品 tab：一句话说明 + 去创作 + 看案例。</p>
+    </div>
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav" style="height:52px;padding-left:var(--s5)"><span class="h-page">作品</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div>
+  <div class="body">
+    <div class="seg"><a class="on">全部 8</a><a>已完成</a><a>生成中</a><a>失败</a></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--s3);margin-top:var(--s3)">
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
+    <div class="th" style="width:169px;height:150px;background:#dfe3d3">
+     <span class="mg" style="font-size:45px">护</span>
+     
+     <span class="tl"><span class="badge b-q"><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zM12 7.5V12l3 2"/></svg>排队中</span></span><span class="tr"><span class="check " style="width:24px;height:24px"></span></span>
+     
+   </div>
+    
+    <div style="padding:var(--s3) var(--s3) var(--s3)" class="flex gap8">
+      <div class="grow"><div class="ell" style="font-size:14px;font-weight:600">国货护肤新品开箱</div>
+        <div class="t-mic mt4">09-19 21:20</div></div>
+      
+    </div>
+  </div>
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
+    <div class="th" style="width:169px;height:150px;background:#e8dcc3">
+     <span class="mg" style="font-size:45px">针</span>
+     
+     <span class="tl"><span class="badge b-g"><svg class="i" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4.5V8H16"/></svg>生成中 62%</span></span><span class="tr"><span class="check " style="width:24px;height:24px"></span></span>
+     
+   </div>
+    <div class="bar" style="border-radius:0;height:3px"><i style="width:62%"></i></div>
+    <div style="padding:var(--s3) var(--s3) var(--s3)" class="flex gap8">
+      <div class="grow"><div class="ell" style="font-size:14px;font-weight:600">秋季针织开衫试穿</div>
+        <div class="t-mic mt4">约 2 分钟后完成</div></div>
+      
+    </div>
+  </div>
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
+    <div class="th" style="width:169px;height:150px;background:#e2e4d6">
+     <span class="mg" style="font-size:45px">夏</span>
+     
+     <span class="tl"><span class="badge b-g"><svg class="i" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4.5V8H16"/></svg>生成中 18%</span></span><span class="tr"><span class="check " style="width:24px;height:24px"></span></span>
+     
+   </div>
+    <div class="bar" style="border-radius:0;height:3px"><i style="width:18%"></i></div>
+    <div style="padding:var(--s3) var(--s3) var(--s3)" class="flex gap8">
+      <div class="grow"><div class="ell" style="font-size:14px;font-weight:600">夏日轻薄单品种草</div>
+        <div class="t-mic mt4">约 6 分钟后完成</div></div>
+      
+    </div>
+  </div>
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
+    <div class="th" style="width:169px;height:150px;background:#e9dccb">
+     <span class="mg" style="font-size:45px">衬</span>
+     
+     <span class="tl"><span class="badge b-ok"><svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>已完成</span></span><span class="tr"><span class="check on" style="width:24px;height:24px"><svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></span>
+     <span class="br"><span class="dur">0:15</span></span>
+   </div>
+    
+    <div style="padding:var(--s3) var(--s3) var(--s3)" class="flex gap8">
+      <div class="grow"><div class="ell" style="font-size:14px;font-weight:600">每日新款穿搭分享 · 衬衫款</div>
+        <div class="t-mic mt4">09-19 18:42</div></div>
+      
+    </div>
+  </div>
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
+    <div class="th" style="width:169px;height:150px;background:#e6d6cd">
+     <span class="mg" style="font-size:45px">包</span>
+     
+     <span class="tl"><span class="badge b-ok"><svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>已完成</span></span><span class="tr"><span class="check on" style="width:24px;height:24px"><svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></span>
+     <span class="br"><span class="dur">0:15</span></span>
+   </div>
+    
+    <div style="padding:var(--s3) var(--s3) var(--s3)" class="flex gap8">
+      <div class="grow"><div class="ell" style="font-size:14px;font-weight:600">轻奢通勤包合集</div>
+        <div class="t-mic mt4">09-19 12:30</div></div>
+      
+    </div>
+  </div>
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
+    <div class="th" style="width:169px;height:150px;background:#ece1c9">
+     <span class="mg" style="font-size:45px">粥</span>
+     
+     <span class="tl"><span class="badge b-err"><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zM12 8v4.8M12 16h.01"/></svg>失败 · 已返还</span></span><span class="tr"><span class="check " style="width:24px;height:24px"></span></span>
+     
+   </div>
+    
+    <div style="padding:var(--s3) var(--s3) var(--s3)" class="flex gap8">
+      <div class="grow"><div class="ell" style="font-size:14px;font-weight:600">速食早餐粥推广视频</div>
+        <div class="t-mic mt4">09-18 11:05</div></div>
+      
+    </div>
+  </div></div>
+  </div><div class="footer dock" style="padding-bottom:var(--safe-b)"><div class="flex gap12"><span class="check on"><svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span class="grow" style="font-size:14px">已选 <b>2</b> 个</span><span class="btn sm btn-s" style="height:40px">取消</span><span class="btn sm btn-danger" style="height:40px"><svg class="i" viewBox="0 0 24 24"><path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13M10 11v5.5M14 11v5.5"/></svg>删除</span></div></div><div class="hi "></div></div></div><a class="hit" href="screens/11.html" aria-label="11 作品管理 · 批量选择"></a></div>
+      <div class="cap"><span class="no">11</span><span class="nm">作品管理 · 批量选择</span><span class="tag re">重设计</span></div>
+      <p class="note">勾选框放在缩略图右上角；底栏显示已选数量与危险操作。</p>
+    </div>
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">作品预览</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body np">
+  <div class="player" style="height:360px;margin:var(--s1) var(--s5) 0;border-radius:var(--r-xl);overflow:hidden">
+    <div class="th" style="width:350px;height:360px;background:#3a3631">
+     <span class="mg" style="font-size:105px">衬</span>
+     
+     
+     
+   </div>
+    <span class="pl" style="position:absolute;width:56px;height:56px;border-radius:50%;background:rgba(250,249,245,.9);display:grid;place-items:center"><svg class="i f" viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z"/></svg></span>
+    <span class="dur" style="position:absolute;right:12px;bottom:12px">0:15</span>
+    <span class="badge b-ink" style="position:absolute;left:12px;top:12px">预览 · 含水印</span>
+  </div>
+  <div style="padding:var(--s4) var(--s5) 0">
+    <div class="h-sec">每日新款穿搭分享 · 衬衫款</div>
+    <div class="t-mic mt4">09-19 18:42 生成 · 9:16 · 15 秒 · 消耗 270 积分</div>
+    <div class="row2 mt16"><span class="btn md btn-p"><svg class="i" viewBox="0 0 24 24"><path d="M12 4.5V15M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></svg>保存到相册</span><span class="btn md btn-s" style="width:120px"><svg class="i" viewBox="0 0 24 24"><path d="M12 15V4.5M8 8.5l4-4 4 4M5 12v8h14v-8"/></svg>分享</span></div>
+    <div class="card pad mt12 flex gap12" style="padding:var(--s3);background:var(--brand-soft);border-color:var(--brand-line)">
+      <div class="grow"><div style="font-size:14px;font-weight:600">去水印导出，再做 3 条同款</div><div class="t-mic mt4">充 ¥10 得 1,000 积分 · 单条约 ¥2.70</div></div>
+      <span class="btn sm btn-p">去充值</span></div>
+    <div class="flex between mt16" style="font-size:14px"><span class="flex gap8" style="color:var(--char)"><svg class="i" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4.5V8H16"/></svg>重新生成</span><span class="flex gap8" style="color:var(--err)"><svg class="i" viewBox="0 0 24 24"><path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13M10 11v5.5M14 11v5.5"/></svg>删除</span></div>
+    <div class="ai-note mt16">内容由 AI 生成，请仔细甄别</div>
+  </div></div><div class="hi "></div></div></div><a class="hit" href="screens/12.html" aria-label="12 作品预览 · 付费触点"></a></div>
+      <div class="cap"><span class="no">12</span><span class="nm">作品预览 · 付费触点</span><span class="tag re">重设计</span></div>
+      <p class="note">保存到相册成为主操作；付费触点改为“去水印 + 再做 3 条”的利益表达。</p>
+    </div>
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">作品预览</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body np">
+  <div class="player" style="height:360px;margin:var(--s1) var(--s5) 0;border-radius:var(--r-xl);overflow:hidden">
+    <div class="th" style="width:350px;height:360px;background:#3a3631">
+     <span class="mg" style="font-size:105px">衬</span>
+     
+     
+     
+   </div>
+    <span class="pl" style="position:absolute;width:56px;height:56px;border-radius:50%;background:rgba(250,249,245,.9);display:grid;place-items:center"><svg class="i f" viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z"/></svg></span>
+    <span class="dur" style="position:absolute;right:12px;bottom:12px">0:15</span>
+    <span class="badge b-ink" style="position:absolute;left:12px;top:12px">预览 · 含水印</span>
+  </div>
+  <div style="padding:var(--s4) var(--s5) 0">
+    <div class="h-sec">每日新款穿搭分享 · 衬衫款</div>
+    <div class="t-mic mt4">09-19 18:42 生成 · 9:16 · 15 秒 · 消耗 270 积分</div>
+    <div class="row2 mt16"><span class="btn md btn-p"><svg class="i" viewBox="0 0 24 24"><path d="M12 4.5V15M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></svg>保存到相册</span><span class="btn md btn-s" style="width:120px"><svg class="i" viewBox="0 0 24 24"><path d="M12 15V4.5M8 8.5l4-4 4 4M5 12v8h14v-8"/></svg>分享</span></div>
+    <div class="card pad mt12 flex gap12" style="padding:var(--s3);background:var(--brand-soft);border-color:var(--brand-line)">
+      <div class="grow"><div style="font-size:14px;font-weight:600">去水印导出，再做 3 条同款</div><div class="t-mic mt4">充 ¥10 得 1,000 积分 · 单条约 ¥2.70</div></div>
+      <span class="btn sm btn-p">去充值</span></div>
+    <div class="flex between mt16" style="font-size:14px"><span class="flex gap8" style="color:var(--char)"><svg class="i" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4.5V8H16"/></svg>重新生成</span><span class="flex gap8" style="color:var(--err)"><svg class="i" viewBox="0 0 24 24"><path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13M10 11v5.5M14 11v5.5"/></svg>删除</span></div>
+    <div class="ai-note mt16">内容由 AI 生成，请仔细甄别</div>
+  </div></div><div class="scrim"></div><div class="dlg center">
+  <div class="ill" style="width:64px;height:64px;border-radius:var(--r-xl)"><svg class="i" viewBox="0 0 24 24"><path d="M12 4.5V15M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></svg></div>
+  <div class="h-sec mt16">正在保存到相册</div>
+  <div class="t-cap mt4">请不要离开当前页面</div>
+  <div class="bar mt20" style="height:8px"><i style="width:68%"></i></div>
+  <div class="flex between mt8 t-mic num"><span>11.2 / 16.5 MB</span><span>68%</span></div>
+  <span class="btn btn-g mt12">取消</span></div><div class="hi "></div></div></div><a class="hit" href="screens/12a.html" aria-label="12a 保存到相册中"></a></div>
+      <div class="cap"><span class="no">12a</span><span class="nm">保存到相册中</span><span class="kd">状态</span><span class="tag ns">新增状态</span></div>
+      <p class="note">显示保存进度与文件大小，可取消。</p>
+    </div>
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav" style="height:52px;padding-left:var(--s5)"><span class="h-page">作品</span><span style="position:absolute;right:108px;top:14px;font-size:15px;font-weight:600;color:var(--brand-strong)">管理</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div>
+  <div class="body">
+    <div class="seg"><a class="on">全部 8</a><a>已完成</a><a>生成中</a><a>失败</a></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--s3);margin-top:var(--s3)">
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
+    <div class="th" style="width:169px;height:150px;background:#dfe3d3">
+     <span class="mg" style="font-size:45px">护</span>
+     
+     <span class="tl"><span class="badge b-q"><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zM12 7.5V12l3 2"/></svg>排队中</span></span>
+     
+   </div>
+    
+    <div style="padding:var(--s3) var(--s3) var(--s3)" class="flex gap8">
+      <div class="grow"><div class="ell" style="font-size:14px;font-weight:600">国货护肤新品开箱</div>
+        <div class="t-mic mt4">09-19 21:20</div></div>
+      <span style="color:var(--olive)"><svg class="i" viewBox="0 0 24 24"><path d="M5.5 12h.01M12 12h.01M18.5 12h.01"/></svg></span>
+    </div>
+  </div>
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
+    <div class="th" style="width:169px;height:150px;background:#e8dcc3">
+     <span class="mg" style="font-size:45px">针</span>
+     
+     <span class="tl"><span class="badge b-g"><svg class="i" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4.5V8H16"/></svg>生成中 62%</span></span>
+     
+   </div>
+    <div class="bar" style="border-radius:0;height:3px"><i style="width:62%"></i></div>
+    <div style="padding:var(--s3) var(--s3) var(--s3)" class="flex gap8">
+      <div class="grow"><div class="ell" style="font-size:14px;font-weight:600">秋季针织开衫试穿</div>
+        <div class="t-mic mt4">约 2 分钟后完成</div></div>
+      <span style="color:var(--olive)"><svg class="i" viewBox="0 0 24 24"><path d="M5.5 12h.01M12 12h.01M18.5 12h.01"/></svg></span>
+    </div>
+  </div>
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
+    <div class="th" style="width:169px;height:150px;background:#e2e4d6">
+     <span class="mg" style="font-size:45px">夏</span>
+     
+     <span class="tl"><span class="badge b-g"><svg class="i" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4.5V8H16"/></svg>生成中 18%</span></span>
+     
+   </div>
+    <div class="bar" style="border-radius:0;height:3px"><i style="width:18%"></i></div>
+    <div style="padding:var(--s3) var(--s3) var(--s3)" class="flex gap8">
+      <div class="grow"><div class="ell" style="font-size:14px;font-weight:600">夏日轻薄单品种草</div>
+        <div class="t-mic mt4">约 6 分钟后完成</div></div>
+      <span style="color:var(--olive)"><svg class="i" viewBox="0 0 24 24"><path d="M5.5 12h.01M12 12h.01M18.5 12h.01"/></svg></span>
+    </div>
+  </div>
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
+    <div class="th" style="width:169px;height:150px;background:#e9dccb">
+     <span class="mg" style="font-size:45px">衬</span>
+     
+     <span class="tl"><span class="badge b-ok"><svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>已完成</span></span>
+     <span class="br"><span class="dur">0:15</span></span>
+   </div>
+    
+    <div style="padding:var(--s3) var(--s3) var(--s3)" class="flex gap8">
+      <div class="grow"><div class="ell" style="font-size:14px;font-weight:600">每日新款穿搭分享 · 衬衫款</div>
+        <div class="t-mic mt4">09-19 18:42</div></div>
+      <span style="color:var(--olive)"><svg class="i" viewBox="0 0 24 24"><path d="M5.5 12h.01M12 12h.01M18.5 12h.01"/></svg></span>
+    </div>
+  </div>
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
+    <div class="th" style="width:169px;height:150px;background:#e6d6cd">
+     <span class="mg" style="font-size:45px">包</span>
+     
+     <span class="tl"><span class="badge b-ok"><svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>已完成</span></span>
+     <span class="br"><span class="dur">0:15</span></span>
+   </div>
+    
+    <div style="padding:var(--s3) var(--s3) var(--s3)" class="flex gap8">
+      <div class="grow"><div class="ell" style="font-size:14px;font-weight:600">轻奢通勤包合集</div>
+        <div class="t-mic mt4">09-19 12:30</div></div>
+      <span style="color:var(--olive)"><svg class="i" viewBox="0 0 24 24"><path d="M5.5 12h.01M12 12h.01M18.5 12h.01"/></svg></span>
+    </div>
+  </div>
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
+    <div class="th" style="width:169px;height:150px;background:#ece1c9">
+     <span class="mg" style="font-size:45px">粥</span>
+     
+     <span class="tl"><span class="badge b-err"><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zM12 8v4.8M12 16h.01"/></svg>失败 · 已返还</span></span>
+     
+   </div>
+    
+    <div style="padding:var(--s3) var(--s3) var(--s3)" class="flex gap8">
+      <div class="grow"><div class="ell" style="font-size:14px;font-weight:600">速食早餐粥推广视频</div>
+        <div class="t-mic mt4">09-18 11:05</div></div>
+      <span style="color:var(--olive)"><svg class="i" viewBox="0 0 24 24"><path d="M5.5 12h.01M12 12h.01M18.5 12h.01"/></svg></span>
+    </div>
+  </div></div>
+  </div><div class="tab"><a class=""><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5l1.9 5.1 5.1 1.9-5.1 1.9L12 17.5l-1.9-5.1L5 10.5l5.1-1.9zM18.5 16l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/></svg>创作</a><a class="on"><svg class="i" viewBox="0 0 24 24"><path d="M3.5 6h17v12h-17zM10.5 9.5v5l4-2.5z"/></svg>作品</a><a class=""><svg class="i" viewBox="0 0 24 24"><path d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM4.5 20c1-3.8 4-5.5 7.5-5.5s6.5 1.7 7.5 5.5"/></svg>我的</a></div><div class="scrim"></div><div class="dlg">
+  <div class="h-sec">删除这条作品？</div>
+  <div class="t-cap mt8">「每日新款穿搭分享 · 衬衫款」删除后无法恢复，已消耗的积分不会返还。</div>
+  <div class="row2 mt24"><span class="btn md btn-s">取消</span><span class="btn md btn-danger">删除</span></div></div><div class="hi "></div></div></div><a class="hit" href="screens/13.html" aria-label="13 删除确认"></a></div>
+      <div class="cap"><span class="no">13</span><span class="nm">删除确认</span><span class="kd">弹框</span><span class="tag re">重设计</span></div>
+      <p class="note">明确写出作品名，并提示“已消耗积分不返还”。</p>
+    </div>
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav" style="height:52px;padding-left:var(--s5)"><span class="h-page">作品</span><span style="position:absolute;right:108px;top:14px;font-size:15px;font-weight:600;color:var(--brand-strong)">管理</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div>
+  <div class="body">
+    <div class="seg"><a class="on">全部 8</a><a>已完成</a><a>生成中</a><a>失败</a></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--s3);margin-top:var(--s3)">
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
+    <div class="th" style="width:169px;height:150px;background:#dfe3d3">
+     <span class="mg" style="font-size:45px">护</span>
+     
+     <span class="tl"><span class="badge b-q"><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zM12 7.5V12l3 2"/></svg>排队中</span></span>
+     
+   </div>
+    
+    <div style="padding:var(--s3) var(--s3) var(--s3)" class="flex gap8">
+      <div class="grow"><div class="ell" style="font-size:14px;font-weight:600">国货护肤新品开箱</div>
+        <div class="t-mic mt4">09-19 21:20</div></div>
+      <span style="color:var(--olive)"><svg class="i" viewBox="0 0 24 24"><path d="M5.5 12h.01M12 12h.01M18.5 12h.01"/></svg></span>
+    </div>
+  </div>
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
+    <div class="th" style="width:169px;height:150px;background:#e8dcc3">
+     <span class="mg" style="font-size:45px">针</span>
+     
+     <span class="tl"><span class="badge b-g"><svg class="i" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4.5V8H16"/></svg>生成中 62%</span></span>
+     
+   </div>
+    <div class="bar" style="border-radius:0;height:3px"><i style="width:62%"></i></div>
+    <div style="padding:var(--s3) var(--s3) var(--s3)" class="flex gap8">
+      <div class="grow"><div class="ell" style="font-size:14px;font-weight:600">秋季针织开衫试穿</div>
+        <div class="t-mic mt4">约 2 分钟后完成</div></div>
+      <span style="color:var(--olive)"><svg class="i" viewBox="0 0 24 24"><path d="M5.5 12h.01M12 12h.01M18.5 12h.01"/></svg></span>
+    </div>
+  </div>
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
+    <div class="th" style="width:169px;height:150px;background:#e2e4d6">
+     <span class="mg" style="font-size:45px">夏</span>
+     
+     <span class="tl"><span class="badge b-g"><svg class="i" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4.5V8H16"/></svg>生成中 18%</span></span>
+     
+   </div>
+    <div class="bar" style="border-radius:0;height:3px"><i style="width:18%"></i></div>
+    <div style="padding:var(--s3) var(--s3) var(--s3)" class="flex gap8">
+      <div class="grow"><div class="ell" style="font-size:14px;font-weight:600">夏日轻薄单品种草</div>
+        <div class="t-mic mt4">约 6 分钟后完成</div></div>
+      <span style="color:var(--olive)"><svg class="i" viewBox="0 0 24 24"><path d="M5.5 12h.01M12 12h.01M18.5 12h.01"/></svg></span>
+    </div>
+  </div>
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
+    <div class="th" style="width:169px;height:150px;background:#e9dccb">
+     <span class="mg" style="font-size:45px">衬</span>
+     
+     <span class="tl"><span class="badge b-ok"><svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>已完成</span></span>
+     <span class="br"><span class="dur">0:15</span></span>
+   </div>
+    
+    <div style="padding:var(--s3) var(--s3) var(--s3)" class="flex gap8">
+      <div class="grow"><div class="ell" style="font-size:14px;font-weight:600">每日新款穿搭分享 · 衬衫款</div>
+        <div class="t-mic mt4">09-19 18:42</div></div>
+      <span style="color:var(--olive)"><svg class="i" viewBox="0 0 24 24"><path d="M5.5 12h.01M12 12h.01M18.5 12h.01"/></svg></span>
+    </div>
+  </div>
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
+    <div class="th" style="width:169px;height:150px;background:#e6d6cd">
+     <span class="mg" style="font-size:45px">包</span>
+     
+     <span class="tl"><span class="badge b-ok"><svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>已完成</span></span>
+     <span class="br"><span class="dur">0:15</span></span>
+   </div>
+    
+    <div style="padding:var(--s3) var(--s3) var(--s3)" class="flex gap8">
+      <div class="grow"><div class="ell" style="font-size:14px;font-weight:600">轻奢通勤包合集</div>
+        <div class="t-mic mt4">09-19 12:30</div></div>
+      <span style="color:var(--olive)"><svg class="i" viewBox="0 0 24 24"><path d="M5.5 12h.01M12 12h.01M18.5 12h.01"/></svg></span>
+    </div>
+  </div>
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
+    <div class="th" style="width:169px;height:150px;background:#ece1c9">
+     <span class="mg" style="font-size:45px">粥</span>
+     
+     <span class="tl"><span class="badge b-err"><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zM12 8v4.8M12 16h.01"/></svg>失败 · 已返还</span></span>
+     
+   </div>
+    
+    <div style="padding:var(--s3) var(--s3) var(--s3)" class="flex gap8">
+      <div class="grow"><div class="ell" style="font-size:14px;font-weight:600">速食早餐粥推广视频</div>
+        <div class="t-mic mt4">09-18 11:05</div></div>
+      <span style="color:var(--olive)"><svg class="i" viewBox="0 0 24 24"><path d="M5.5 12h.01M12 12h.01M18.5 12h.01"/></svg></span>
+    </div>
+  </div></div>
+  </div><div class="tab"><a class=""><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5l1.9 5.1 5.1 1.9-5.1 1.9L12 17.5l-1.9-5.1L5 10.5l5.1-1.9zM18.5 16l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/></svg>创作</a><a class="on"><svg class="i" viewBox="0 0 24 24"><path d="M3.5 6h17v12h-17zM10.5 9.5v5l4-2.5z"/></svg>作品</a><a class=""><svg class="i" viewBox="0 0 24 24"><path d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM4.5 20c1-3.8 4-5.5 7.5-5.5s6.5 1.7 7.5 5.5"/></svg>我的</a></div><div class="scrim"></div><div class="sheet">
+  <div class="grab"></div>
+  <div class="flex gap12"><div class="th" style="width:48px;height:64px;background:#e9dccb">
+     <span class="mg" style="font-size:19px">衬</span>
+     
+     
+     
+   </div><div class="grow"><div class="h-card">每日新款穿搭分享 · 衬衫款</div><div class="t-mic mt4">09-19 18:42 · 15 秒 · 保留至 10-19</div></div></div>
+  <div class="list mt16">
+    <div class="li"><span class="ic"><svg class="i" viewBox="0 0 24 24"><path d="M12 4.5V15M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></svg></span><span class="grow">保存到相册</span></div><div class="li"><span class="ic"><svg class="i" viewBox="0 0 24 24"><path d="M12 15V4.5M8 8.5l4-4 4 4M5 12v8h14v-8"/></svg></span><span class="grow">分享给微信好友</span></div><div class="li"><span class="ic"><svg class="i" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4.5V8H16"/></svg></span><span class="grow">用同款再生成一条</span></div><div class="li"><span class="ic"><svg class="i" viewBox="0 0 24 24"><path d="M5 19h3.5L19 8.5 15.5 5 5 15.5zM13.5 7l3.5 3.5"/></svg></span><span class="grow">重命名</span></div>
+  </div>
+  <div class="list mt12"><div class="li" style="color:var(--err)"><span class="ic" style="background:var(--err-soft);color:var(--err)"><svg class="i" viewBox="0 0 24 24"><path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13M10 11v5.5M14 11v5.5"/></svg></span><span class="grow">删除作品</span></div></div>
+  <span class="btn btn-g mt8">取消</span></div><div class="hi "></div></div></div><a class="hit" href="screens/14.html" aria-label="14 作品卡操作面板"></a></div>
+      <div class="cap"><span class="no">14</span><span class="nm">作品卡操作面板</span><span class="kd">面板</span><span class="tag re">重设计</span></div>
+      <p class="note">原型此屏画错为失败弹框，这里补回真正的操作面板；删除单独分组。</p>
+    </div>
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav" style="height:52px;padding-left:var(--s5)"><span class="h-page">作品</span><span style="position:absolute;right:108px;top:14px;font-size:15px;font-weight:600;color:var(--brand-strong)">管理</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div>
+  <div class="body">
+    <div class="seg"><a class="on">全部 8</a><a>已完成</a><a>生成中</a><a>失败</a></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--s3);margin-top:var(--s3)">
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
+    <div class="th" style="width:169px;height:150px;background:#dfe3d3">
+     <span class="mg" style="font-size:45px">护</span>
+     
+     <span class="tl"><span class="badge b-q"><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zM12 7.5V12l3 2"/></svg>排队中</span></span>
+     
+   </div>
+    
+    <div style="padding:var(--s3) var(--s3) var(--s3)" class="flex gap8">
+      <div class="grow"><div class="ell" style="font-size:14px;font-weight:600">国货护肤新品开箱</div>
+        <div class="t-mic mt4">09-19 21:20</div></div>
+      <span style="color:var(--olive)"><svg class="i" viewBox="0 0 24 24"><path d="M5.5 12h.01M12 12h.01M18.5 12h.01"/></svg></span>
+    </div>
+  </div>
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
+    <div class="th" style="width:169px;height:150px;background:#e8dcc3">
+     <span class="mg" style="font-size:45px">针</span>
+     
+     <span class="tl"><span class="badge b-g"><svg class="i" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4.5V8H16"/></svg>生成中 62%</span></span>
+     
+   </div>
+    <div class="bar" style="border-radius:0;height:3px"><i style="width:62%"></i></div>
+    <div style="padding:var(--s3) var(--s3) var(--s3)" class="flex gap8">
+      <div class="grow"><div class="ell" style="font-size:14px;font-weight:600">秋季针织开衫试穿</div>
+        <div class="t-mic mt4">约 2 分钟后完成</div></div>
+      <span style="color:var(--olive)"><svg class="i" viewBox="0 0 24 24"><path d="M5.5 12h.01M12 12h.01M18.5 12h.01"/></svg></span>
+    </div>
+  </div>
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
+    <div class="th" style="width:169px;height:150px;background:#e2e4d6">
+     <span class="mg" style="font-size:45px">夏</span>
+     
+     <span class="tl"><span class="badge b-g"><svg class="i" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4.5V8H16"/></svg>生成中 18%</span></span>
+     
+   </div>
+    <div class="bar" style="border-radius:0;height:3px"><i style="width:18%"></i></div>
+    <div style="padding:var(--s3) var(--s3) var(--s3)" class="flex gap8">
+      <div class="grow"><div class="ell" style="font-size:14px;font-weight:600">夏日轻薄单品种草</div>
+        <div class="t-mic mt4">约 6 分钟后完成</div></div>
+      <span style="color:var(--olive)"><svg class="i" viewBox="0 0 24 24"><path d="M5.5 12h.01M12 12h.01M18.5 12h.01"/></svg></span>
+    </div>
+  </div>
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
+    <div class="th" style="width:169px;height:150px;background:#e9dccb">
+     <span class="mg" style="font-size:45px">衬</span>
+     
+     <span class="tl"><span class="badge b-ok"><svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>已完成</span></span>
+     <span class="br"><span class="dur">0:15</span></span>
+   </div>
+    
+    <div style="padding:var(--s3) var(--s3) var(--s3)" class="flex gap8">
+      <div class="grow"><div class="ell" style="font-size:14px;font-weight:600">每日新款穿搭分享 · 衬衫款</div>
+        <div class="t-mic mt4">09-19 18:42</div></div>
+      <span style="color:var(--olive)"><svg class="i" viewBox="0 0 24 24"><path d="M5.5 12h.01M12 12h.01M18.5 12h.01"/></svg></span>
+    </div>
+  </div>
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
+    <div class="th" style="width:169px;height:150px;background:#e6d6cd">
+     <span class="mg" style="font-size:45px">包</span>
+     
+     <span class="tl"><span class="badge b-ok"><svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>已完成</span></span>
+     <span class="br"><span class="dur">0:15</span></span>
+   </div>
+    
+    <div style="padding:var(--s3) var(--s3) var(--s3)" class="flex gap8">
+      <div class="grow"><div class="ell" style="font-size:14px;font-weight:600">轻奢通勤包合集</div>
+        <div class="t-mic mt4">09-19 12:30</div></div>
+      <span style="color:var(--olive)"><svg class="i" viewBox="0 0 24 24"><path d="M5.5 12h.01M12 12h.01M18.5 12h.01"/></svg></span>
+    </div>
+  </div>
+  <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
+    <div class="th" style="width:169px;height:150px;background:#ece1c9">
+     <span class="mg" style="font-size:45px">粥</span>
+     
+     <span class="tl"><span class="badge b-err"><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zM12 8v4.8M12 16h.01"/></svg>失败 · 已返还</span></span>
+     
+   </div>
+    
+    <div style="padding:var(--s3) var(--s3) var(--s3)" class="flex gap8">
+      <div class="grow"><div class="ell" style="font-size:14px;font-weight:600">速食早餐粥推广视频</div>
+        <div class="t-mic mt4">09-18 11:05</div></div>
+      <span style="color:var(--olive)"><svg class="i" viewBox="0 0 24 24"><path d="M5.5 12h.01M12 12h.01M18.5 12h.01"/></svg></span>
+    </div>
+  </div></div>
+  </div><div class="tab"><a class=""><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5l1.9 5.1 5.1 1.9-5.1 1.9L12 17.5l-1.9-5.1L5 10.5l5.1-1.9zM18.5 16l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/></svg>创作</a><a class="on"><svg class="i" viewBox="0 0 24 24"><path d="M3.5 6h17v12h-17zM10.5 9.5v5l4-2.5z"/></svg>作品</a><a class=""><svg class="i" viewBox="0 0 24 24"><path d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM4.5 20c1-3.8 4-5.5 7.5-5.5s6.5 1.7 7.5 5.5"/></svg>我的</a></div><div class="scrim"></div><div class="sheet">
+  <div class="grab"></div>
+  <div class="sh-h"><div class="flex gap12"><span class="ill" style="width:44px;height:44px;border-radius:var(--r-lg);margin:0;background:var(--err-soft);color:var(--err)"><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zM12 8v4.8M12 16h.01"/></svg></span>
+    <div><div class="h-sec">生成失败</div><div class="t-mic mt4">速食早餐粥推广视频 · 09-18 11:05</div></div></div><span class="x"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div>
+  <div class="card wh pad mt16" style="padding:var(--s3) var(--s3)">
+    <div class="kv"><span>失败原因</span><b>商品图主体过小，无法合成</b></div>
+    <div class="kv"><span>积分返还</span><b class="num" style="color:var(--ok)">+432 已到账</b></div>
+  </div>
+  <div class="t-cap mt12">建议换一张商品占画面一半以上的图片后重试。</div>
+  <span class="btn btn-p mt20">换图重新生成</span>
+  <span class="btn btn-g mt4" style="color:var(--err)">删除记录</span></div><div class="hi "></div></div></div><a class="hit" href="screens/14b.html" aria-label="14b 生成失败面板"></a></div>
+      <div class="cap"><span class="no">14b</span><span class="nm">生成失败面板</span><span class="kd">面板</span><span class="tag re">重设计</span></div>
+      <p class="note">显示失败原因与返还积分数额，主操作为“换图重新生成”。</p>
+    </div></div>
+  <h2>B · 我的与账户<small>钱包 → 充值 → 明细 → 设置 · 12 屏</small></h2>
+  <div class="cards">
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav" style="height:52px;padding-left:var(--s5)"><span class="h-page">我的</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body">
+  <div class="card pad flex gap12">
+    <div style="width:52px;height:52px;border-radius:50%;background:var(--sand);display:grid;place-items:center;color:var(--char)"><svg class="i" viewBox="0 0 24 24"><path d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM4.5 20c1-3.8 4-5.5 7.5-5.5s6.5 1.7 7.5 5.5"/></svg></div>
+    <div class="grow"><div class="h-card">微信用户</div><div class="t-mic mt4">ID 2025 0918 · 已创作 14 条</div></div><svg class="i chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+  </div>
+  <div class="card pad mt12">
+    <div class="flex between"><span class="t-cap">积分余额</span><span class="t-mic">1 元 = 100 积分</span></div>
+    <div class="flex between mt8" style="align-items:flex-end"><div><span class="num" style="font-size:36px;line-height:1">1,190</span></div><span class="btn sm btn-p">充值</span></div>
+    <div class="flex gap12 mt12 t-mic"><span>赠送 <b class="num" style="color:var(--ink)">500</b></span><span>充值 <b class="num" style="color:var(--ink)">690</b></span><span>优先扣赠送</span></div>
+    <div class="hr"></div>
+    <div class="flex between"><span class="t-cap">本月已出片 <b style="color:var(--ink)">6</b> 条</span><span class="t-cap">余额还能做约 <b style="color:var(--ink)">4</b> 条 15 秒</span></div>
+    <div class="bar mt8"><i style="width:60%"></i></div>
+  </div>
+  <div class="card pad mt12 flex gap12" style="background:var(--ink);border-color:var(--ink);color:var(--iv)">
+    <span style="color:var(--coral)"><svg class="i" viewBox="0 0 24 24"><path d="M4.5 11h15v9h-15zM3.5 7.5h17V11h-17zM12 7.5V20M12 7.5C10.5 4.5 7 4 7 6.2 7 7.5 9 7.5 12 7.5zm0 0c1.5-3 5-3.5 5-1.3 0 1.3-2 1.3-5 1.3z"/></svg></span><div class="grow"><div style="font-size:15px;font-weight:600">邀请好友，各得 500 积分</div><div style="font-size:12.5px;color:var(--silver);margin-top:var(--s05)">好友首次出片即到账 · 已邀请 3 人</div></div><svg class="i" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+  </div>
+  <div class="list mt12">
+    <div class="li"><span class="ic"><svg class="i" viewBox="0 0 24 24"><path d="M4 7.5h16v11.5H4zM4 7.5l12-3.5v3.5M15.5 12h4.5v3.5h-4.5z"/></svg></span><span class="grow">充值中心</span><svg class="i chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div><div class="li"><span class="ic"><svg class="i" viewBox="0 0 24 24"><path d="M8.5 7h11.5M8.5 12h11.5M8.5 17h11.5M4.5 7h.01M4.5 12h.01M4.5 17h.01"/></svg></span><span class="grow">积分明细</span><svg class="i chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div><div class="li"><span class="ic"><svg class="i" viewBox="0 0 24 24"><path d="M5 14.5V12a7 7 0 0 1 14 0v2.5M5 14h3v5.5H5zM16 14h3v5.5h-3z"/></svg></span><span class="grow">联系客服</span><svg class="i chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div><div class="li"><span class="ic"><svg class="i" viewBox="0 0 24 24"><path d="M6 3.5h8l4 4v13H6zM14 3.5v4h4M9 12h6M9 16h6"/></svg></span><span class="grow">协议与规则</span><svg class="i chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div><div class="li"><span class="ic"><svg class="i" viewBox="0 0 24 24"><path d="M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21M5.6 5.6l1.8 1.8M16.6 16.6l1.8 1.8M5.6 18.4l1.8-1.8M16.6 7.4l1.8-1.8"/></svg></span><span class="grow">账号设置</span><svg class="i chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div>
+  </div></div><div class="tab"><a class=""><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5l1.9 5.1 5.1 1.9-5.1 1.9L12 17.5l-1.9-5.1L5 10.5l5.1-1.9zM18.5 16l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/></svg>创作</a><a class=""><svg class="i" viewBox="0 0 24 24"><path d="M3.5 6h17v12h-17zM10.5 9.5v5l4-2.5z"/></svg>作品</a><a class="on"><svg class="i" viewBox="0 0 24 24"><path d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM4.5 20c1-3.8 4-5.5 7.5-5.5s6.5 1.7 7.5 5.5"/></svg>我的</a></div><div class="hi "></div></div></div><a class="hit" href="screens/15.html" aria-label="15 我的 · 月产能 / 裂变"></a></div>
+      <div class="cap"><span class="no">15</span><span class="nm">我的 · 月产能 / 裂变</span><span class="tag re">重设计</span></div>
+      <p class="note">补上屏名承诺的内容：双池余额、本月产能进度、邀请入口。</p>
+    </div>
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">邀请好友</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body">
+  <div class="card" style="background:var(--ink);border-color:var(--ink);color:var(--iv);padding:var(--s6) var(--s5)">
+    <div style="color:var(--coral);font-size:13px;font-weight:600">邀请有礼 · 长期有效</div>
+    <div class="h-page mt8" style="font-size:26px;color:var(--iv)">好友首次出片，<br>你们各得 500 积分</div>
+    <div style="font-size:13px;color:var(--silver);margin-top:var(--s3)">500 积分 ≈ 1 条 15 秒视频，进入赠送池</div>
+    <div class="flex mt20" style="border-top:1px solid var(--ink2);padding-top:var(--s4)">
+      <div class="grow center"><div class="num" style="font-size:24px">3</div><div style="font-size:12px;color:var(--silver);margin-top:var(--s05)">已邀请</div></div><div class="grow center"><div class="num" style="font-size:24px">1</div><div style="font-size:12px;color:var(--silver);margin-top:var(--s05)">已出片</div></div><div class="grow center"><div class="num" style="font-size:24px">+500</div><div style="font-size:12px;color:var(--silver);margin-top:var(--s05)">累计获得</div></div>
+    </div>
+  </div>
+  <div class="lbl mt20">怎么得积分</div>
+  <div class="card wh" style="padding:var(--s1) var(--s4)">
+    <div class="step" style="align-items:center"><span class="n ">1</span><div class="grow"><div style="font-size:14px;font-weight:600">把小程序分享给好友</div><div class="t-mic">微信好友或群聊</div></div></div><div class="step" style="align-items:center"><span class="n ">2</span><div class="grow"><div style="font-size:14px;font-weight:600">好友微信登录</div><div class="t-mic">好友领 500 新人积分</div></div></div><div class="step" style="align-items:center"><span class="n now">3</span><div class="grow"><div style="font-size:14px;font-weight:600">好友完成首条视频</div><div class="t-mic">你得 500 积分，自动到账</div></div></div>
+  </div>
+  <div class="lbl mt20">邀请记录</div>
+  <div class="list">
+    <div class="li" style="padding:var(--s3) var(--s4)"><span class="ic" style="border-radius:50%"><svg class="i" viewBox="0 0 24 24"><path d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM4.5 20c1-3.8 4-5.5 7.5-5.5s6.5 1.7 7.5 5.5"/></svg></span><div class="grow"><div style="font-size:14px">王**</div><div class="t-mic">09-19 已出片</div></div><span class="badge b-ok">+500</span></div>
+    <div class="li" style="padding:var(--s3) var(--s4)"><span class="ic" style="border-radius:50%"><svg class="i" viewBox="0 0 24 24"><path d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM4.5 20c1-3.8 4-5.5 7.5-5.5s6.5 1.7 7.5 5.5"/></svg></span><div class="grow"><div style="font-size:14px">李**</div><div class="t-mic">09-18 已登录，未出片</div></div><span class="badge b-q">待出片</span></div>
+    <div class="li" style="padding:var(--s3) var(--s4)"><span class="ic" style="border-radius:50%"><svg class="i" viewBox="0 0 24 24"><path d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM4.5 20c1-3.8 4-5.5 7.5-5.5s6.5 1.7 7.5 5.5"/></svg></span><div class="grow"><div style="font-size:14px">陈**</div><div class="t-mic">09-18 已登录，未出片</div></div><span class="badge b-q">待出片</span></div></div>
+  </div>
+  <div class="footer"><div class="row2"><span class="btn btn-s" style="width:132px">生成海报</span><span class="btn btn-p grow"><svg class="i" viewBox="0 0 24 24"><path d="M9 5C5.4 5 3 7.3 3 10c0 1.6.9 3 2.3 3.9L4.8 16l2.4-1.2c.6.1 1.2.2 1.8.2M15 9.5c3.3 0 6 2.1 6 4.8 0 1.4-.8 2.7-2 3.6l.4 1.8-2.1-1.1c-.7.2-1.5.3-2.3.3-3.3 0-6-2.1-6-4.6s2.7-4.8 6-4.8z"/></svg>分享给好友</span></div></div><div class="hi "></div></div></div><a class="hit" href="screens/15a.html" aria-label="15a 邀请好友"></a></div>
+      <div class="cap"><span class="no">15a</span><span class="nm">邀请好友</span><span class="kd">页面</span><span class="tag np">新增页面</span></div>
+      <p class="note">落地裂变：规则一句话、三步流程、邀请战绩与记录。</p>
+    </div>
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">联系客服</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body">
+  <div class="card pad flex gap12" style="padding:var(--s4)"><span class="ill" style="width:48px;height:48px;border-radius:var(--r-lg);margin:0"><svg class="i" viewBox="0 0 24 24"><path d="M5 14.5V12a7 7 0 0 1 14 0v2.5M5 14h3v5.5H5zM16 14h3v5.5h-3z"/></svg></span>
+    <div class="grow"><div class="h-card">在线客服</div><div class="t-mic mt4">每天 9:00–22:00 · 平均 2 分钟回复</div></div><span class="btn sm btn-p">咨询</span></div>
+  <div class="lbl mt20">常见问题</div>
+  <div class="list">
+    <div class="li"><span class="grow" style="font-size:14.5px">生成失败了，积分会退吗？</span><svg class="i chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div>
+    <div style="padding:0 var(--s4) var(--s3);margin-top:-6px" class="t-cap">会。任何原因导致的生成失败，本次消耗的积分都会在 1 分钟内原路返还到对应积分池，可在「积分明细」查看。</div>
+    <div class="li"><span class="grow" style="font-size:14.5px">赠送积分和充值积分有什么区别？</span><svg class="i chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div>
+    
+    <div class="li"><span class="grow" style="font-size:14.5px">视频可以商用吗？会不会侵权？</span><svg class="i chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div>
+    
+    <div class="li"><span class="grow" style="font-size:14.5px">为什么生成的商品和原图不一样？</span><svg class="i chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div>
+    
+    <div class="li"><span class="grow" style="font-size:14.5px">积分有有效期吗？</span><svg class="i chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div>
+    
+    <div class="li"><span class="grow" style="font-size:14.5px">如何开具发票？</span><svg class="i chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div>
+    </div>
+  <div class="t-mic center mt16">没找到答案？<span style="color:var(--brand-strong);font-weight:600">提交反馈 ›</span></div>
+  </div><div class="hi "></div></div></div><a class="hit" href="screens/15b.html" aria-label="15b 联系客服"></a></div>
+      <div class="cap"><span class="no">15b</span><span class="nm">联系客服</span><span class="kd">页面</span><span class="tag np">新增页面</span></div>
+      <p class="note">在线客服 + 常见问题，首条展开“失败积分退不退”。</p>
+    </div>
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">充值中心</span><span style="position:absolute;right:108px;top:12px;font-size:14px;color:var(--char)">积分明细</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body">
+  <div class="card pad"><div class="t-cap">积分余额</div>
+    <div class="flex between mt4" style="align-items:flex-end"><span class="num" style="font-size:40px;line-height:1.05">1,190</span><span class="t-mic">≈ 4 条 15 秒</span></div>
+    <div class="flex gap12 mt8 t-mic"><span>赠送 <b class="num" style="color:var(--ink)">500</b></span><span>充值 <b class="num" style="color:var(--ink)">690</b></span><span>优先扣赠送</span></div></div>
+  <div class="lbl mt16">选择充值档位</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--s2)">
+    
+    <div class="card wh" style="padding:var(--s3);box-shadow:0 0 0 2px var(--brand-strong);border-color:transparent">
+      <div class="flex between"><span style="font-size:13px;font-weight:600">首充礼包</span><span class="badge b-g">首次专享</span></div>
+      <div class="num mt8" style="font-size:28px;line-height:1">¥10</div>
+      <div class="t-mic mt8">到账 <b class="num" style="color:var(--ink)">1,000</b> 积分 · ≈3 条 15 秒</div></div>
+    <div class="card wh" style="padding:var(--s3);">
+      <div class="flex between"><span style="font-size:13px;font-weight:600">轻量包</span><span class="t-mic">月出 5 条内</span></div>
+      <div class="num mt8" style="font-size:28px;line-height:1">¥30</div>
+      <div class="t-mic mt8">到账 <b class="num" style="color:var(--ink)">3,000</b> 积分 · ≈11 条 15 秒</div></div>
+    <div class="card wh" style="padding:var(--s3);">
+      <div class="flex between"><span style="font-size:13px;font-weight:600">常用包</span><span class="t-mic">月出 8–20 条</span></div>
+      <div class="num mt8" style="font-size:28px;line-height:1">¥50</div>
+      <div class="t-mic mt8">到账 <b class="num" style="color:var(--ink)">5,000</b> 积分 · ≈18 条 15 秒</div></div>
+    <div class="card wh" style="padding:var(--s3);">
+      <div class="flex between"><span style="font-size:13px;font-weight:600">超值包</span><span class="t-mic">量大更省</span></div>
+      <div class="num mt8" style="font-size:28px;line-height:1">¥120</div>
+      <div class="t-mic mt8">到账 <b class="num" style="color:var(--ink)">12,000</b> 积分 · ≈44 条 15 秒</div></div>
+  </div>
+  <div class="card pad mt12" style="padding:var(--s3) var(--s3)">
+    <div class="flex between"><span style="font-size:13px;font-weight:600">计费规则</span><span class="t-mic">优惠价 18 积分/秒</span></div>
+    <div class="mt8"><div class="kv" style="padding:3px 0;font-size:13px"><span>15 秒</span><span><span class="strike num">990</span>&nbsp; <b class="num price">270</b></span></div><div class="kv" style="padding:3px 0;font-size:13px"><span>24 秒</span><span><span class="strike num">1,584</span>&nbsp; <b class="num price">432</b></span></div><div class="kv" style="padding:3px 0;font-size:13px"><span>38 秒</span><span><span class="strike num">2,508</span>&nbsp; <b class="num price">684</b></span></div><div class="kv" style="padding:3px 0;font-size:13px"><span>65 秒</span><span><span class="strike num">4,290</span>&nbsp; <b class="num price">1,170</b></span></div></div>
+  </div></div>
+  <div class="footer dock"><div class="flex gap12"><div class="grow"><div class="t-mic">应付</div><div><span class="num" style="font-size:22px;font-weight:600">¥10</span> <span class="t-mic">到账 1,000 积分</span></div></div><span class="btn btn-p" style="width:150px">微信支付</span></div></div><div class="hi "></div></div></div><a class="hit" href="screens/16.html" aria-label="16 充值中心 · 计费规则"></a></div>
+      <div class="cap"><span class="no">16</span><span class="nm">充值中心 · 计费规则</span><span class="tag re">重设计</span></div>
+      <p class="note">余额口径改为总额 = 赠送 + 充值；档位双列卡片，计费规则收到下方。</p>
+    </div>
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">支付结果</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body center" style="padding-top:72px">
+  <div class="ill" style="background:var(--ok-soft);color:var(--ok-icon)"><svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+  <div class="h-page mt24">充值成功</div>
+  <div class="mt12"><span class="num" style="font-size:32px;color:var(--ok)">+1,000</span> <span class="t-cap">积分已到账</span></div>
+  <div class="card wh mt32" style="padding:var(--s15) var(--s4);text-align:left">
+    <div class="kv"><span>支付金额</span><b class="num">¥10.00</b></div>
+    <div class="kv"><span>当前余额</span><b class="num">2,190</b></div>
+    <div class="kv"><span>其中充值池</span><b class="num">1,690</b></div>
+    <div class="kv"><span>订单号</span><span class="num t-mic">WX2025091920341028</span></div>
+  </div></div>
+  <div class="footer"><span class="btn btn-p">回到刚才的模板继续生成</span><span class="btn btn-g mt4">查看积分明细</span></div><div class="hi "></div></div></div><a class="hit" href="screens/16a.html" aria-label="16a 支付成功"></a></div>
+      <div class="cap"><span class="no">16a</span><span class="nm">支付成功</span><span class="kd">页面</span><span class="tag np">新增页面</span></div>
+      <p class="note">显示到账积分与新余额，主操作回到刚才的模板继续生成。</p>
+    </div>
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">支付结果</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body center" style="padding-top:72px">
+  <div class="ill" style="background:var(--warn-soft);color:var(--warn)"><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zM12 11v5M12 8h.01"/></svg></div>
+  <div class="h-page mt24">支付未完成</div>
+  <div class="t-cap mt12">你已取消支付，<b style="color:var(--ink)">未产生任何扣款</b>。<br>刚才选的模板已为你保留。</div>
+  <div class="card wh mt32" style="padding:var(--s15) var(--s4);text-align:left">
+    <div class="kv"><span>档位</span><b>首充礼包 ¥10 · 1,000 积分</b></div>
+    <div class="kv"><span>首充优惠</span><b>仍可使用</b></div>
+  </div></div>
+  <div class="footer"><span class="btn btn-p">重新支付</span><span class="btn btn-g mt4">换个档位</span></div><div class="hi "></div></div></div><a class="hit" href="screens/16b.html" aria-label="16b 支付未完成"></a></div>
+      <div class="cap"><span class="no">16b</span><span class="nm">支付未完成</span><span class="kd">状态</span><span class="tag ns">新增状态</span></div>
+      <p class="note">明确“未产生扣款”，保留首充资格与所选模板。</p>
+    </div>
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">积分明细</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body">
+  <div class="seg"><a class="on">全部</a><a>消耗</a><a>获得</a></div>
+  <div class="flex gap12 mt12 t-mic"><span>9 月 · 获得 <b class="num" style="color:var(--ink)">+2,432</b></span><span>消耗 <b class="num" style="color:var(--ink)">−1,242</b></span></div>
+  <div class="list mt12">
+    
+    <div class="li" style="padding:var(--s3) var(--s4)"><span class="ic"><svg class="i" viewBox="0 0 24 24"><path d="M4.5 11h15v9h-15zM3.5 7.5h17V11h-17zM12 7.5V20M12 7.5C10.5 4.5 7 4 7 6.2 7 7.5 9 7.5 12 7.5zm0 0c1.5-3 5-3.5 5-1.3 0 1.3-2 1.3-5 1.3z"/></svg></span><div class="grow"><div style="font-size:14px">新人首次登录赠送</div><div class="t-mic num">09-20 17:05 · 赠送池</div></div><b class="num" style="font-size:16px;color:var(--ok)">+500</b></div>
+    <div class="li" style="padding:var(--s3) var(--s4)"><span class="ic"><svg class="i" viewBox="0 0 24 24"><path d="M3.5 6h17v12h-17zM10.5 9.5v5l4-2.5z"/></svg></span><div class="grow"><div style="font-size:14px">创作消耗 · 15 秒模板</div><div class="t-mic num">09-19 20:18 · 余额 690</div></div><b class="num" style="font-size:16px;">−270</b></div>
+    <div class="li" style="padding:var(--s3) var(--s4)"><span class="ic"><svg class="i" viewBox="0 0 24 24"><path d="M3.5 6h17v12h-17zM10.5 9.5v5l4-2.5z"/></svg></span><div class="grow"><div style="font-size:14px">创作消耗 · 15 秒模板</div><div class="t-mic num">09-19 18:42 · 余额 960</div></div><b class="num" style="font-size:16px;">−270</b></div>
+    <div class="li" style="padding:var(--s3) var(--s4)"><span class="ic"><svg class="i" viewBox="0 0 24 24"><path d="M3.5 6h17v12h-17zM10.5 9.5v5l4-2.5z"/></svg></span><div class="grow"><div style="font-size:14px">创作消耗 · 15 秒模板</div><div class="t-mic num">09-19 15:40 · 余额 1,230</div></div><b class="num" style="font-size:16px;">−270</b></div>
+    <div class="li" style="padding:var(--s3) var(--s4)"><span class="ic"><svg class="i" viewBox="0 0 24 24"><path d="M9.5 4a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zM3.5 20c.8-3.5 3.2-5 6-5s5.2 1.5 6 5M18.5 8v6M15.5 11h6"/></svg></span><div class="grow"><div style="font-size:14px">邀请好友奖励 · 好友出片</div><div class="t-mic num">09-19 12:30 · 赠送池</div></div><b class="num" style="font-size:16px;color:var(--ok)">+500</b></div>
+    <div class="li" style="padding:var(--s3) var(--s4)"><span class="ic"><svg class="i" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4.5V8H16"/></svg></span><div class="grow"><div style="font-size:14px">生成失败自动返还 · 24 秒</div><div class="t-mic num">09-18 11:07 · 余额 1,000</div></div><b class="num" style="font-size:16px;color:var(--ok)">+432</b></div>
+    <div class="li" style="padding:var(--s3) var(--s4)"><span class="ic"><svg class="i" viewBox="0 0 24 24"><path d="M3.5 6h17v12h-17zM10.5 9.5v5l4-2.5z"/></svg></span><div class="grow"><div style="font-size:14px">创作消耗 · 24 秒模板</div><div class="t-mic num">09-18 10:55 · 余额 568</div></div><b class="num" style="font-size:16px;">−432</b></div>
+    <div class="li" style="padding:var(--s3) var(--s4)"><span class="ic"><svg class="i" viewBox="0 0 24 24"><path d="M4 7.5h16v11.5H4zM4 7.5l12-3.5v3.5M15.5 12h4.5v3.5h-4.5z"/></svg></span><div class="grow"><div style="font-size:14px">充值到账 · ¥10</div><div class="t-mic num">09-17 09:20 · 充值池</div></div><b class="num" style="font-size:16px;color:var(--ok)">+1,000</b></div>
+  </div>
+  <div class="t-mic center mt12">已显示全部 8 条记录</div></div><div class="hi "></div></div></div><a class="hit" href="screens/17.html" aria-label="17 积分明细 · 双池记账"></a></div>
+      <div class="cap"><span class="no">17</span><span class="nm">积分明细 · 双池记账</span><span class="tag re">重设计</span></div>
+      <p class="note">每条记录标注所属积分池；顶部月度汇总。</p>
+    </div>
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">账号设置</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body">
+  <div class="list mt8">
+    <div class="li"><span class="grow">头像</span><span style="width:36px;height:36px;border-radius:50%;background:var(--sand);display:grid;place-items:center;color:var(--char)"><svg class="i" viewBox="0 0 24 24"><path d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM4.5 20c1-3.8 4-5.5 7.5-5.5s6.5 1.7 7.5 5.5"/></svg></span><svg class="i chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div>
+    <div class="li"><span class="grow">昵称</span><span class="t-cap">微信用户</span><svg class="i chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div>
+    <div class="li"><span class="grow">绑定手机</span><span class="t-cap">138****0918</span><svg class="i chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div>
+  </div>
+  <div class="list mt12"><div class="li"><span class="grow">清除缓存</span><span class="t-cap">42.6 MB</span></div><div class="li"><span class="grow">注销账号</span><svg class="i chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div></div>
+  <span class="btn md btn-w mt24" style="color:var(--err)">退出登录</span>
+  </div><div class="hi "></div></div></div><a class="hit" href="screens/18.html" aria-label="18 账号设置"></a></div>
+      <div class="cap"><span class="no">18</span><span class="nm">账号设置</span><span class="tag re">重设计</span></div>
+      <p class="note">补齐绑定手机、清除缓存、注销账号（审核要求）。</p>
+    </div>
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">账号设置</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body">
+  <div class="list mt8">
+    <div class="li"><span class="grow">头像</span><span style="width:36px;height:36px;border-radius:50%;background:var(--sand);display:grid;place-items:center;color:var(--char)"><svg class="i" viewBox="0 0 24 24"><path d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM4.5 20c1-3.8 4-5.5 7.5-5.5s6.5 1.7 7.5 5.5"/></svg></span><svg class="i chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div>
+    <div class="li"><span class="grow">昵称</span><span class="t-cap">微信用户</span><svg class="i chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div>
+    <div class="li"><span class="grow">绑定手机</span><span class="t-cap">138****0918</span><svg class="i chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div>
+  </div>
+  <div class="list mt12"><div class="li"><span class="grow">清除缓存</span><span class="t-cap">42.6 MB</span></div><div class="li"><span class="grow">注销账号</span><svg class="i chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div></div>
+  <span class="btn md btn-w mt24" style="color:var(--err)">退出登录</span>
+  </div><div class="scrim"></div><div class="sheet">
+  <div class="grab"></div><div class="h-sec">修改头像</div>
+  <div class="list mt16"><div class="li"><span class="ic"><svg class="i" viewBox="0 0 24 24"><path d="M9 5C5.4 5 3 7.3 3 10c0 1.6.9 3 2.3 3.9L4.8 16l2.4-1.2c.6.1 1.2.2 1.8.2M15 9.5c3.3 0 6 2.1 6 4.8 0 1.4-.8 2.7-2 3.6l.4 1.8-2.1-1.1c-.7.2-1.5.3-2.3.3-3.3 0-6-2.1-6-4.6s2.7-4.8 6-4.8z"/></svg></span><span class="grow">使用微信头像</span></div><div class="li"><span class="ic"><svg class="i" viewBox="0 0 24 24"><path d="M4 5h16v14H4zM4 16l4.5-4.5 3.5 3.5 2.5-2.5 5.5 5M15.5 8.5h.01"/></svg></span><span class="grow">从相册选择</span></div><div class="li"><span class="ic"><svg class="i" viewBox="0 0 24 24"><path d="M4 8h3l1.5-2.2h7L17 8h3v11H4zM12 10.3a3.3 3.3 0 1 0 0 6.6 3.3 3.3 0 0 0 0-6.6z"/></svg></span><span class="grow">拍照</span></div></div>
+  <span class="btn btn-s mt12">取消</span></div><div class="hi "></div></div></div><a class="hit" href="screens/19.html" aria-label="19 更换头像面板"></a></div>
+      <div class="cap"><span class="no">19</span><span class="nm">更换头像面板</span><span class="kd">面板</span><span class="tag re">重设计</span></div>
+      <p class="note">图标统一为线性图标，取消按钮独立。</p>
+    </div>
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">账号设置</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body">
+  <div class="list mt8">
+    <div class="li"><span class="grow">头像</span><span style="width:36px;height:36px;border-radius:50%;background:var(--sand);display:grid;place-items:center;color:var(--char)"><svg class="i" viewBox="0 0 24 24"><path d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM4.5 20c1-3.8 4-5.5 7.5-5.5s6.5 1.7 7.5 5.5"/></svg></span><svg class="i chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div>
+    <div class="li"><span class="grow">昵称</span><span class="t-cap">微信用户</span><svg class="i chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div>
+    <div class="li"><span class="grow">绑定手机</span><span class="t-cap">138****0918</span><svg class="i chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div>
+  </div>
+  <div class="list mt12"><div class="li"><span class="grow">清除缓存</span><span class="t-cap">42.6 MB</span></div><div class="li"><span class="grow">注销账号</span><svg class="i chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div></div>
+  <span class="btn md btn-w mt24" style="color:var(--err)">退出登录</span>
+  </div><div class="scrim"></div><div class="dlg">
+  <div class="h-sec">修改昵称</div>
+  <div class="field mt16 flex" style="border-color:var(--ink);box-shadow:0 0 0 3px var(--sand)"><span class="grow">微信用户</span><span class="t-mic num">4/16</span></div>
+  <div class="t-mic mt8">支持中英文、数字，30 天内可修改 3 次</div>
+  <div class="row2 mt24"><span class="btn md btn-s">取消</span><span class="btn md btn-p">保存</span></div></div><div class="hi "></div></div></div><a class="hit" href="screens/20.html" aria-label="20 修改昵称弹框"></a></div>
+      <div class="cap"><span class="no">20</span><span class="nm">修改昵称弹框</span><span class="kd">弹框</span><span class="tag re">重设计</span></div>
+      <p class="note">聚焦态边框 + 字数计数 + 修改规则说明。</p>
+    </div>
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">协议与规则</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body">
+  <div class="list mt8">
+    <div class="li"><span class="grow">用户协议</span><span class="t-mic">2025-08-01 更新</span><svg class="i chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div>
+    <div class="li"><span class="grow">隐私政策</span><span class="t-mic">2025-08-01 更新</span><svg class="i chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div>
+    <div class="li"><span class="grow">计费与积分规则</span><span class="t-mic">2025-09-01 更新</span><svg class="i chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div>
+    <div class="li"><span class="grow">AI 生成内容使用规范</span><span class="t-mic">2025-08-01 更新</span><svg class="i chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div>
+    <div class="li"><span class="grow">个人信息收集清单</span><span class="t-mic"></span><svg class="i chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div>
+    <div class="li"><span class="grow">第三方 SDK 共享清单</span><span class="t-mic"></span><svg class="i chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div></div>
+  <div class="t-mic center mt16">ICP 备案号 粤ICP备 2025000000 号</div></div><div class="hi "></div></div></div><a class="hit" href="screens/21.html" aria-label="21 协议与规则"></a></div>
+      <div class="cap"><span class="no">21</span><span class="nm">协议与规则</span><span class="tag re">重设计</span></div>
+      <p class="note">补齐个人信息收集清单、第三方 SDK 清单（小程序合规要求）。</p>
+    </div>
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">计费与积分规则</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body" style="padding:var(--s2) var(--s6) 0">
+  <div class="h-page">计费与积分规则</div>
+  <div class="t-mic mt8">更新于 2025-09-01 · 生效于 2025-09-08</div>
+  <div class="card pad mt16" style="padding:var(--s3) var(--s3)"><div class="t-mic" style="font-weight:600;color:var(--char)">本页要点</div>
+    <div class="t-cap mt4">1 元 = 100 积分；按生成时长计费 18 积分/秒；先扣赠送、后扣充值；失败全额返还。</div></div>
+  
+    <div class="h-card mt20" style="font-family:var(--serif);font-weight:500;font-size:17px">一、积分获取</div><div class="t-body mt8" style="font-size:14.5px">充值积分通过微信支付购买，1 元 = 100 积分，即时到账。赠送积分通过新人登录、邀请好友等活动获得。</div>
+    <div class="h-card mt20" style="font-family:var(--serif);font-weight:500;font-size:17px">二、消耗规则</div><div class="t-body mt8" style="font-size:14.5px">每次生成按视频时长计费，优惠价 18 积分/秒，以确认弹框显示的数额为准。消耗时优先扣除赠送积分，不足部分再扣除充值积分。</div>
+    <div class="h-card mt20" style="font-family:var(--serif);font-weight:500;font-size:17px">三、失败返还</div><div class="t-body mt8" style="font-size:14.5px">因任何原因导致生成失败，本次消耗的积分将在 1 分钟内原路返还至对应积分池。</div>
+    <div class="h-card mt20" style="font-family:var(--serif);font-weight:500;font-size:17px">四、有效期</div><div class="t-body mt8" style="font-size:14.5px">充值积分长期有效；赠送积分自获得之日起 90 天内有效，过期自动清零。</div>
+  </div><div class="hi "></div></div></div><a class="hit" href="screens/21a.html" aria-label="21a 协议详情"></a></div>
+      <div class="cap"><span class="no">21a</span><span class="nm">协议详情</span><span class="kd">页面</span><span class="tag np">新增页面</span></div>
+      <p class="note">衬线标题 + 本页要点摘要 + 分节正文，登录页协议链接也落在这里。</p>
+    </div></div>
+  <h2>C · 隐蔽入口与全局状态<small>案例 → 提示 → 异常 · 4 屏</small></h2>
+  <div class="cards">
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">模板案例</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body">
+  <div class="h-page" style="font-size:24px">看看别人复刻了什么</div>
+  <div class="chips mt12"><span class="chip sm on">全部</span><span class="chip sm">服饰</span><span class="chip sm">食品</span><span class="chip sm">美妆</span><span class="chip sm">家居</span><span class="chip sm">3C</span></div>
+  <div class="mt12"><div class="flex gap12" style="padding:var(--s3) 0;border-bottom:1px solid var(--bw);align-items:flex-start">
+      <div class="th" style="width:84px;height:112px;background:#dfe3d3">
+     <span class="mg" style="font-size:29px">水</span>
+     
+     
+     <span class="br"><span class="dur">0:15</span></span>
+   </div>
+      <div class="grow"><div class="flex gap8"><span class="badge b-g">AI 内容创作</span></div><div style="font-size:14.5px;font-weight:600;margin-top:var(--s15)">戏水玩具 · 户外娱乐</div><div class="t-mic mt4 cl2" style="-webkit-line-clamp:3">夜晚公园里，花朵造型抽拉水枪喷出伞状水花，突出趣味玩法与夜间视觉效果。</div></div></div><div class="flex gap12" style="padding:var(--s3) 0;border-bottom:1px solid var(--bw);align-items:flex-start">
+      <div class="th" style="width:84px;height:112px;background:#ead5cc">
+     <span class="mg" style="font-size:29px">糖</span>
+     
+     
+     <span class="br"><span class="dur">0:15</span></span>
+   </div>
+      <div class="grow"><div class="flex gap8"><span class="badge b-g">生成式 AI</span></div><div style="font-size:14.5px;font-weight:600;margin-top:var(--s15)">美食零食 · 口播带货</div><div class="t-mic mt4 cl2" style="-webkit-line-clamp:3">仔仔棒四种新口味棒棒糖，配合旁白介绍茉莉沙田柚、杨枝甘露等果味层次。</div></div></div><div class="flex gap12" style="padding:var(--s3) 0;border-bottom:1px solid var(--bw);align-items:flex-start">
+      <div class="th" style="width:84px;height:112px;background:#e3ddcd">
+     <span class="mg" style="font-size:29px">纸</span>
+     
+     
+     <span class="br"><span class="dur">0:15</span></span>
+   </div>
+      <div class="grow"><div class="flex gap8"><span class="badge b-g">爆款钩子</span></div><div style="font-size:14.5px;font-weight:600;margin-top:var(--s15)">开学好物 · 口播带货</div><div class="t-mic mt4 cl2" style="-webkit-line-clamp:3">前 3 秒用「开学必备」提问开场，介绍 85 克加厚、抑菌温和的便携湿厕纸。</div></div></div><div class="flex gap12" style="padding:var(--s3) 0;border-bottom:1px solid var(--bw);align-items:flex-start">
+      <div class="th" style="width:84px;height:112px;background:#e8dcc3">
+     <span class="mg" style="font-size:29px">鞋</span>
+     
+     
+     <span class="br"><span class="dur">0:15</span></span>
+   </div>
+      <div class="grow"><div class="flex gap8"><span class="badge b-g">AI 生成图片</span></div><div style="font-size:14.5px;font-weight:600;margin-top:var(--s15)">拖鞋带货 · 口播带货</div><div class="t-mic mt4 cl2" style="-webkit-line-clamp:3">主播直播间推荐厚底防滑拖鞋，通过试穿、防滑与弹性测试完成种草。</div></div></div><div class="flex gap12" style="padding:var(--s3) 0;border-bottom:1px solid var(--bw);align-items:flex-start">
+      <div class="th" style="width:84px;height:112px;background:#e6d6cd">
+     <span class="mg" style="font-size:29px">带</span>
+     
+     
+     <span class="br"><span class="dur">0:15</span></span>
+   </div>
+      <div class="grow"><div class="flex gap8"><span class="badge b-g">爆款钩子</span></div><div style="font-size:14.5px;font-weight:600;margin-top:var(--s15)">七夕礼物 · 口播带货</div><div class="t-mic mt4 cl2" style="-webkit-line-clamp:3">百家姓扣头男士皮带礼盒，深情旁白 + 浪漫 BGM，送男友的走心礼物。</div></div></div></div>
+  </div><div class="hi "></div></div></div><a class="hit" href="screens/22.html" aria-label="22 模板案例（隐蔽入口）"></a></div>
+      <div class="cap"><span class="no">22</span><span class="nm">模板案例（隐蔽入口）</span><span class="tag re">重设计</span></div>
+      <p class="note">编辑式列表：标签 + 类目 + 三行摘要，按行业筛选。</p>
+    </div>
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">作品预览</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body np">
+  <div class="player" style="height:360px;margin:var(--s1) var(--s5) 0;border-radius:var(--r-xl);overflow:hidden">
+    <div class="th" style="width:350px;height:360px;background:#3a3631">
+     <span class="mg" style="font-size:105px">衬</span>
+     
+     
+     
+   </div>
+    <span class="pl" style="position:absolute;width:56px;height:56px;border-radius:50%;background:rgba(250,249,245,.9);display:grid;place-items:center"><svg class="i f" viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z"/></svg></span>
+    <span class="dur" style="position:absolute;right:12px;bottom:12px">0:15</span>
+    <span class="badge b-ink" style="position:absolute;left:12px;top:12px">预览 · 含水印</span>
+  </div>
+  <div style="padding:var(--s4) var(--s5) 0">
+    <div class="h-sec">每日新款穿搭分享 · 衬衫款</div>
+    <div class="t-mic mt4">09-19 18:42 生成 · 9:16 · 15 秒 · 消耗 270 积分</div>
+    <div class="row2 mt16"><span class="btn md btn-p"><svg class="i" viewBox="0 0 24 24"><path d="M12 4.5V15M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></svg>保存到相册</span><span class="btn md btn-s" style="width:120px"><svg class="i" viewBox="0 0 24 24"><path d="M12 15V4.5M8 8.5l4-4 4 4M5 12v8h14v-8"/></svg>分享</span></div>
+    <div class="card pad mt12 flex gap12" style="padding:var(--s3);background:var(--brand-soft);border-color:var(--brand-line)">
+      <div class="grow"><div style="font-size:14px;font-weight:600">去水印导出，再做 3 条同款</div><div class="t-mic mt4">充 ¥10 得 1,000 积分 · 单条约 ¥2.70</div></div>
+      <span class="btn sm btn-p">去充值</span></div>
+    <div class="flex between mt16" style="font-size:14px"><span class="flex gap8" style="color:var(--char)"><svg class="i" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4.5V8H16"/></svg>重新生成</span><span class="flex gap8" style="color:var(--err)"><svg class="i" viewBox="0 0 24 24"><path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13M10 11v5.5M14 11v5.5"/></svg>删除</span></div>
+    <div class="ai-note mt16">内容由 AI 生成，请仔细甄别</div>
+  </div></div><div style="position:absolute;left:0;right:0;top:128px;display:flex;flex-direction:column;align-items:center;gap:var(--s3);z-index:12">
+  <span class="toast"><span style="color:#a9bf8e"><svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>已保存到手机相册</span>
+  <span class="toast"><svg class="i" viewBox="0 0 24 24"><path d="M8.5 8.5h11v11h-11zM5 15.5V4.5h11"/></svg>邀请链接已复制</span>
+  <span class="toast"><span style="color:#e4b86a"><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zM12 11v5M12 8h.01"/></svg></span>图片较大，已自动压缩</span>
+  <span class="toast" style="background:var(--err)"><svg class="i" viewBox="0 0 24 24"><path d="M3.5 3.5l17 17M8.8 16.2a4.5 4.5 0 0 1 6.4 0M5.3 12.6a9.5 9.5 0 0 1 3.9-2.3M18.7 12.6a9.5 9.5 0 0 0-2.4-1.7M2 9a14 14 0 0 1 4-2.6M22 9a14 14 0 0 0-8.4-3.4M12 19.5h.01"/></svg>网络不稳定，请稍后重试</span>
+  </div><div class="hi "></div></div></div><a class="hit" href="screens/23.html" aria-label="23 轻提示 Toast"></a></div>
+      <div class="cap"><span class="no">23</span><span class="nm">轻提示 Toast</span><span class="kd">规范</span><span class="tag re">重设计</span></div>
+      <p class="note">统一为近黑底 Toast，成功 / 信息 / 警告 / 错误四种，仅图标颜色区分。</p>
+    </div>
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">选择参考视频</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body center" style="padding-top:120px">
+  <div class="ill"><svg class="i" viewBox="0 0 24 24"><path d="M3.5 3.5l17 17M8.8 16.2a4.5 4.5 0 0 1 6.4 0M5.3 12.6a9.5 9.5 0 0 1 3.9-2.3M18.7 12.6a9.5 9.5 0 0 0-2.4-1.7M2 9a14 14 0 0 1 4-2.6M22 9a14 14 0 0 0-8.4-3.4M12 19.5h.01"/></svg></div>
+  <div class="h-sec mt24">网络好像断开了</div>
+  <div class="t-cap mt8">检查网络设置后重试。<br>你填写的商品信息已自动保存。</div>
+  <span class="btn btn-p mt32" style="width:180px;margin-left:auto;margin-right:auto"><svg class="i" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4.5V8H16"/></svg>重新加载</span>
+  </div><div class="hi "></div></div></div><a class="hit" href="screens/23a.html" aria-label="23a 网络异常"></a></div>
+      <div class="cap"><span class="no">23a</span><span class="nm">网络异常</span><span class="kd">状态</span><span class="tag ns">新增状态</span></div>
+      <p class="note">全局断网页，并告知已填写内容已自动保存。</p>
+    </div>
+    <div class="gc">
+      <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">选择参考视频</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body">
+  
+  <div class="card pad flex gap12" style="padding:var(--s3)">
+    <div class="th" style="width:52px;height:52px;background:#e9dccb">
+     <span class="mg" style="font-size:24px">衬</span>
+     
+     
+     
+   </div>
+    <div class="grow"><div class="h-card">夏季棉麻衬衫</div>
+      <div class="t-mic mt4 flex gap8"><svg class="i" style="width:14px;height:14px" viewBox="0 0 24 24"><path d="M4 4h7.5l8.5 8.5-7.5 7.5L4 11.5zM8 8h.01"/></svg><span>服装内衣 / 上装</span><span style="color:var(--brand-strong);font-weight:600">更换类目</span></div></div>
+    <span class="btn sm btn-w">修改</span>
+  </div>
+  <div class="sk mt12" style="height:42px;border-radius:var(--r-md)"></div>
+  <div class="flex gap8 mt12"><div class="sk" style="width:60px;height:26px;border-radius:var(--r-pill)"></div><div class="sk" style="width:72px;height:26px;border-radius:var(--r-pill)"></div><div class="sk" style="width:56px;height:26px;border-radius:var(--r-pill)"></div><div class="sk" style="width:80px;height:26px;border-radius:var(--r-pill)"></div></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--s2);margin-top:var(--s3)">
+    <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)"><div class="sk" style="height:190px;border-radius:0"></div>
+      <div style="padding:var(--s3)"><div class="sk" style="height:12px"></div><div class="sk mt8" style="height:12px;width:70%"></div><div class="sk mt12" style="height:22px;width:50%"></div></div></div>
+    <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)"><div class="sk" style="height:190px;border-radius:0"></div>
+      <div style="padding:var(--s3)"><div class="sk" style="height:12px"></div><div class="sk mt8" style="height:12px;width:70%"></div><div class="sk mt12" style="height:22px;width:50%"></div></div></div>
+    <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)"><div class="sk" style="height:190px;border-radius:0"></div>
+      <div style="padding:var(--s3)"><div class="sk" style="height:12px"></div><div class="sk mt8" style="height:12px;width:70%"></div><div class="sk mt12" style="height:22px;width:50%"></div></div></div>
+    <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)"><div class="sk" style="height:190px;border-radius:0"></div>
+      <div style="padding:var(--s3)"><div class="sk" style="height:12px"></div><div class="sk mt8" style="height:12px;width:70%"></div><div class="sk mt12" style="height:22px;width:50%"></div></div></div></div>
+  </div><div class="hi "></div></div></div><a class="hit" href="screens/23b.html" aria-label="23b 列表加载骨架"></a></div>
+      <div class="cap"><span class="no">23b</span><span class="nm">列表加载骨架</span><span class="kd">状态</span><span class="tag ns">新增状态</span></div>
+      <p class="note">参考视频列表首屏骨架，尺寸与真实卡片一致，避免加载后跳动。</p>
+    </div></div>
+</div>
+</body>
+</html>
