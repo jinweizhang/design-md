@@ -9,7 +9,7 @@
   --pa:#f5f4ed; --iv:#faf9f5; --wh:#ffffff; --sand:#e8e6dc; --sand2:#dedbcf;
   --ink:#141413; --ink2:#30302e; --char:#4d4c48; --olive:#5e5d59; --stone:#87867f; --silver:#b0aea5;
   --bc:#f0eee6; --bw:#e8e6dc; --ring:#d1cfc5;
-  --brand:#c96442; --brand-strong:#ae5230; --brand-soft:#f3e3da; --coral:#d97757;
+  --brand:#c96442; --brand-strong:#ae5230; --brand-ink:#9a4526; --brand-soft:#f3e3da; --coral:#d97757;
   --ok:#56693f; --ok-icon:#6b7d55; --ok-soft:#e6e9dc;
   --err:#b53333; --err-soft:#f5e2dd;
   --warn:#83570f; --warn-soft:#f2e8d3;
@@ -74,8 +74,8 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
 .tab a{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;color:var(--olive);text-decoration:none}
 .tab a.on{color:var(--brand-strong);font-weight:600}
 .tab .i{width:24px;height:24px}
-.footer{flex-shrink:0;padding:12px 20px 34px;background:linear-gradient(transparent,var(--pa) 18px)}
-.footer.bar{background:var(--iv);border-top:1px solid var(--bc)}
+.footer{flex-shrink:0;padding:12px 20px 34px;background:var(--pa)}
+.footer.dock{background:var(--iv);border-top:1px solid var(--bc)}
 
 /* ---------------- type ---------------- */
 .h-page{font-family:var(--serif);font-weight:500;font-size:28px;line-height:1.2}
@@ -113,7 +113,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
 .badge{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:11px;font-size:11.5px;font-weight:600;white-space:nowrap}
 .badge .i{width:13px;height:13px;stroke-width:2}
 .b-q{background:var(--warn-soft);color:var(--warn)}
-.b-g{background:var(--brand-soft);color:var(--brand-strong)}
+.b-g{background:var(--brand-soft);color:var(--brand-ink)}
 .b-ok{background:var(--ok-soft);color:var(--ok)}
 .b-err{background:var(--err-soft);color:var(--err)}
 .b-off{background:var(--sand);color:var(--olive)}
@@ -318,7 +318,7 @@ const refList = (q='') => `
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px">${TPL.map(tplCard).join('')}</div>`;
 
 const s05body = () => `${nav('选择参考视频')}<div class="body">${refList()}</div>
-  <div class="footer bar" style="padding-bottom:34px"><div class="flex gap12"><span class="ill" style="width:36px;height:36px;border-radius:12px;margin:0;color:var(--char)">${ic('upload')}</span>
+  <div class="footer dock" style="padding-bottom:34px"><div class="flex gap12"><span class="ill" style="width:36px;height:36px;border-radius:12px;margin:0;color:var(--char)">${ic('upload')}</span>
   <div class="grow"><div style="font-size:14px;font-weight:600">没有合适的参考视频？</div><div class="t-mic">手动上传同类型的爆款作参考</div></div>${ic('chev','chev')}</div></div>`;
 
 const homeUpload = (imgs) => `
@@ -443,7 +443,7 @@ S['01a'] = () => S['01']().replace('<div class="flex gap8 mt16 t-mic" style="jus
   .replace('<span class="check" style="width:16px;height:16px"></span>','<span class="check" style="width:16px;height:16px;border-color:var(--err);box-shadow:0 0 0 3px var(--err-soft)"></span>');
 
 const homeBody = (state) => `${navBig('爆款复刻')}<div class="body">
-  ${state==='filled'?`<div class="card flex gap12" style="padding:10px 12px;background:var(--ok-soft);border-color:#d7ddc9"><span style="color:var(--ok-icon)">${ic('gift')}</span><span class="grow" style="font-size:13.5px;color:var(--ok)"><b>新人 500 积分已到账</b>，够做 1 条 15 秒</span><span style="color:var(--ok)">${ic('close')}</span></div>`:''}
+  ${state==='filled'?`<div class="card flex gap12" style="padding:10px 12px;background:var(--ok-soft);border-color:#d7ddc9;margin-bottom:12px"><span style="color:var(--ok-icon)">${ic('gift')}</span><span class="grow" style="font-size:13.5px;color:var(--ok)"><b>新人 500 积分已到账</b>，够做 1 条 15 秒</span><span style="color:var(--ok)">${ic('close')}</span></div>`:''}
   ${state==='empty' ? `
     <div class="card" style="margin-top:4px;padding:24px 16px;text-align:center;border:1.5px dashed var(--ring);background:var(--wh)">
       <div class="ill" style="width:64px;height:64px;border-radius:20px">${ic('upload')}</div>
@@ -533,7 +533,7 @@ S['05b'] = () => screen(`<div class="nav" style="position:absolute;top:47px;left
       <div class="card pad mt12" style="padding:12px 14px"><div style="font-size:13px;font-weight:600">复刻点</div>
         <div class="t-cap mt4">开场口播「当我拥有一件有多种穿法的…」+ 同一件单品换搭 4 套造型，同机位全身展示，商品换成你的即可。</div></div>
     </div></div>
-  <div class="footer bar"><div class="flex gap12"><div><div class="t-mic">本次消耗</div><div><span class="strike num" style="font-size:12px">990</span> <b class="price">${pts(270)}</b></div></div>
+  <div class="footer dock"><div class="flex gap12"><div><div class="t-mic">本次消耗</div><div><span class="strike num" style="font-size:12px">990</span> <b class="price">${pts(270)}</b></div></div>
     <span class="btn btn-p grow">用这个模板生成</span></div></div>`);
 
 S['05c'] = () => screen(`${nav('上传参考视频')}<div class="body">
@@ -593,7 +593,7 @@ S['10a'] = () => screen(`${navBig('作品')}<div class="body center" style="padd
   <div class="t-cap mt16" style="color:var(--char)">先看看别人做了什么 ›</div>
   </div>${tab('作品')}`);
 
-S['11'] = () => screen(worksPage('select') + `<div class="footer bar" style="padding-bottom:34px"><div class="flex gap12"><span class="check on">${ic('check')}</span><span class="grow" style="font-size:14px">已选 <b>2</b> 个</span><span class="btn sm btn-s" style="height:40px">取消</span><span class="btn sm btn-danger" style="height:40px">${ic('trash')}删除</span></div></div>`);
+S['11'] = () => screen(worksPage('select') + `<div class="footer dock" style="padding-bottom:34px"><div class="flex gap12"><span class="check on">${ic('check')}</span><span class="grow" style="font-size:14px">已选 <b>2</b> 个</span><span class="btn sm btn-s" style="height:40px">取消</span><span class="btn sm btn-danger" style="height:40px">${ic('trash')}删除</span></div></div>`);
 
 S['12']  = () => screen(previewPage());
 S['12a'] = () => screen(previewPage(`<div class="scrim"></div><div class="dlg center">
@@ -677,7 +677,7 @@ S['16'] = () => screen(`${nav('充值中心', true, `<span style="position:absol
     <div class="flex between"><span style="font-size:13px;font-weight:600">计费规则</span><span class="t-mic">优惠价 18 积分/秒</span></div>
     <div class="mt8">${TPL.map(t=>`<div class="kv" style="padding:3px 0;font-size:13px"><span>${t.s} 秒</span><span><span class="strike num">${fmt(t.o)}</span>&nbsp; <b class="num price">${fmt(t.p)}</b></span></div>`).join('')}</div>
   </div></div>
-  <div class="footer bar"><div class="flex gap12"><div class="grow"><div class="t-mic">应付</div><div><span class="num" style="font-size:22px;font-weight:600">¥10</span> <span class="t-mic">到账 1,000 积分</span></div></div><span class="btn btn-p" style="width:150px">微信支付</span></div></div>`);
+  <div class="footer dock"><div class="flex gap12"><div class="grow"><div class="t-mic">应付</div><div><span class="num" style="font-size:22px;font-weight:600">¥10</span> <span class="t-mic">到账 1,000 积分</span></div></div><span class="btn btn-p" style="width:150px">微信支付</span></div></div>`);
 
 S['16a'] = () => screen(`${nav('支付结果')}<div class="body center" style="padding-top:72px">
   <div class="ill" style="background:var(--ok-soft);color:var(--ok-icon)">${ic('check')}</div>
@@ -809,7 +809,7 @@ const SECTIONS = [
     ['15a','邀请好友','页面','np','落地裂变：规则一句话、三步流程、邀请战绩与记录。'],
     ['15b','联系客服','页面','np','在线客服 + 常见问题，首条展开“失败积分退不退”。'],
     ['16','充值中心 · 计费规则','','re','余额口径改为总额 = 赠送 + 充值；档位双列卡片，计费规则收到下方。'],
-    ['16a','支付成功','状态','ns','显示到账积分与新余额，主操作回到刚才的模板继续生成。'],
+    ['16a','支付成功','页面','np','显示到账积分与新余额，主操作回到刚才的模板继续生成。'],
     ['16b','支付未完成','状态','ns','明确“未产生扣款”，保留首充资格与所选模板。'],
     ['17','积分明细 · 双池记账','','re','每条记录标注所属积分池；顶部月度汇总。'],
     ['18','账号设置','','re','补齐绑定手机、清除缓存、注销账号（审核要求）。'],
