@@ -9,58 +9,52 @@
    1. Tokens — 唯一事实来源，所有组件由此派生（对应 DESIGN.md §2–§6）
    ========================================================= */
 :root{
-  /* 表面 */
-  --pa:#f5f4ed; --iv:#faf9f5; --wh:#ffffff; --sand:#e8e6dc; --sand2:#dedbcf;
-  --ink:#141413; --ink2:#30302e;
+  /* 表面：Apple 深色。纯黑画布，抬升靠更亮的灰，不用投影 */
+  --pa:#000000; --surface:#1c1c1e; --iv:#ffffff; --wh:#2c2c2e; --sand:#3a3a3c; --sand2:#636366;
+  --ink:#f5f5f7; --ink2:#3a3a3c;
   /* 文字 */
-  --char:#4d4c48; --olive:#5e5d59; --stone:#87867f; --silver:#b0aea5;
-  /* 描边 */
-  --bc:#f0eee6; --bw:#e8e6dc; --ring:#d1cfc5; --ring-deep:#c2c0b6;
-  /* 品牌 */
-  --brand:#c96442; --brand-strong:#ae5230; --brand-pressed:#963f22; --brand-ink:#9a4526;
-  --brand-soft:#f3e3da; --brand-line:#ecd3c6; --coral:#d97757;
-  /* 语义 */
-  --ok:#56693f; --ok-icon:#6b7d55; --ok-soft:#e6e9dc; --ok-line:#d7ddc9;
-  --err:#b53333; --err-soft:#f5e2dd;
-  --warn:#83570f; --warn-soft:#f2e8d3;
-  --focus:#3898ec; --focus-ring:0 0 0 3px rgba(56,152,236,.35);
+  --char:#ebebf5; --olive:#98989d; --stone:#8e8e93; --silver:#aeaeb2;
+  /* 描边：深色上的发丝线 */
+  --bc:rgba(255,255,255,.10); --bw:rgba(255,255,255,.14); --ring:rgba(255,255,255,.18); --ring-deep:rgba(255,255,255,.32);
+  /* 唯一彩色：Apple Blue。按钮用 #0071e3（白字 4.70），深底上的文字用 #2997ff */
+  --brand:#2997ff; --brand-strong:#0071e3; --brand-pressed:#0066cc; --brand-ink:#64d2ff;
+  --brand-soft:rgba(41,151,255,.16); --brand-line:rgba(41,151,255,.40); --coral:#2997ff;
+  /* 语义：只用在状态上，不装饰 */
+  --ok:#30d158; --ok-icon:#30d158; --ok-soft:rgba(48,209,88,.16); --ok-line:rgba(48,209,88,.45);
+  --err:#ff453a; --err-soft:rgba(255,69,58,.16);
+  --warn:#ff9f0a; --warn-soft:rgba(255,159,10,.18);
+  --focus:#0071e3; --focus-ring:0 0 0 3px rgba(0,113,227,.45);
   /* 遮罩 */
-  --scrim:rgba(20,20,19,.42); --ink-72:rgba(20,20,19,.72); --ink-62:rgba(20,20,19,.62); --iv-88:rgba(250,249,245,.88);
-  /* 字体 */
-  --serif:"Noto Serif SC","Songti SC","Noto Serif CJK SC",Georgia,serif;
-  --sans:-apple-system,"PingFang SC","Noto Sans SC","Noto Sans CJK SC",system-ui,sans-serif;
-  --mono:Georgia,"Noto Serif SC",serif;
-  /* 字阶（px） */
+  --scrim:rgba(0,0,0,.64); --ink-72:rgba(0,0,0,.72); --ink-62:rgba(0,0,0,.55); --iv-88:rgba(255,255,255,.92);
+  /* 字体：SF Pro，环境没有时回退苹方 / Noto */
+  --serif:-apple-system,"SF Pro Display","Helvetica Neue","PingFang SC","Noto Sans SC",sans-serif;
+  --sans:-apple-system,"SF Pro Text","SF Pro Display","Helvetica Neue","PingFang SC","Noto Sans SC",sans-serif;
+  --mono:"SF Mono",ui-monospace,"Noto Sans SC",sans-serif;
   --fs-11:11px; --fs-12:12px; --fs-13:13px; --fs-14:14px; --fs-15:15px; --fs-16:16px; --fs-17:17px;
-  --fs-20:20px; --fs-28:28px; --fs-36:36px;
-  --ls-tight:-.01em; --ls-label:.12px;
-  /* 间距比例尺：4 基准 */
+  --fs-20:22px; --fs-28:34px; --fs-36:40px;
+  --ls-tight:-0.022em; --ls-label:-0.01em;
   --s05:2px; --s1:4px; --s15:6px; --s2:8px; --s3:12px; --s4:16px; --s5:20px; --s6:24px; --s8:32px; --s12:48px;
-  /* 圆角比例尺 */
-  --r-2xs:3px; --r-xs:6px; --r-sm:8px; --r-md:12px; --r-lg:16px; --r-xl:20px; --r-2xl:24px; --r-3xl:32px; --r-pill:999px;
-  /* 层级：环形阴影优先，投影只给悬浮层 */
+  --r-2xs:3px; --r-xs:6px; --r-sm:10px; --r-md:14px; --r-lg:16px; --r-xl:20px; --r-2xl:24px; --r-3xl:32px; --r-pill:999px;
   --ring-1:0 0 0 1px var(--bc); --ring-2:0 0 0 1px var(--ring); --ring-3:0 0 0 1px var(--bw);
-  --sh-sm:0 1px 2px rgba(20,20,19,.08); --sh-md:rgba(20,20,19,.08) 0 8px 32px; --sh-lg:rgba(20,20,19,.12) 0 8px 24px;
-  /* 动效 */
-  --dur-1:150ms; --dur-2:220ms; --ease:cubic-bezier(.2,.7,.2,1);
-  /* 尺寸 */
+  --sh-sm:none; --sh-md:none; --sh-lg:none;
+  --dur-1:180ms; --dur-2:240ms; --ease:cubic-bezier(.25,.1,.25,1);
   --hit:44px; --btn-lg:50px; --btn-md:44px; --btn-sm:36px; --icon:20px; --icon-sm:16px; --icon-xs:14px;
   --w:390px; --h:812px; --sb:47px; --nav:44px; --tabbar:84px; --safe-b:34px; --gutter:20px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-smoothing:antialiased}
+body{background:#000;font-family:var(--sans);color:var(--ink);-webkit-font-smoothing:antialiased}
 .i{width:var(--icon);height:var(--icon);fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
 .i.f{fill:currentColor;stroke:none}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 
 /* ---------------- board ---------------- */
 .board{padding:56px 64px 96px;max-width:1880px;margin:0 auto}
-.b-head h1{font-family:var(--serif);font-weight:500;font-size:44px;line-height:1.15}
+.b-head h1{font-family:var(--serif);font-weight:600;font-size:44px;line-height:1.1;letter-spacing:-0.022em}
 .b-head p{color:var(--olive);font-size:var(--fs-15);line-height:1.6;margin-top:var(--s3);max-width:92ch}
 .legend{display:flex;gap:var(--s4);margin-top:var(--s5);font-size:var(--fs-13);color:var(--olive)}
 .legend span{display:inline-flex;align-items:center;gap:var(--s1)}
 .sec{margin-top:64px}
-.sec h2{font-family:var(--serif);font-weight:500;font-size:26px;padding-bottom:var(--s3);border-bottom:1px solid var(--ring)}
+.sec h2{font-family:var(--serif);font-weight:600;font-size:26px;letter-spacing:-0.02em;padding-bottom:var(--s3);border-bottom:1px solid var(--ring)}
 .sec h2 small{font-family:var(--sans);font-size:var(--fs-13);color:var(--olive);font-weight:400;margin-left:var(--s3)}
 .grid{display:flex;flex-wrap:wrap;gap:var(--s12) 40px;margin-top:28px}
 .fig{width:var(--w)}
@@ -70,47 +64,47 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
 .cap .kd{font-size:var(--fs-12);color:var(--olive)}
 .tag{font-size:var(--fs-11);font-weight:600;letter-spacing:var(--ls-label);border-radius:var(--r-pill);padding:var(--s05) var(--s2);margin-left:auto;white-space:nowrap}
 .tag.re{background:var(--sand);color:var(--char)}
-.tag.np{background:var(--brand-strong);color:var(--iv)}
-.tag.ns{background:var(--ink);color:var(--iv)}
+.tag.np{background:var(--brand-strong);color:#fff}
+.tag.ns{background:#fff;color:#000}
 .note{font-size:12.5px;line-height:1.55;color:var(--olive);margin-top:var(--s3);min-height:38px}
 
 /* ---------------- phone frame ---------------- */
 .scr{position:relative;width:var(--w);height:var(--h);background:var(--pa);border-radius:40px;overflow:hidden;
-     box-shadow:0 0 0 1px rgba(20,20,19,.08),rgba(0,0,0,.08) 0 12px 40px;display:flex;flex-direction:column}
+     box-shadow:0 0 0 1px rgba(255,255,255,.14);display:flex;flex-direction:column}
 .scr.dark{background:var(--ink);color:var(--iv)}
 .sb{height:var(--sb);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 30px 0 34px;font-size:var(--fs-15);font-weight:600}
 .sb .r{display:flex;gap:var(--s15);align-items:center}
 .nav{height:var(--nav);flex-shrink:0;display:flex;align-items:center;padding:0 110px 0 var(--s3);position:relative}
-.nav .bk{width:36px;height:36px;display:grid;place-items:center;border-radius:var(--r-md);color:var(--ink)}
+.nav .bk{width:36px;height:36px;display:grid;place-items:center;border-radius:var(--r-md);color:var(--brand)}
 .dark .nav .bk{color:var(--iv)}
 .nav .tt{font-size:var(--fs-17);font-weight:600;margin-left:var(--s05)}
 .nav .tt.pl{margin-left:var(--s3)}
-.capsule{position:absolute;right:var(--s2);top:6px;width:87px;height:32px;border-radius:var(--r-pill);border:1px solid var(--bw);
-         background:rgba(255,255,255,.72);display:flex;align-items:center}
+.capsule{position:absolute;right:var(--s2);top:6px;width:87px;height:32px;border-radius:var(--r-pill);border:1px solid rgba(255,255,255,.28);
+         background:rgba(0,0,0,.35);display:flex;align-items:center}
 .capsule .d{flex:1;display:flex;justify-content:center;gap:3px}
-.capsule .d i{width:4px;height:4px;border-radius:50%;background:var(--ink)}
-.capsule .sep{width:1px;height:18px;background:var(--bw)}
+.capsule .d i{width:4px;height:4px;border-radius:50%;background:#fff}
+.capsule .sep{width:1px;height:18px;background:rgba(255,255,255,.28)}
 .capsule .o{flex:1;display:grid;place-items:center}
-.capsule .o i{width:16px;height:16px;border-radius:50%;border:1.6px solid var(--ink);display:grid;place-items:center}
-.capsule .o i::after{content:"";width:6px;height:6px;border-radius:50%;background:var(--ink)}
+.capsule .o i{width:16px;height:16px;border-radius:50%;border:1.6px solid #fff;display:grid;place-items:center}
+.capsule .o i::after{content:"";width:6px;height:6px;border-radius:50%;background:#fff}
 .dark .capsule{background:rgba(20,20,19,.5);border-color:rgba(250,249,245,.18)}
 .dark .capsule .d i,.dark .capsule .o i::after{background:var(--iv)}
 .dark .capsule .o i{border-color:var(--iv)}
 .dark .capsule .sep{background:rgba(250,249,245,.18)}
 .body{flex:1;overflow:hidden;padding:var(--s1) var(--gutter) 0;position:relative}
 .body.np{padding:0}
-.hi{position:absolute;left:50%;bottom:var(--s2);width:134px;height:5px;border-radius:var(--r-2xs);background:var(--ink);transform:translateX(-50%);z-index:30}
-.dark .hi,.hi.lt{background:var(--iv)}
-.tab{height:var(--tabbar);flex-shrink:0;background:var(--iv);border-top:1px solid var(--bc);display:flex;padding-top:7px}
+.hi{position:absolute;left:50%;bottom:var(--s2);width:134px;height:5px;border-radius:var(--r-2xs);background:rgba(255,255,255,.9);transform:translateX(-50%);z-index:30}
+.dark .hi,.hi.lt{background:rgba(255,255,255,.9)}
+.tab{height:var(--tabbar);flex-shrink:0;background:rgba(28,28,30,.86);backdrop-filter:saturate(180%) blur(20px);border-top:1px solid var(--bc);display:flex;padding-top:7px}
 .tab a{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:var(--fs-11);letter-spacing:var(--ls-label);color:var(--olive);text-decoration:none;border-radius:var(--r-md);transition:color var(--dur-1) var(--ease)}
-.tab a.on{color:var(--brand-strong);font-weight:600}
+.tab a.on{color:var(--brand);font-weight:600}
 .tab .i{width:24px;height:24px}
 .footer{flex-shrink:0;padding:var(--s3) var(--gutter) var(--safe-b);background:var(--pa)}
-.footer.dock{background:var(--iv);border-top:1px solid var(--bc)}
+.footer.dock{background:rgba(28,28,30,.92);backdrop-filter:saturate(180%) blur(20px);border-top:1px solid var(--bc)}
 
 /* ---------------- type ---------------- */
-.h-page{font-family:var(--serif);font-weight:500;font-size:var(--fs-28);line-height:1.2;letter-spacing:var(--ls-tight)}
-.h-sec{font-family:var(--serif);font-weight:500;font-size:var(--fs-20);line-height:1.25}
+.h-page{font-family:var(--serif);font-weight:600;font-size:var(--fs-28);line-height:1.12;letter-spacing:var(--ls-tight)}
+.h-sec{font-family:var(--serif);font-weight:600;font-size:var(--fs-20);line-height:1.2;letter-spacing:-0.016em}
 .h-card{font-size:var(--fs-16);font-weight:600;line-height:1.35}
 .t-body{font-size:var(--fs-15);line-height:1.6;color:var(--char)}
 .t-cap{font-size:var(--fs-13);line-height:1.45;color:var(--olive)}
@@ -118,37 +112,37 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
 .num{font-family:var(--mono);font-variant-numeric:tabular-nums}
 .lbl{font-size:var(--fs-13);font-weight:600;color:var(--char);margin:18px 0 var(--s2);display:flex;justify-content:space-between;align-items:baseline}
 .lbl .t-mic{font-weight:400}
-.req{color:var(--brand-strong)}
+.req{color:var(--brand)}
 .strike{text-decoration:line-through;color:var(--stone)}
-.price{color:var(--brand-strong);font-weight:600}
+.price{color:var(--brand);font-weight:600}
 
 /* ---------------- components ---------------- */
-.card{background:var(--iv);border:1px solid var(--bc);border-radius:var(--r-lg)}
+.card{background:var(--surface);border:1px solid var(--bc);border-radius:var(--r-lg)}
 .card.wh{background:var(--wh)}
 .pad{padding:var(--s4)}
 /* 按钮：默认 / 按下 / 禁用 / 聚焦 */
-.btn{height:var(--btn-lg);border-radius:var(--r-md);border:0;font:600 var(--fs-16)/1 var(--sans);display:flex;align-items:center;justify-content:center;gap:var(--s2);width:100%;cursor:pointer;user-select:none;
+.btn{height:var(--btn-lg);border-radius:var(--r-md);border:0;font:500 var(--fs-17)/1 var(--sans);letter-spacing:-0.01em;display:flex;align-items:center;justify-content:center;gap:var(--s2);width:100%;cursor:pointer;user-select:none;
      transition:background-color var(--dur-1) var(--ease),box-shadow var(--dur-1) var(--ease),transform var(--dur-1) var(--ease)}
 .btn.sm{height:var(--btn-sm);border-radius:var(--r-sm);font-size:var(--fs-14);width:auto;padding:0 var(--s3)}
 .btn.md{height:var(--btn-md);border-radius:var(--r-md);font-size:var(--fs-15)}
-.btn-p{background:var(--brand-strong);color:var(--iv)}
+.btn-p{background:var(--brand-strong);color:#fff}
 .btn-p:active,.btn-p.is-pressed{background:var(--brand-pressed)}
-.btn-s{background:var(--sand);color:var(--char);box-shadow:var(--ring-2)}
+.btn-s{background:var(--sand);color:var(--ink);box-shadow:none}
 .btn-s:active,.btn-s.is-pressed{background:var(--sand2);box-shadow:0 0 0 1px var(--ring-deep)}
-.btn-w{background:var(--wh);color:var(--ink);box-shadow:var(--ring-3)}
+.btn-w{background:var(--wh);color:var(--ink);box-shadow:none}
 .btn-w:active,.btn-w.is-pressed{background:var(--sand)}
-.btn-d{background:var(--ink);color:var(--iv)}
-.btn-d:active,.btn-d.is-pressed{background:var(--ink2)}
+.btn-d{background:#fff;color:#000}
+.btn-d:active,.btn-d.is-pressed{background:#e5e5ea}
 .btn-g{background:none;color:var(--olive);height:40px;font-weight:500;font-size:var(--fs-14)}
 .btn-g:active,.btn-g.is-pressed{color:var(--ink)}
 .btn-x,.btn.is-disabled{background:var(--sand);color:var(--stone);box-shadow:none;pointer-events:none}
-.btn-danger{background:var(--err);color:var(--iv)}
+.btn-danger{background:var(--err);color:#fff}
 .btn:active:not(.btn-g){transform:translateY(1px)}
 .btn:focus-visible,.chip:focus-visible,.li:focus-visible,.tab a:focus-visible,.field:focus-visible,.seg a:focus-visible{outline:none;box-shadow:var(--focus-ring)}
 .row2{display:flex;gap:var(--s3)}
 .chip{display:inline-flex;align-items:center;gap:var(--s1);height:30px;padding:0 var(--s3);border-radius:var(--r-pill);font-size:var(--fs-13);background:var(--wh);color:var(--char);box-shadow:var(--ring-3);transition:background-color var(--dur-1) var(--ease)}
 .chip:active{background:var(--sand)}
-.chip.on{background:var(--ink);color:var(--iv);box-shadow:none}
+.chip.on{background:var(--brand-strong);color:#fff;box-shadow:none}
 .chip.sm{height:26px;padding:0 var(--s3);font-size:var(--fs-12)}
 .chips{display:flex;flex-wrap:wrap;gap:var(--s2)}
 .badge{display:inline-flex;align-items:center;gap:var(--s1);height:22px;padding:0 var(--s2);border-radius:var(--r-pill);font-size:11.5px;font-weight:600;letter-spacing:var(--ls-label);white-space:nowrap}
@@ -167,7 +161,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
 .field.dis{background:var(--sand);color:var(--stone);border-color:transparent}
 .errtxt{color:var(--err);font-size:12.5px;margin-top:var(--s15);display:flex;gap:var(--s1);align-items:center}
 .errtxt .i{width:var(--icon-xs);height:var(--icon-xs)}
-.list{background:var(--iv);border:1px solid var(--bc);border-radius:var(--r-lg);overflow:hidden}
+.list{background:var(--surface);border:1px solid var(--bc);border-radius:var(--r-lg);overflow:hidden}
 .li{display:flex;align-items:center;gap:var(--s3);padding:15px var(--s4);border-top:1px solid var(--bc);font-size:var(--fs-15);min-height:52px;transition:background-color var(--dur-1) var(--ease)}
 .li:first-child{border-top:0}
 .li:active{background:var(--pa)}
@@ -188,46 +182,45 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
 
 /* thumbnails: product monogram on a warm tint, with an organic off-center shape */
 .th{position:relative;border-radius:var(--r-md);display:grid;place-items:center;overflow:hidden;flex-shrink:0}
-.th::before{content:"";position:absolute;right:-22%;bottom:-26%;width:82%;aspect-ratio:1;border-radius:50%;background:rgba(20,20,19,.07)}
-.th .mg{position:relative;font-family:var(--serif);font-weight:500;color:rgba(20,20,19,.55)}
+.th .mg{position:relative;font-family:var(--serif);font-weight:600;color:rgba(255,255,255,.82);letter-spacing:-0.03em}
 .th .tl{position:absolute;left:var(--s2);top:var(--s2)}
 .th .tr{position:absolute;right:var(--s2);top:var(--s2)}
 .th .bl{position:absolute;left:var(--s2);bottom:var(--s2)}
 .th .br{position:absolute;right:var(--s2);bottom:var(--s2)}
-.th .pl{width:44px;height:44px;border-radius:50%;background:var(--iv-88);display:grid;place-items:center;color:var(--ink)}
+.th .pl{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.92);display:grid;place-items:center;color:#000}
 .th .pl .i{width:18px;height:18px;margin-left:var(--s05)}
-.dur{font-size:var(--fs-11);font-weight:600;letter-spacing:var(--ls-label);color:var(--iv);background:var(--ink-62);border-radius:var(--r-xs);padding:var(--s05) var(--s15);font-variant-numeric:tabular-nums}
+.dur{font-size:var(--fs-11);font-weight:600;letter-spacing:var(--ls-label);color:#fff;background:rgba(0,0,0,.55);border-radius:var(--r-xs);padding:var(--s05) var(--s15);font-variant-numeric:tabular-nums}
 
 /* overlays */
 .scrim{position:absolute;inset:0;background:var(--scrim);z-index:10}
-.sheet{position:absolute;left:0;right:0;bottom:0;background:var(--iv);border-radius:var(--r-2xl) var(--r-2xl) 0 0;z-index:11;padding:var(--s2) var(--gutter) var(--safe-b)}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:#3a3a3c;border-radius:var(--r-2xl) var(--r-2xl) 0 0;z-index:11;padding:var(--s2) var(--gutter) var(--safe-b)}
 .grab{width:36px;height:5px;border-radius:var(--r-2xs);background:var(--ring);margin:0 auto var(--s3)}
 .sheet .sh-h{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:var(--s15)}
 .x{width:32px;height:32px;border-radius:50%;background:var(--sand);display:grid;place-items:center;color:var(--char)}
 .x .i{width:var(--icon-sm);height:var(--icon-sm)}
-.dlg{position:absolute;left:var(--s6);right:var(--s6);top:50%;transform:translateY(-50%);background:var(--iv);border-radius:var(--r-2xl);z-index:11;padding:var(--s6);box-shadow:var(--sh-md)}
+.dlg{position:absolute;left:var(--s6);right:var(--s6);top:50%;transform:translateY(-50%);background:#3a3a3c;border-radius:var(--r-2xl);z-index:11;padding:var(--s6);box-shadow:var(--sh-md)}
 .dlg .h-sec{margin-bottom:var(--s15)}
-.toast{display:inline-flex;align-items:center;gap:var(--s2);background:var(--ink);color:var(--iv);border-radius:var(--r-md);padding:var(--s3) var(--s4);font-size:var(--fs-14);line-height:1.4;box-shadow:var(--sh-lg)}
+.toast{display:inline-flex;align-items:center;gap:var(--s2);background:#3a3a3c;color:#fff;border-radius:var(--r-md);padding:var(--s3) var(--s4);font-size:var(--fs-14);line-height:1.4;box-shadow:var(--sh-lg)}
 .toast .i{width:18px;height:18px}
 .ill{width:96px;height:96px;border-radius:var(--r-3xl);background:var(--sand);display:grid;place-items:center;margin:0 auto;color:var(--brand)}
 .ill .i{width:40px;height:40px;stroke-width:1.5}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--ring);display:inline-block}
 .dot.on{background:var(--brand)}
 .check{width:20px;height:20px;border-radius:50%;border:1.6px solid var(--ring);display:grid;place-items:center;background:var(--wh);flex-shrink:0;transition:background-color var(--dur-1) var(--ease)}
-.check.on{background:var(--brand-strong);border-color:var(--brand-strong);color:var(--iv)}
+.check.on{background:var(--brand-strong);border-color:var(--brand);color:#fff}
 .check .i{width:12px;height:12px;stroke-width:2.6}
-.sk{background:linear-gradient(90deg,#ebe8de,#f2f0e8,#ebe8de);border-radius:var(--r-sm)}
+.sk{background:linear-gradient(90deg,#3a3a3c,#48484a,#3a3a3c);border-radius:var(--r-sm)}
 .step{display:flex;gap:var(--s3);align-items:flex-start;padding:var(--s3) 0}
 .step .n{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:var(--fs-12);font-weight:600;background:var(--sand);color:var(--char);flex-shrink:0}
 .step .n.done{background:var(--ok-soft);color:var(--ok)}
-.step .n.now{background:var(--brand-strong);color:var(--iv)}
+.step .n.now{background:var(--brand-strong);color:#fff}
 .step .n .i{width:var(--icon-xs);height:var(--icon-xs);stroke-width:2.4}
 .seg{display:flex;background:var(--sand);border-radius:var(--r-md);padding:3px}
 .seg a{flex:1;text-align:center;font-size:var(--fs-14);padding:7px 0;border-radius:9px;color:var(--olive);transition:background-color var(--dur-1) var(--ease)}
-.seg a.on{background:var(--wh);color:var(--ink);font-weight:600;box-shadow:var(--sh-sm)}
-.tip{position:absolute;background:var(--ink);color:var(--iv);font-size:var(--fs-13);border-radius:10px;padding:var(--s2) var(--s3);z-index:5;white-space:nowrap}
-.tip::after{content:"";position:absolute;left:18px;bottom:-5px;width:10px;height:10px;background:var(--ink);transform:rotate(45deg)}
-.player{background:var(--ink);position:relative;display:grid;place-items:center}
+.seg a.on{background:#636366;color:#fff;font-weight:600;box-shadow:none}
+.tip{position:absolute;background:#3a3a3c;color:#fff;font-size:var(--fs-13);border-radius:10px;padding:var(--s2) var(--s3);z-index:5;white-space:nowrap}
+.tip::after{content:"";position:absolute;left:18px;bottom:-5px;width:10px;height:10px;background:#3a3a3c;transform:rotate(45deg)}
+.player{background:#000;position:relative;display:grid;place-items:center}
 .ai-note{font-size:11.5px;color:var(--stone);text-align:center;margin-top:var(--s2)}
 
 .gal{padding:56px 48px 96px;max-width:1680px;margin:0 auto}
@@ -264,17 +257,17 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     <div style="width:64px;height:64px;border-radius:var(--r-xl);background:var(--brand);display:grid;place-items:center;color:var(--iv)"><svg class="i f" style="width:28px;height:28px;margin-left:3px" viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z"/></svg></div>
     <div class="h-page mt24" style="font-size:36px;line-height:1.15">上传一张商品图，<br>复刻同款带货视频</div>
     <div class="t-body mt16" style="color:var(--olive)">新人赠送 500 积分，够做 1 条 15 秒。<br>先免费做一条，看到效果再决定。</div>
-    <div class="flex gap8 mt24"><div class="th" style="width:96px;height:128px;background:#e9dccb">
+    <div class="flex gap8 mt24"><div class="th" style="width:96px;height:128px;background:#3a3a3c">
      <span class="mg" style="font-size:33px">衬</span>
      
      
      <span class="br"><span class="dur">0:15</span></span>
-   </div><div class="th" style="width:96px;height:128px;background:#e6d6cd">
+   </div><div class="th" style="width:96px;height:128px;background:#363638">
      <span class="mg" style="font-size:33px">包</span>
      
      
      <span class="br"><span class="dur">0:15</span></span>
-   </div><div class="th" style="width:96px;height:128px;background:#dfe3d3">
+   </div><div class="th" style="width:96px;height:128px;background:#323234">
      <span class="mg" style="font-size:33px">护</span>
      
      
@@ -297,17 +290,17 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     <div style="width:64px;height:64px;border-radius:var(--r-xl);background:var(--brand);display:grid;place-items:center;color:var(--iv)"><svg class="i f" style="width:28px;height:28px;margin-left:3px" viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z"/></svg></div>
     <div class="h-page mt24" style="font-size:36px;line-height:1.15">上传一张商品图，<br>复刻同款带货视频</div>
     <div class="t-body mt16" style="color:var(--olive)">新人赠送 500 积分，够做 1 条 15 秒。<br>先免费做一条，看到效果再决定。</div>
-    <div class="flex gap8 mt24"><div class="th" style="width:96px;height:128px;background:#e9dccb">
+    <div class="flex gap8 mt24"><div class="th" style="width:96px;height:128px;background:#3a3a3c">
      <span class="mg" style="font-size:33px">衬</span>
      
      
      <span class="br"><span class="dur">0:15</span></span>
-   </div><div class="th" style="width:96px;height:128px;background:#e6d6cd">
+   </div><div class="th" style="width:96px;height:128px;background:#363638">
      <span class="mg" style="font-size:33px">包</span>
      
      
      <span class="br"><span class="dur">0:15</span></span>
-   </div><div class="th" style="width:96px;height:128px;background:#dfe3d3">
+   </div><div class="th" style="width:96px;height:128px;background:#323234">
      <span class="mg" style="font-size:33px">护</span>
      
      
@@ -330,22 +323,22 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
   
   <div class="card pad" style="padding:var(--s3)">
     <div class="flex between"><div class="h-card">商品图片</div><span class="t-mic">3/4 · 正面 / 细节 / 场景</span></div>
-    <div class="flex gap8 mt12"><div style="position:relative"><div class="th" style="width:74px;height:74px;background:#e9dccb">
+    <div class="flex gap8 mt12"><div style="position:relative"><div class="th" style="width:74px;height:74px;background:#3a3a3c">
      <span class="mg" style="font-size:30px">衬</span>
      
      
      
-   </div><span style="position:absolute;right:-6px;top:-6px;width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--iv);display:grid;place-items:center"><svg class="i" style="width:12px;height:12px;stroke-width:2.4" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div><div style="position:relative"><div class="th" style="width:74px;height:74px;background:#e5dac8">
+   </div><span style="position:absolute;right:-6px;top:-6px;width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,.72);color:#fff;display:grid;place-items:center"><svg class="i" style="width:12px;height:12px;stroke-width:2.4" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div><div style="position:relative"><div class="th" style="width:74px;height:74px;background:#48484a">
      <span class="mg" style="font-size:30px">领</span>
      
      
      
-   </div><span style="position:absolute;right:-6px;top:-6px;width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--iv);display:grid;place-items:center"><svg class="i" style="width:12px;height:12px;stroke-width:2.4" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div><div style="position:relative"><div class="th" style="width:74px;height:74px;background:#e2dccf">
+   </div><span style="position:absolute;right:-6px;top:-6px;width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,.72);color:#fff;display:grid;place-items:center"><svg class="i" style="width:12px;height:12px;stroke-width:2.4" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div><div style="position:relative"><div class="th" style="width:74px;height:74px;background:#2c2c2e">
      <span class="mg" style="font-size:30px">景</span>
      
      
      
-   </div><span style="position:absolute;right:-6px;top:-6px;width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--iv);display:grid;place-items:center"><svg class="i" style="width:12px;height:12px;stroke-width:2.4" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div>
+   </div><span style="position:absolute;right:-6px;top:-6px;width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,.72);color:#fff;display:grid;place-items:center"><svg class="i" style="width:12px;height:12px;stroke-width:2.4" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div>
       <div style="width:74px;height:74px;border-radius:var(--r-md);border:1.5px dashed var(--ring);display:grid;place-items:center;color:var(--olive);background:var(--wh)"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></div>
     </div>
   </div>
@@ -380,12 +373,12 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
   <div class="field ph " style="min-height:72px">如：轻薄透气 · 抗皱好打理 · 适合夏季通勤</div>
   
   <div class="lbl mt20">做出来是这样的</div>
-    <div class="card wh flex gap12" style="padding:var(--s3)"><div class="th" style="width:64px;height:86px;background:#e3ddcd">
+    <div class="card wh flex gap12" style="padding:var(--s3)"><div class="th" style="width:64px;height:86px;background:#404042">
      <span class="mg" style="font-size:19px">原</span>
      
      
      
-   </div><span style="color:var(--stone)"><svg class="i" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span><div class="th" style="width:64px;height:86px;background:#e9dccb">
+   </div><span style="color:var(--stone)"><svg class="i" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span><div class="th" style="width:64px;height:86px;background:#3a3a3c">
      <span class="mg" style="font-size:19px">复</span>
      
      
@@ -404,12 +397,12 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
   
   <div class="card pad" style="padding:var(--s3)">
     <div class="flex between"><div class="h-card">商品图片</div><span class="t-mic">3/4 · 正面 / 细节 / 场景</span></div>
-    <div class="flex gap8 mt12"><div style="position:relative"><div class="th" style="width:74px;height:74px;background:#e9dccb">
+    <div class="flex gap8 mt12"><div style="position:relative"><div class="th" style="width:74px;height:74px;background:#3a3a3c">
      <span class="mg" style="font-size:30px">衬</span>
      
      
      
-   </div><span style="position:absolute;right:-6px;top:-6px;width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--iv);display:grid;place-items:center"><svg class="i" style="width:12px;height:12px;stroke-width:2.4" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div><div style="position:relative"><div class="th" style="width:74px;height:74px;background:#e9dccb">
+   </div><span style="position:absolute;right:-6px;top:-6px;width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,.72);color:#fff;display:grid;place-items:center"><svg class="i" style="width:12px;height:12px;stroke-width:2.4" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div><div style="position:relative"><div class="th" style="width:74px;height:74px;background:#3a3a3c">
      <span class="mg" style="font-size:31px"></span>
      
      
@@ -443,22 +436,22 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
   
   <div class="card pad" style="padding:var(--s3)">
     <div class="flex between"><div class="h-card">商品图片</div><span class="t-mic">3/4 · 正面 / 细节 / 场景</span></div>
-    <div class="flex gap8 mt12"><div style="position:relative"><div class="th" style="width:74px;height:74px;background:#e9dccb">
+    <div class="flex gap8 mt12"><div style="position:relative"><div class="th" style="width:74px;height:74px;background:#3a3a3c">
      <span class="mg" style="font-size:30px">衬</span>
      
      
      
-   </div><span style="position:absolute;right:-6px;top:-6px;width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--iv);display:grid;place-items:center"><svg class="i" style="width:12px;height:12px;stroke-width:2.4" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div><div style="position:relative"><div class="th" style="width:74px;height:74px;background:#e5dac8">
+   </div><span style="position:absolute;right:-6px;top:-6px;width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,.72);color:#fff;display:grid;place-items:center"><svg class="i" style="width:12px;height:12px;stroke-width:2.4" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div><div style="position:relative"><div class="th" style="width:74px;height:74px;background:#48484a">
      <span class="mg" style="font-size:30px">领</span>
      
      
      
-   </div><span style="position:absolute;right:-6px;top:-6px;width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--iv);display:grid;place-items:center"><svg class="i" style="width:12px;height:12px;stroke-width:2.4" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div><div style="position:relative"><div class="th" style="width:74px;height:74px;background:#e2dccf">
+   </div><span style="position:absolute;right:-6px;top:-6px;width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,.72);color:#fff;display:grid;place-items:center"><svg class="i" style="width:12px;height:12px;stroke-width:2.4" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div><div style="position:relative"><div class="th" style="width:74px;height:74px;background:#2c2c2e">
      <span class="mg" style="font-size:30px">景</span>
      
      
      
-   </div><span style="position:absolute;right:-6px;top:-6px;width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--iv);display:grid;place-items:center"><svg class="i" style="width:12px;height:12px;stroke-width:2.4" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div>
+   </div><span style="position:absolute;right:-6px;top:-6px;width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,.72);color:#fff;display:grid;place-items:center"><svg class="i" style="width:12px;height:12px;stroke-width:2.4" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div>
       <div style="width:74px;height:74px;border-radius:var(--r-md);border:1.5px dashed var(--ring);display:grid;place-items:center;color:var(--olive);background:var(--wh)"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></div>
     </div>
   </div>
@@ -491,7 +484,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
       <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
   <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">商品识别</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body" style="display:flex;flex-direction:column;align-items:center;padding-top:80px">
   <div style="position:relative;width:180px;height:180px">
-    <div class="th" style="width:180px;height:180px;background:#e9dccb">
+    <div class="th" style="width:180px;height:180px;background:#3a3a3c">
      <span class="mg" style="font-size:65px">衬</span>
      
      
@@ -535,14 +528,14 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
   <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">选择参考视频</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body">
   
   <div class="card pad flex gap12" style="padding:var(--s3)">
-    <div class="th" style="width:52px;height:52px;background:#e9dccb">
+    <div class="th" style="width:52px;height:52px;background:#3a3a3c">
      <span class="mg" style="font-size:24px">衬</span>
      
      
      
    </div>
     <div class="grow"><div class="h-card">夏季棉麻衬衫</div>
-      <div class="t-mic mt4 flex gap8"><svg class="i" style="width:14px;height:14px" viewBox="0 0 24 24"><path d="M4 4h7.5l8.5 8.5-7.5 7.5L4 11.5zM8 8h.01"/></svg><span>服装内衣 / 上装</span><span style="color:var(--brand-strong);font-weight:600">更换类目</span></div></div>
+      <div class="t-mic mt4 flex gap8"><svg class="i" style="width:14px;height:14px" viewBox="0 0 24 24"><path d="M4 4h7.5l8.5 8.5-7.5 7.5L4 11.5zM8 8h.01"/></svg><span>服装内衣 / 上装</span><span style="color:var(--brand);font-weight:600">更换类目</span></div></div>
     <span class="btn sm btn-w">修改</span>
   </div>
   <div class="flex gap8 mt12">
@@ -552,7 +545,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
   <div class="chips mt12"><span class="chip sm on">全部</span><span class="chip sm">15 秒内</span><span class="chip sm">竖屏</span><span class="chip sm">口播带货</span></div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--s2);margin-top:var(--s3)">
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
-    <div class="th" style="width:170px;height:190px;background:#e9dccb">
+    <div class="th" style="width:170px;height:190px;background:#3a3a3c">
      <span class="mg" style="font-size:58px">衬</span>
      
      <span class="tl"><span class="dur">9:16</span></span>
@@ -564,7 +557,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
   </div>
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
-    <div class="th" style="width:170px;height:190px;background:#dfe3d3">
+    <div class="th" style="width:170px;height:190px;background:#323234">
      <span class="mg" style="font-size:58px">夏</span>
      
      <span class="tl"><span class="dur">9:16</span></span>
@@ -576,7 +569,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
   </div>
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
-    <div class="th" style="width:170px;height:190px;background:#e6d6cd">
+    <div class="th" style="width:170px;height:190px;background:#363638">
      <span class="mg" style="font-size:58px">通</span>
      
      <span class="tl"><span class="dur">16:9</span></span>
@@ -588,7 +581,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
   </div>
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
-    <div class="th" style="width:170px;height:190px;background:#e8dcc3">
+    <div class="th" style="width:170px;height:190px;background:#48484a">
      <span class="mg" style="font-size:58px">料</span>
      
      <span class="tl"><span class="dur">9:16</span></span>
@@ -602,21 +595,21 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
   <div class="footer dock" style="padding-bottom:var(--safe-b)"><div class="flex gap12"><span class="ill" style="width:36px;height:36px;border-radius:var(--r-md);margin:0;color:var(--char)"><svg class="i" viewBox="0 0 24 24"><path d="M12 15.5V5M7.5 9.5L12 5l4.5 4.5M5 19h14"/></svg></span>
   <div class="grow"><div style="font-size:14px;font-weight:600">没有合适的参考视频？</div><div class="t-mic">手动上传同类型的爆款作参考</div></div><svg class="i chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div></div><div class="hi "></div></div></div><a class="hit" href="screens/05.html" aria-label="05 选择参考视频"></a></div>
       <div class="cap"><span class="no">05</span><span class="nm">选择参考视频</span><span class="tag re">重设计</span></div>
-      <p class="note">双列 9:16 卡片，价格固定陶土色；手动上传入口固定在底栏。</p>
+      <p class="note">双列 9:16 卡片，价格用 Apple Blue；手动上传入口固定在底栏。</p>
     </div>
     <div class="gc">
       <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
   <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">选择参考视频</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body">
   
   <div class="card pad flex gap12" style="padding:var(--s3)">
-    <div class="th" style="width:52px;height:52px;background:#e9dccb">
+    <div class="th" style="width:52px;height:52px;background:#3a3a3c">
      <span class="mg" style="font-size:24px">衬</span>
      
      
      
    </div>
     <div class="grow"><div class="h-card">夏季棉麻衬衫</div>
-      <div class="t-mic mt4 flex gap8"><svg class="i" style="width:14px;height:14px" viewBox="0 0 24 24"><path d="M4 4h7.5l8.5 8.5-7.5 7.5L4 11.5zM8 8h.01"/></svg><span>服装内衣 / 上装</span><span style="color:var(--brand-strong);font-weight:600">更换类目</span></div></div>
+      <div class="t-mic mt4 flex gap8"><svg class="i" style="width:14px;height:14px" viewBox="0 0 24 24"><path d="M4 4h7.5l8.5 8.5-7.5 7.5L4 11.5zM8 8h.01"/></svg><span>服装内衣 / 上装</span><span style="color:var(--brand);font-weight:600">更换类目</span></div></div>
     <span class="btn sm btn-w">修改</span>
   </div>
   <div class="flex gap8 mt12"><div class="field grow flex gap8" style="height:42px;padding:0 var(--s3);border-color:var(--ink)"><svg class="i" viewBox="0 0 24 24"><path d="M10.5 4a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM20 20l-4.6-4.6"/></svg><span>真丝睡衣 直播</span><span style="margin-left:auto;color:var(--stone)"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div></div>
@@ -634,7 +627,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
       <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
   <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav" style="position:absolute;top:47px;left:0;right:0;z-index:3"><span class="bk" style="background:rgba(20,20,19,.4);color:var(--iv)"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div>
   <div class="body np" style="margin-top:-47px">
-    <div class="player" style="height:470px"><div class="th" style="width:390px;height:470px;background:#3a3631">
+    <div class="player" style="height:470px"><div class="th" style="width:390px;height:470px;background:#0a0a0a">
      <span class="mg" style="font-size:109px">衬</span>
      
      
@@ -658,7 +651,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
       <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
   <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">上传参考视频</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body">
   <div class="t-cap">上传一条你觉得好的同类爆款，AI 会学习它的节奏、镜头和口播结构。</div>
-  <div class="card wh mt16 flex gap12" style="padding:var(--s3)"><div class="th" style="width:64px;height:86px;background:#3a3631">
+  <div class="card wh mt16 flex gap12" style="padding:var(--s3)"><div class="th" style="width:64px;height:86px;background:#0a0a0a">
      <span class="mg" style="font-size:27px"></span>
      
      
@@ -685,14 +678,14 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
   <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">选择参考视频</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body">
   
   <div class="card pad flex gap12" style="padding:var(--s3)">
-    <div class="th" style="width:52px;height:52px;background:#e9dccb">
+    <div class="th" style="width:52px;height:52px;background:#3a3a3c">
      <span class="mg" style="font-size:24px">衬</span>
      
      
      
    </div>
     <div class="grow"><div class="h-card">夏季棉麻衬衫</div>
-      <div class="t-mic mt4 flex gap8"><svg class="i" style="width:14px;height:14px" viewBox="0 0 24 24"><path d="M4 4h7.5l8.5 8.5-7.5 7.5L4 11.5zM8 8h.01"/></svg><span>服装内衣 / 上装</span><span style="color:var(--brand-strong);font-weight:600">更换类目</span></div></div>
+      <div class="t-mic mt4 flex gap8"><svg class="i" style="width:14px;height:14px" viewBox="0 0 24 24"><path d="M4 4h7.5l8.5 8.5-7.5 7.5L4 11.5zM8 8h.01"/></svg><span>服装内衣 / 上装</span><span style="color:var(--brand);font-weight:600">更换类目</span></div></div>
     <span class="btn sm btn-w">修改</span>
   </div>
   <div class="flex gap8 mt12">
@@ -702,7 +695,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
   <div class="chips mt12"><span class="chip sm on">全部</span><span class="chip sm">15 秒内</span><span class="chip sm">竖屏</span><span class="chip sm">口播带货</span></div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--s2);margin-top:var(--s3)">
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
-    <div class="th" style="width:170px;height:190px;background:#e9dccb">
+    <div class="th" style="width:170px;height:190px;background:#3a3a3c">
      <span class="mg" style="font-size:58px">衬</span>
      
      <span class="tl"><span class="dur">9:16</span></span>
@@ -714,7 +707,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
   </div>
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
-    <div class="th" style="width:170px;height:190px;background:#dfe3d3">
+    <div class="th" style="width:170px;height:190px;background:#323234">
      <span class="mg" style="font-size:58px">夏</span>
      
      <span class="tl"><span class="dur">9:16</span></span>
@@ -726,7 +719,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
   </div>
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
-    <div class="th" style="width:170px;height:190px;background:#e6d6cd">
+    <div class="th" style="width:170px;height:190px;background:#363638">
      <span class="mg" style="font-size:58px">通</span>
      
      <span class="tl"><span class="dur">16:9</span></span>
@@ -738,7 +731,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
   </div>
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
-    <div class="th" style="width:170px;height:190px;background:#e8dcc3">
+    <div class="th" style="width:170px;height:190px;background:#48484a">
      <span class="mg" style="font-size:58px">料</span>
      
      <span class="tl"><span class="dur">9:16</span></span>
@@ -765,14 +758,14 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
   <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">选择参考视频</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body">
   
   <div class="card pad flex gap12" style="padding:var(--s3)">
-    <div class="th" style="width:52px;height:52px;background:#e9dccb">
+    <div class="th" style="width:52px;height:52px;background:#3a3a3c">
      <span class="mg" style="font-size:24px">衬</span>
      
      
      
    </div>
     <div class="grow"><div class="h-card">夏季棉麻衬衫</div>
-      <div class="t-mic mt4 flex gap8"><svg class="i" style="width:14px;height:14px" viewBox="0 0 24 24"><path d="M4 4h7.5l8.5 8.5-7.5 7.5L4 11.5zM8 8h.01"/></svg><span>服装内衣 / 上装</span><span style="color:var(--brand-strong);font-weight:600">更换类目</span></div></div>
+      <div class="t-mic mt4 flex gap8"><svg class="i" style="width:14px;height:14px" viewBox="0 0 24 24"><path d="M4 4h7.5l8.5 8.5-7.5 7.5L4 11.5zM8 8h.01"/></svg><span>服装内衣 / 上装</span><span style="color:var(--brand);font-weight:600">更换类目</span></div></div>
     <span class="btn sm btn-w">修改</span>
   </div>
   <div class="flex gap8 mt12">
@@ -782,7 +775,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
   <div class="chips mt12"><span class="chip sm on">全部</span><span class="chip sm">15 秒内</span><span class="chip sm">竖屏</span><span class="chip sm">口播带货</span></div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--s2);margin-top:var(--s3)">
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
-    <div class="th" style="width:170px;height:190px;background:#e9dccb">
+    <div class="th" style="width:170px;height:190px;background:#3a3a3c">
      <span class="mg" style="font-size:58px">衬</span>
      
      <span class="tl"><span class="dur">9:16</span></span>
@@ -794,7 +787,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
   </div>
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
-    <div class="th" style="width:170px;height:190px;background:#dfe3d3">
+    <div class="th" style="width:170px;height:190px;background:#323234">
      <span class="mg" style="font-size:58px">夏</span>
      
      <span class="tl"><span class="dur">9:16</span></span>
@@ -806,7 +799,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
   </div>
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
-    <div class="th" style="width:170px;height:190px;background:#e6d6cd">
+    <div class="th" style="width:170px;height:190px;background:#363638">
      <span class="mg" style="font-size:58px">通</span>
      
      <span class="tl"><span class="dur">16:9</span></span>
@@ -818,7 +811,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
   </div>
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
-    <div class="th" style="width:170px;height:190px;background:#e8dcc3">
+    <div class="th" style="width:170px;height:190px;background:#48484a">
      <span class="mg" style="font-size:58px">料</span>
      
      <span class="tl"><span class="dur">9:16</span></span>
@@ -834,25 +827,25 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
   <div class="grab"></div><div class="sh-h"><div><div class="h-sec">修改商品类目</div><div class="t-mic mt4">只影响本次模板匹配，不改写识别结果</div></div><span class="x"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div>
   <div class="flex mt12" style="height:340px;margin:var(--s3) -20px 0;border-top:1px solid var(--bc)">
     <div style="width:128px;background:var(--pa);font-size:14px"><div style="padding:var(--s3) var(--s4);background:var(--iv);font-weight:600;box-shadow:inset 3px 0 0 var(--brand)">服饰鞋包</div><div style="padding:var(--s3) var(--s4);color:var(--olive)">食品饮料</div><div style="padding:var(--s3) var(--s4);color:var(--olive)">个护家清</div><div style="padding:var(--s3) var(--s4);color:var(--olive)">生鲜农产</div><div style="padding:var(--s3) var(--s4);color:var(--olive)">家居日用</div><div style="padding:var(--s3) var(--s4);color:var(--olive)">3C 数码</div><div style="padding:var(--s3) var(--s4);color:var(--olive)">美妆护肤</div></div>
-    <div class="grow" style="font-size:15px"><div class="flex between" style="padding:var(--s3) var(--s5);border-bottom:1px solid var(--bc);color:var(--brand-strong);font-weight:600">上装<svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div><div class="flex between" style="padding:var(--s3) var(--s5);border-bottom:1px solid var(--bc);">裤装</div><div class="flex between" style="padding:var(--s3) var(--s5);border-bottom:1px solid var(--bc);">连衣裙</div><div class="flex between" style="padding:var(--s3) var(--s5);border-bottom:1px solid var(--bc);">内衣袜子</div><div class="flex between" style="padding:var(--s3) var(--s5);border-bottom:1px solid var(--bc);">鞋靴</div><div class="flex between" style="padding:var(--s3) var(--s5);border-bottom:1px solid var(--bc);">箱包</div></div>
+    <div class="grow" style="font-size:15px"><div class="flex between" style="padding:var(--s3) var(--s5);border-bottom:1px solid var(--bc);color:var(--brand);font-weight:600">上装<svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div><div class="flex between" style="padding:var(--s3) var(--s5);border-bottom:1px solid var(--bc);">裤装</div><div class="flex between" style="padding:var(--s3) var(--s5);border-bottom:1px solid var(--bc);">连衣裙</div><div class="flex between" style="padding:var(--s3) var(--s5);border-bottom:1px solid var(--bc);">内衣袜子</div><div class="flex between" style="padding:var(--s3) var(--s5);border-bottom:1px solid var(--bc);">鞋靴</div><div class="flex between" style="padding:var(--s3) var(--s5);border-bottom:1px solid var(--bc);">箱包</div></div>
   </div>
   <div style="padding:var(--s3) 0 var(--safe-b)"><span class="btn btn-p">确定 · 服饰鞋包 / 上装</span></div></div><div class="hi "></div></div></div><a class="hit" href="screens/07.html" aria-label="07 修改商品类目（双级）"></a></div>
       <div class="cap"><span class="no">07</span><span class="nm">修改商品类目（双级）</span><span class="kd">面板</span><span class="tag re">重设计</span></div>
-      <p class="note">左侧一级类目用陶土竖线标记选中；确定按钮回显完整路径。</p>
+      <p class="note">左侧一级类目用蓝色竖线标记选中；确定按钮回显完整路径。</p>
     </div>
     <div class="gc">
       <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
   <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">选择参考视频</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body">
   
   <div class="card pad flex gap12" style="padding:var(--s3)">
-    <div class="th" style="width:52px;height:52px;background:#e9dccb">
+    <div class="th" style="width:52px;height:52px;background:#3a3a3c">
      <span class="mg" style="font-size:24px">衬</span>
      
      
      
    </div>
     <div class="grow"><div class="h-card">夏季棉麻衬衫</div>
-      <div class="t-mic mt4 flex gap8"><svg class="i" style="width:14px;height:14px" viewBox="0 0 24 24"><path d="M4 4h7.5l8.5 8.5-7.5 7.5L4 11.5zM8 8h.01"/></svg><span>服装内衣 / 上装</span><span style="color:var(--brand-strong);font-weight:600">更换类目</span></div></div>
+      <div class="t-mic mt4 flex gap8"><svg class="i" style="width:14px;height:14px" viewBox="0 0 24 24"><path d="M4 4h7.5l8.5 8.5-7.5 7.5L4 11.5zM8 8h.01"/></svg><span>服装内衣 / 上装</span><span style="color:var(--brand);font-weight:600">更换类目</span></div></div>
     <span class="btn sm btn-w">修改</span>
   </div>
   <div class="flex gap8 mt12">
@@ -862,7 +855,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
   <div class="chips mt12"><span class="chip sm on">全部</span><span class="chip sm">15 秒内</span><span class="chip sm">竖屏</span><span class="chip sm">口播带货</span></div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--s2);margin-top:var(--s3)">
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
-    <div class="th" style="width:170px;height:190px;background:#e9dccb">
+    <div class="th" style="width:170px;height:190px;background:#3a3a3c">
      <span class="mg" style="font-size:58px">衬</span>
      
      <span class="tl"><span class="dur">9:16</span></span>
@@ -874,7 +867,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
   </div>
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
-    <div class="th" style="width:170px;height:190px;background:#dfe3d3">
+    <div class="th" style="width:170px;height:190px;background:#323234">
      <span class="mg" style="font-size:58px">夏</span>
      
      <span class="tl"><span class="dur">9:16</span></span>
@@ -886,7 +879,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
   </div>
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
-    <div class="th" style="width:170px;height:190px;background:#e6d6cd">
+    <div class="th" style="width:170px;height:190px;background:#363638">
      <span class="mg" style="font-size:58px">通</span>
      
      <span class="tl"><span class="dur">16:9</span></span>
@@ -898,7 +891,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
   </div>
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
-    <div class="th" style="width:170px;height:190px;background:#e8dcc3">
+    <div class="th" style="width:170px;height:190px;background:#48484a">
      <span class="mg" style="font-size:58px">料</span>
      
      <span class="tl"><span class="dur">9:16</span></span>
@@ -913,7 +906,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
   <div class="grow"><div style="font-size:14px;font-weight:600">没有合适的参考视频？</div><div class="t-mic">手动上传同类型的爆款作参考</div></div><svg class="i chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div></div><div class="scrim"></div><div class="sheet">
   <div class="grab"></div>
   <div class="sh-h"><div><div class="h-sec">确认生成</div><div class="t-mic mt4">生成失败按消耗积分全额返还</div></div><span class="x"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div>
-  <div class="card wh flex gap12 mt12" style="padding:var(--s3)"><div class="th" style="width:56px;height:72px;background:#e9dccb">
+  <div class="card wh flex gap12 mt12" style="padding:var(--s3)"><div class="th" style="width:56px;height:72px;background:#3a3a3c">
      <span class="mg" style="font-size:22px">衬</span>
      
      
@@ -939,14 +932,14 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
   <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">选择参考视频</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body">
   
   <div class="card pad flex gap12" style="padding:var(--s3)">
-    <div class="th" style="width:52px;height:52px;background:#e9dccb">
+    <div class="th" style="width:52px;height:52px;background:#3a3a3c">
      <span class="mg" style="font-size:24px">衬</span>
      
      
      
    </div>
     <div class="grow"><div class="h-card">夏季棉麻衬衫</div>
-      <div class="t-mic mt4 flex gap8"><svg class="i" style="width:14px;height:14px" viewBox="0 0 24 24"><path d="M4 4h7.5l8.5 8.5-7.5 7.5L4 11.5zM8 8h.01"/></svg><span>服装内衣 / 上装</span><span style="color:var(--brand-strong);font-weight:600">更换类目</span></div></div>
+      <div class="t-mic mt4 flex gap8"><svg class="i" style="width:14px;height:14px" viewBox="0 0 24 24"><path d="M4 4h7.5l8.5 8.5-7.5 7.5L4 11.5zM8 8h.01"/></svg><span>服装内衣 / 上装</span><span style="color:var(--brand);font-weight:600">更换类目</span></div></div>
     <span class="btn sm btn-w">修改</span>
   </div>
   <div class="flex gap8 mt12">
@@ -956,7 +949,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
   <div class="chips mt12"><span class="chip sm on">全部</span><span class="chip sm">15 秒内</span><span class="chip sm">竖屏</span><span class="chip sm">口播带货</span></div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--s2);margin-top:var(--s3)">
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
-    <div class="th" style="width:170px;height:190px;background:#e9dccb">
+    <div class="th" style="width:170px;height:190px;background:#3a3a3c">
      <span class="mg" style="font-size:58px">衬</span>
      
      <span class="tl"><span class="dur">9:16</span></span>
@@ -968,7 +961,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
   </div>
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
-    <div class="th" style="width:170px;height:190px;background:#dfe3d3">
+    <div class="th" style="width:170px;height:190px;background:#323234">
      <span class="mg" style="font-size:58px">夏</span>
      
      <span class="tl"><span class="dur">9:16</span></span>
@@ -980,7 +973,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
   </div>
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
-    <div class="th" style="width:170px;height:190px;background:#e6d6cd">
+    <div class="th" style="width:170px;height:190px;background:#363638">
      <span class="mg" style="font-size:58px">通</span>
      
      <span class="tl"><span class="dur">16:9</span></span>
@@ -992,7 +985,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
   </div>
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg)">
-    <div class="th" style="width:170px;height:190px;background:#e8dcc3">
+    <div class="th" style="width:170px;height:190px;background:#48484a">
      <span class="mg" style="font-size:58px">料</span>
      
      <span class="tl"><span class="dur">9:16</span></span>
@@ -1007,7 +1000,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
   <div class="grow"><div style="font-size:14px;font-weight:600">没有合适的参考视频？</div><div class="t-mic">手动上传同类型的爆款作参考</div></div><svg class="i chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div></div><div class="scrim"></div><div class="sheet">
   <div class="grab"></div>
   <div class="sh-h"><div><div class="h-sec">确认生成</div><div class="t-mic mt4">生成失败按消耗积分全额返还</div></div><span class="x"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div>
-  <div class="card wh flex gap12 mt12" style="padding:var(--s3)"><div class="th" style="width:56px;height:72px;background:#e9dccb">
+  <div class="card wh flex gap12 mt12" style="padding:var(--s3)"><div class="th" style="width:56px;height:72px;background:#3a3a3c">
      <span class="mg" style="font-size:22px">衬</span>
      
      
@@ -1032,7 +1025,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     <div class="gc">
       <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
   <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">生成进度</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body">
-  <div class="flex gap12 mt8"><div class="th" style="width:64px;height:86px;background:#e9dccb">
+  <div class="flex gap12 mt8"><div class="th" style="width:64px;height:86px;background:#3a3a3c">
      <span class="mg" style="font-size:23px">衬</span>
      
      
@@ -1060,12 +1053,12 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
   <div class="cards">
     <div class="gc">
       <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
-  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav" style="height:52px;padding-left:var(--s5)"><span class="h-page">作品</span><span style="position:absolute;right:108px;top:14px;font-size:15px;font-weight:600;color:var(--brand-strong)">管理</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav" style="height:52px;padding-left:var(--s5)"><span class="h-page">作品</span><span style="position:absolute;right:108px;top:14px;font-size:15px;font-weight:600;color:var(--brand)">管理</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div>
   <div class="body">
     <div class="seg"><a class="on">全部 8</a><a>已完成</a><a>生成中</a><a>失败</a></div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--s3);margin-top:var(--s3)">
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
-    <div class="th" style="width:169px;height:150px;background:#dfe3d3">
+    <div class="th" style="width:169px;height:150px;background:#323234">
      <span class="mg" style="font-size:45px">护</span>
      
      <span class="tl"><span class="badge b-q"><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zM12 7.5V12l3 2"/></svg>排队中</span></span>
@@ -1079,7 +1072,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
   </div>
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
-    <div class="th" style="width:169px;height:150px;background:#e8dcc3">
+    <div class="th" style="width:169px;height:150px;background:#48484a">
      <span class="mg" style="font-size:45px">针</span>
      
      <span class="tl"><span class="badge b-g"><svg class="i" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4.5V8H16"/></svg>生成中 62%</span></span>
@@ -1093,7 +1086,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
   </div>
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
-    <div class="th" style="width:169px;height:150px;background:#e2e4d6">
+    <div class="th" style="width:169px;height:150px;background:#454547">
      <span class="mg" style="font-size:45px">夏</span>
      
      <span class="tl"><span class="badge b-g"><svg class="i" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4.5V8H16"/></svg>生成中 18%</span></span>
@@ -1107,7 +1100,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
   </div>
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
-    <div class="th" style="width:169px;height:150px;background:#e9dccb">
+    <div class="th" style="width:169px;height:150px;background:#3a3a3c">
      <span class="mg" style="font-size:45px">衬</span>
      
      <span class="tl"><span class="badge b-ok"><svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>已完成</span></span>
@@ -1121,7 +1114,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
   </div>
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
-    <div class="th" style="width:169px;height:150px;background:#e6d6cd">
+    <div class="th" style="width:169px;height:150px;background:#363638">
      <span class="mg" style="font-size:45px">包</span>
      
      <span class="tl"><span class="badge b-ok"><svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>已完成</span></span>
@@ -1135,7 +1128,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
   </div>
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
-    <div class="th" style="width:169px;height:150px;background:#ece1c9">
+    <div class="th" style="width:169px;height:150px;background:#3c3c3e">
      <span class="mg" style="font-size:45px">粥</span>
      
      <span class="tl"><span class="badge b-err"><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zM12 8v4.8M12 16h.01"/></svg>失败 · 已返还</span></span>
@@ -1155,17 +1148,17 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     <div class="gc">
       <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
   <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav" style="height:52px;padding-left:var(--s5)"><span class="h-page">作品</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body center" style="padding-top:110px">
-  <div class="flex gap8" style="justify-content:center"><div class="th" style="width:60px;height:80px;background:#e9dccb">
+  <div class="flex gap8" style="justify-content:center"><div class="th" style="width:60px;height:80px;background:#3a3a3c">
      <span class="mg" style="font-size:25px"></span>
      
      
      
-   </div><div class="th" style="width:60px;height:80px;background:#dfe3d3">
+   </div><div class="th" style="width:60px;height:80px;background:#323234">
      <span class="mg" style="font-size:25px"></span>
      
      
      
-   </div><div class="th" style="width:60px;height:80px;background:#e6d6cd">
+   </div><div class="th" style="width:60px;height:80px;background:#363638">
      <span class="mg" style="font-size:25px"></span>
      
      
@@ -1186,7 +1179,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     <div class="seg"><a class="on">全部 8</a><a>已完成</a><a>生成中</a><a>失败</a></div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--s3);margin-top:var(--s3)">
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
-    <div class="th" style="width:169px;height:150px;background:#dfe3d3">
+    <div class="th" style="width:169px;height:150px;background:#323234">
      <span class="mg" style="font-size:45px">护</span>
      
      <span class="tl"><span class="badge b-q"><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zM12 7.5V12l3 2"/></svg>排队中</span></span><span class="tr"><span class="check " style="width:24px;height:24px"></span></span>
@@ -1200,7 +1193,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
   </div>
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
-    <div class="th" style="width:169px;height:150px;background:#e8dcc3">
+    <div class="th" style="width:169px;height:150px;background:#48484a">
      <span class="mg" style="font-size:45px">针</span>
      
      <span class="tl"><span class="badge b-g"><svg class="i" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4.5V8H16"/></svg>生成中 62%</span></span><span class="tr"><span class="check " style="width:24px;height:24px"></span></span>
@@ -1214,7 +1207,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
   </div>
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
-    <div class="th" style="width:169px;height:150px;background:#e2e4d6">
+    <div class="th" style="width:169px;height:150px;background:#454547">
      <span class="mg" style="font-size:45px">夏</span>
      
      <span class="tl"><span class="badge b-g"><svg class="i" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4.5V8H16"/></svg>生成中 18%</span></span><span class="tr"><span class="check " style="width:24px;height:24px"></span></span>
@@ -1228,7 +1221,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
   </div>
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
-    <div class="th" style="width:169px;height:150px;background:#e9dccb">
+    <div class="th" style="width:169px;height:150px;background:#3a3a3c">
      <span class="mg" style="font-size:45px">衬</span>
      
      <span class="tl"><span class="badge b-ok"><svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>已完成</span></span><span class="tr"><span class="check on" style="width:24px;height:24px"><svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></span>
@@ -1242,7 +1235,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
   </div>
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
-    <div class="th" style="width:169px;height:150px;background:#e6d6cd">
+    <div class="th" style="width:169px;height:150px;background:#363638">
      <span class="mg" style="font-size:45px">包</span>
      
      <span class="tl"><span class="badge b-ok"><svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>已完成</span></span><span class="tr"><span class="check on" style="width:24px;height:24px"><svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></span>
@@ -1256,7 +1249,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
   </div>
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
-    <div class="th" style="width:169px;height:150px;background:#ece1c9">
+    <div class="th" style="width:169px;height:150px;background:#3c3c3e">
      <span class="mg" style="font-size:45px">粥</span>
      
      <span class="tl"><span class="badge b-err"><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zM12 8v4.8M12 16h.01"/></svg>失败 · 已返还</span></span><span class="tr"><span class="check " style="width:24px;height:24px"></span></span>
@@ -1277,7 +1270,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
       <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
   <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">作品预览</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body np">
   <div class="player" style="height:360px;margin:var(--s1) var(--s5) 0;border-radius:var(--r-xl);overflow:hidden">
-    <div class="th" style="width:350px;height:360px;background:#3a3631">
+    <div class="th" style="width:350px;height:360px;background:#0a0a0a">
      <span class="mg" style="font-size:105px">衬</span>
      
      
@@ -1304,7 +1297,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
       <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
   <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">作品预览</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body np">
   <div class="player" style="height:360px;margin:var(--s1) var(--s5) 0;border-radius:var(--r-xl);overflow:hidden">
-    <div class="th" style="width:350px;height:360px;background:#3a3631">
+    <div class="th" style="width:350px;height:360px;background:#0a0a0a">
      <span class="mg" style="font-size:105px">衬</span>
      
      
@@ -1335,12 +1328,12 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
     <div class="gc">
       <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
-  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav" style="height:52px;padding-left:var(--s5)"><span class="h-page">作品</span><span style="position:absolute;right:108px;top:14px;font-size:15px;font-weight:600;color:var(--brand-strong)">管理</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav" style="height:52px;padding-left:var(--s5)"><span class="h-page">作品</span><span style="position:absolute;right:108px;top:14px;font-size:15px;font-weight:600;color:var(--brand)">管理</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div>
   <div class="body">
     <div class="seg"><a class="on">全部 8</a><a>已完成</a><a>生成中</a><a>失败</a></div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--s3);margin-top:var(--s3)">
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
-    <div class="th" style="width:169px;height:150px;background:#dfe3d3">
+    <div class="th" style="width:169px;height:150px;background:#323234">
      <span class="mg" style="font-size:45px">护</span>
      
      <span class="tl"><span class="badge b-q"><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zM12 7.5V12l3 2"/></svg>排队中</span></span>
@@ -1354,7 +1347,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
   </div>
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
-    <div class="th" style="width:169px;height:150px;background:#e8dcc3">
+    <div class="th" style="width:169px;height:150px;background:#48484a">
      <span class="mg" style="font-size:45px">针</span>
      
      <span class="tl"><span class="badge b-g"><svg class="i" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4.5V8H16"/></svg>生成中 62%</span></span>
@@ -1368,7 +1361,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
   </div>
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
-    <div class="th" style="width:169px;height:150px;background:#e2e4d6">
+    <div class="th" style="width:169px;height:150px;background:#454547">
      <span class="mg" style="font-size:45px">夏</span>
      
      <span class="tl"><span class="badge b-g"><svg class="i" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4.5V8H16"/></svg>生成中 18%</span></span>
@@ -1382,7 +1375,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
   </div>
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
-    <div class="th" style="width:169px;height:150px;background:#e9dccb">
+    <div class="th" style="width:169px;height:150px;background:#3a3a3c">
      <span class="mg" style="font-size:45px">衬</span>
      
      <span class="tl"><span class="badge b-ok"><svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>已完成</span></span>
@@ -1396,7 +1389,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
   </div>
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
-    <div class="th" style="width:169px;height:150px;background:#e6d6cd">
+    <div class="th" style="width:169px;height:150px;background:#363638">
      <span class="mg" style="font-size:45px">包</span>
      
      <span class="tl"><span class="badge b-ok"><svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>已完成</span></span>
@@ -1410,7 +1403,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
   </div>
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
-    <div class="th" style="width:169px;height:150px;background:#ece1c9">
+    <div class="th" style="width:169px;height:150px;background:#3c3c3e">
      <span class="mg" style="font-size:45px">粥</span>
      
      <span class="tl"><span class="badge b-err"><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zM12 8v4.8M12 16h.01"/></svg>失败 · 已返还</span></span>
@@ -1432,12 +1425,12 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
     <div class="gc">
       <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
-  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav" style="height:52px;padding-left:var(--s5)"><span class="h-page">作品</span><span style="position:absolute;right:108px;top:14px;font-size:15px;font-weight:600;color:var(--brand-strong)">管理</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav" style="height:52px;padding-left:var(--s5)"><span class="h-page">作品</span><span style="position:absolute;right:108px;top:14px;font-size:15px;font-weight:600;color:var(--brand)">管理</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div>
   <div class="body">
     <div class="seg"><a class="on">全部 8</a><a>已完成</a><a>生成中</a><a>失败</a></div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--s3);margin-top:var(--s3)">
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
-    <div class="th" style="width:169px;height:150px;background:#dfe3d3">
+    <div class="th" style="width:169px;height:150px;background:#323234">
      <span class="mg" style="font-size:45px">护</span>
      
      <span class="tl"><span class="badge b-q"><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zM12 7.5V12l3 2"/></svg>排队中</span></span>
@@ -1451,7 +1444,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
   </div>
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
-    <div class="th" style="width:169px;height:150px;background:#e8dcc3">
+    <div class="th" style="width:169px;height:150px;background:#48484a">
      <span class="mg" style="font-size:45px">针</span>
      
      <span class="tl"><span class="badge b-g"><svg class="i" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4.5V8H16"/></svg>生成中 62%</span></span>
@@ -1465,7 +1458,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
   </div>
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
-    <div class="th" style="width:169px;height:150px;background:#e2e4d6">
+    <div class="th" style="width:169px;height:150px;background:#454547">
      <span class="mg" style="font-size:45px">夏</span>
      
      <span class="tl"><span class="badge b-g"><svg class="i" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4.5V8H16"/></svg>生成中 18%</span></span>
@@ -1479,7 +1472,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
   </div>
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
-    <div class="th" style="width:169px;height:150px;background:#e9dccb">
+    <div class="th" style="width:169px;height:150px;background:#3a3a3c">
      <span class="mg" style="font-size:45px">衬</span>
      
      <span class="tl"><span class="badge b-ok"><svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>已完成</span></span>
@@ -1493,7 +1486,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
   </div>
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
-    <div class="th" style="width:169px;height:150px;background:#e6d6cd">
+    <div class="th" style="width:169px;height:150px;background:#363638">
      <span class="mg" style="font-size:45px">包</span>
      
      <span class="tl"><span class="badge b-ok"><svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>已完成</span></span>
@@ -1507,7 +1500,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
   </div>
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
-    <div class="th" style="width:169px;height:150px;background:#ece1c9">
+    <div class="th" style="width:169px;height:150px;background:#3c3c3e">
      <span class="mg" style="font-size:45px">粥</span>
      
      <span class="tl"><span class="badge b-err"><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zM12 8v4.8M12 16h.01"/></svg>失败 · 已返还</span></span>
@@ -1522,7 +1515,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
   </div></div>
   </div><div class="tab"><a class=""><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5l1.9 5.1 5.1 1.9-5.1 1.9L12 17.5l-1.9-5.1L5 10.5l5.1-1.9zM18.5 16l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/></svg>创作</a><a class="on"><svg class="i" viewBox="0 0 24 24"><path d="M3.5 6h17v12h-17zM10.5 9.5v5l4-2.5z"/></svg>作品</a><a class=""><svg class="i" viewBox="0 0 24 24"><path d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM4.5 20c1-3.8 4-5.5 7.5-5.5s6.5 1.7 7.5 5.5"/></svg>我的</a></div><div class="scrim"></div><div class="sheet">
   <div class="grab"></div>
-  <div class="flex gap12"><div class="th" style="width:48px;height:64px;background:#e9dccb">
+  <div class="flex gap12"><div class="th" style="width:48px;height:64px;background:#3a3a3c">
      <span class="mg" style="font-size:19px">衬</span>
      
      
@@ -1538,12 +1531,12 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
     <div class="gc">
       <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
-  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav" style="height:52px;padding-left:var(--s5)"><span class="h-page">作品</span><span style="position:absolute;right:108px;top:14px;font-size:15px;font-weight:600;color:var(--brand-strong)">管理</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div>
+  <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav" style="height:52px;padding-left:var(--s5)"><span class="h-page">作品</span><span style="position:absolute;right:108px;top:14px;font-size:15px;font-weight:600;color:var(--brand)">管理</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div>
   <div class="body">
     <div class="seg"><a class="on">全部 8</a><a>已完成</a><a>生成中</a><a>失败</a></div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--s3);margin-top:var(--s3)">
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
-    <div class="th" style="width:169px;height:150px;background:#dfe3d3">
+    <div class="th" style="width:169px;height:150px;background:#323234">
      <span class="mg" style="font-size:45px">护</span>
      
      <span class="tl"><span class="badge b-q"><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zM12 7.5V12l3 2"/></svg>排队中</span></span>
@@ -1557,7 +1550,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
   </div>
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
-    <div class="th" style="width:169px;height:150px;background:#e8dcc3">
+    <div class="th" style="width:169px;height:150px;background:#48484a">
      <span class="mg" style="font-size:45px">针</span>
      
      <span class="tl"><span class="badge b-g"><svg class="i" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4.5V8H16"/></svg>生成中 62%</span></span>
@@ -1571,7 +1564,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
   </div>
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
-    <div class="th" style="width:169px;height:150px;background:#e2e4d6">
+    <div class="th" style="width:169px;height:150px;background:#454547">
      <span class="mg" style="font-size:45px">夏</span>
      
      <span class="tl"><span class="badge b-g"><svg class="i" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4.5V8H16"/></svg>生成中 18%</span></span>
@@ -1585,7 +1578,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
   </div>
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
-    <div class="th" style="width:169px;height:150px;background:#e9dccb">
+    <div class="th" style="width:169px;height:150px;background:#3a3a3c">
      <span class="mg" style="font-size:45px">衬</span>
      
      <span class="tl"><span class="badge b-ok"><svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>已完成</span></span>
@@ -1599,7 +1592,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
   </div>
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
-    <div class="th" style="width:169px;height:150px;background:#e6d6cd">
+    <div class="th" style="width:169px;height:150px;background:#363638">
      <span class="mg" style="font-size:45px">包</span>
      
      <span class="tl"><span class="badge b-ok"><svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>已完成</span></span>
@@ -1613,7 +1606,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     </div>
   </div>
   <div class="card wh" style="overflow:hidden;border-radius:var(--r-lg);">
-    <div class="th" style="width:169px;height:150px;background:#ece1c9">
+    <div class="th" style="width:169px;height:150px;background:#3c3c3e">
      <span class="mg" style="font-size:45px">粥</span>
      
      <span class="tl"><span class="badge b-err"><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zM12 8v4.8M12 16h.01"/></svg>失败 · 已返还</span></span>
@@ -1657,7 +1650,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     <div class="flex between"><span class="t-cap">本月已出片 <b style="color:var(--ink)">6</b> 条</span><span class="t-cap">余额还能做约 <b style="color:var(--ink)">4</b> 条 15 秒</span></div>
     <div class="bar mt8"><i style="width:60%"></i></div>
   </div>
-  <div class="card pad mt12 flex gap12" style="background:var(--ink);border-color:var(--ink);color:var(--iv)">
+  <div class="card pad mt12 flex gap12" style="background:#0a0a0a;border-color:rgba(255,255,255,.14);color:#f5f5f7">
     <span style="color:var(--coral)"><svg class="i" viewBox="0 0 24 24"><path d="M4.5 11h15v9h-15zM3.5 7.5h17V11h-17zM12 7.5V20M12 7.5C10.5 4.5 7 4 7 6.2 7 7.5 9 7.5 12 7.5zm0 0c1.5-3 5-3.5 5-1.3 0 1.3-2 1.3-5 1.3z"/></svg></span><div class="grow"><div style="font-size:15px;font-weight:600">邀请好友，各得 500 积分</div><div style="font-size:12.5px;color:var(--silver);margin-top:var(--s05)">好友首次出片即到账 · 已邀请 3 人</div></div><svg class="i" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
   </div>
   <div class="list mt12">
@@ -1669,11 +1662,11 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     <div class="gc">
       <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
   <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">邀请好友</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body">
-  <div class="card" style="background:var(--ink);border-color:var(--ink);color:var(--iv);padding:var(--s6) var(--s5)">
+  <div class="card" style="background:#0a0a0a;border-color:rgba(255,255,255,.14);color:#f5f5f7;padding:var(--s6) var(--s5)">
     <div style="color:var(--coral);font-size:13px;font-weight:600">邀请有礼 · 长期有效</div>
-    <div class="h-page mt8" style="font-size:26px;color:var(--iv)">好友首次出片，<br>你们各得 500 积分</div>
+    <div class="h-page mt8" style="font-size:26px;color:#f5f5f7">好友首次出片，<br>你们各得 500 积分</div>
     <div style="font-size:13px;color:var(--silver);margin-top:var(--s3)">500 积分 ≈ 1 条 15 秒视频，进入赠送池</div>
-    <div class="flex mt20" style="border-top:1px solid var(--ink2);padding-top:var(--s4)">
+    <div class="flex mt20" style="border-top:1px solid rgba(255,255,255,.12);padding-top:var(--s4)">
       <div class="grow center"><div class="num" style="font-size:24px">3</div><div style="font-size:12px;color:var(--silver);margin-top:var(--s05)">已邀请</div></div><div class="grow center"><div class="num" style="font-size:24px">1</div><div style="font-size:12px;color:var(--silver);margin-top:var(--s05)">已出片</div></div><div class="grow center"><div class="num" style="font-size:24px">+500</div><div style="font-size:12px;color:var(--silver);margin-top:var(--s05)">累计获得</div></div>
     </div>
   </div>
@@ -1710,7 +1703,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     
     <div class="li"><span class="grow" style="font-size:14.5px">如何开具发票？</span><svg class="i chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div>
     </div>
-  <div class="t-mic center mt16">没找到答案？<span style="color:var(--brand-strong);font-weight:600">提交反馈 ›</span></div>
+  <div class="t-mic center mt16">没找到答案？<span style="color:var(--brand);font-weight:600">提交反馈 ›</span></div>
   </div><div class="hi "></div></div></div><a class="hit" href="screens/15b.html" aria-label="15b 联系客服"></a></div>
       <div class="cap"><span class="no">15b</span><span class="nm">联系客服</span><span class="kd">页面</span><span class="tag np">新增页面</span></div>
       <p class="note">在线客服 + 常见问题，首条展开“失败积分退不退”。</p>
@@ -1724,7 +1717,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
   <div class="lbl mt16">选择充值档位</div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--s2)">
     
-    <div class="card wh" style="padding:var(--s3);box-shadow:0 0 0 2px var(--brand-strong);border-color:transparent">
+    <div class="card wh" style="padding:var(--s3);box-shadow:0 0 0 2px var(--brand);border-color:transparent">
       <div class="flex between"><span style="font-size:13px;font-weight:600">首充礼包</span><span class="badge b-g">首次专享</span></div>
       <div class="num mt8" style="font-size:28px;line-height:1">¥10</div>
       <div class="t-mic mt8">到账 <b class="num" style="color:var(--ink)">1,000</b> 积分 · ≈3 条 15 秒</div></div>
@@ -1876,7 +1869,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
     <div class="h-card mt20" style="font-family:var(--serif);font-weight:500;font-size:17px">四、有效期</div><div class="t-body mt8" style="font-size:14.5px">充值积分长期有效；赠送积分自获得之日起 90 天内有效，过期自动清零。</div>
   </div><div class="hi "></div></div></div><a class="hit" href="screens/21a.html" aria-label="21a 协议详情"></a></div>
       <div class="cap"><span class="no">21a</span><span class="nm">协议详情</span><span class="kd">页面</span><span class="tag np">新增页面</span></div>
-      <p class="note">衬线标题 + 本页要点摘要 + 分节正文，登录页协议链接也落在这里。</p>
+      <p class="note">无衬线标题 + 本页要点摘要 + 分节正文，登录页协议链接也落在这里。</p>
     </div></div>
   <h2>C · 隐蔽入口与全局状态<small>案例 → 提示 → 异常 · 4 屏</small></h2>
   <div class="cards">
@@ -1886,35 +1879,35 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
   <div class="h-page" style="font-size:24px">看看别人复刻了什么</div>
   <div class="chips mt12"><span class="chip sm on">全部</span><span class="chip sm">服饰</span><span class="chip sm">食品</span><span class="chip sm">美妆</span><span class="chip sm">家居</span><span class="chip sm">3C</span></div>
   <div class="mt12"><div class="flex gap12" style="padding:var(--s3) 0;border-bottom:1px solid var(--bw);align-items:flex-start">
-      <div class="th" style="width:84px;height:112px;background:#dfe3d3">
+      <div class="th" style="width:84px;height:112px;background:#323234">
      <span class="mg" style="font-size:29px">水</span>
      
      
      <span class="br"><span class="dur">0:15</span></span>
    </div>
       <div class="grow"><div class="flex gap8"><span class="badge b-g">AI 内容创作</span></div><div style="font-size:14.5px;font-weight:600;margin-top:var(--s15)">戏水玩具 · 户外娱乐</div><div class="t-mic mt4 cl2" style="-webkit-line-clamp:3">夜晚公园里，花朵造型抽拉水枪喷出伞状水花，突出趣味玩法与夜间视觉效果。</div></div></div><div class="flex gap12" style="padding:var(--s3) 0;border-bottom:1px solid var(--bw);align-items:flex-start">
-      <div class="th" style="width:84px;height:112px;background:#ead5cc">
+      <div class="th" style="width:84px;height:112px;background:#333335">
      <span class="mg" style="font-size:29px">糖</span>
      
      
      <span class="br"><span class="dur">0:15</span></span>
    </div>
       <div class="grow"><div class="flex gap8"><span class="badge b-g">生成式 AI</span></div><div style="font-size:14.5px;font-weight:600;margin-top:var(--s15)">美食零食 · 口播带货</div><div class="t-mic mt4 cl2" style="-webkit-line-clamp:3">仔仔棒四种新口味棒棒糖，配合旁白介绍茉莉沙田柚、杨枝甘露等果味层次。</div></div></div><div class="flex gap12" style="padding:var(--s3) 0;border-bottom:1px solid var(--bw);align-items:flex-start">
-      <div class="th" style="width:84px;height:112px;background:#e3ddcd">
+      <div class="th" style="width:84px;height:112px;background:#404042">
      <span class="mg" style="font-size:29px">纸</span>
      
      
      <span class="br"><span class="dur">0:15</span></span>
    </div>
       <div class="grow"><div class="flex gap8"><span class="badge b-g">爆款钩子</span></div><div style="font-size:14.5px;font-weight:600;margin-top:var(--s15)">开学好物 · 口播带货</div><div class="t-mic mt4 cl2" style="-webkit-line-clamp:3">前 3 秒用「开学必备」提问开场，介绍 85 克加厚、抑菌温和的便携湿厕纸。</div></div></div><div class="flex gap12" style="padding:var(--s3) 0;border-bottom:1px solid var(--bw);align-items:flex-start">
-      <div class="th" style="width:84px;height:112px;background:#e8dcc3">
+      <div class="th" style="width:84px;height:112px;background:#48484a">
      <span class="mg" style="font-size:29px">鞋</span>
      
      
      <span class="br"><span class="dur">0:15</span></span>
    </div>
       <div class="grow"><div class="flex gap8"><span class="badge b-g">AI 生成图片</span></div><div style="font-size:14.5px;font-weight:600;margin-top:var(--s15)">拖鞋带货 · 口播带货</div><div class="t-mic mt4 cl2" style="-webkit-line-clamp:3">主播直播间推荐厚底防滑拖鞋，通过试穿、防滑与弹性测试完成种草。</div></div></div><div class="flex gap12" style="padding:var(--s3) 0;border-bottom:1px solid var(--bw);align-items:flex-start">
-      <div class="th" style="width:84px;height:112px;background:#e6d6cd">
+      <div class="th" style="width:84px;height:112px;background:#363638">
      <span class="mg" style="font-size:29px">带</span>
      
      
@@ -1929,7 +1922,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
       <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
   <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">作品预览</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body np">
   <div class="player" style="height:360px;margin:var(--s1) var(--s5) 0;border-radius:var(--r-xl);overflow:hidden">
-    <div class="th" style="width:350px;height:360px;background:#3a3631">
+    <div class="th" style="width:350px;height:360px;background:#0a0a0a">
      <span class="mg" style="font-size:105px">衬</span>
      
      
@@ -1955,7 +1948,7 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
   <span class="toast" style="background:var(--err)"><svg class="i" viewBox="0 0 24 24"><path d="M3.5 3.5l17 17M8.8 16.2a4.5 4.5 0 0 1 6.4 0M5.3 12.6a9.5 9.5 0 0 1 3.9-2.3M18.7 12.6a9.5 9.5 0 0 0-2.4-1.7M2 9a14 14 0 0 1 4-2.6M22 9a14 14 0 0 0-8.4-3.4M12 19.5h.01"/></svg>网络不稳定，请稍后重试</span>
   </div><div class="hi "></div></div></div><a class="hit" href="screens/23.html" aria-label="23 轻提示 Toast"></a></div>
       <div class="cap"><span class="no">23</span><span class="nm">轻提示 Toast</span><span class="kd">规范</span><span class="tag re">重设计</span></div>
-      <p class="note">统一为近黑底 Toast，成功 / 信息 / 警告 / 错误四种，仅图标颜色区分。</p>
+      <p class="note">统一为深灰底 Toast，成功 / 信息 / 警告 / 错误四种，仅图标颜色区分。</p>
     </div>
     <div class="gc">
       <div class="shot"><div class="mini"><div class="scr "><div class="sb"><span class="num" style="font-family:var(--sans)">20:34</span>
@@ -1973,14 +1966,14 @@ body{background:#e3e0d5;font-family:var(--sans);color:var(--ink);-webkit-font-sm
   <span class="r"><svg class="i f" viewBox="0 0 24 24"><path d="M4 17h2v2H4zM9 14h2v5H9zM14 10h2v9h-2zM19 6h2v13h-2z"/></svg><svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div><div class="nav"><span class="bk"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></span><span class="tt ">选择参考视频</span><div class="capsule"><span class="d"><i></i><i></i><i></i></span><span class="sep"></span><span class="o"><i></i></span></div></div><div class="body">
   
   <div class="card pad flex gap12" style="padding:var(--s3)">
-    <div class="th" style="width:52px;height:52px;background:#e9dccb">
+    <div class="th" style="width:52px;height:52px;background:#3a3a3c">
      <span class="mg" style="font-size:24px">衬</span>
      
      
      
    </div>
     <div class="grow"><div class="h-card">夏季棉麻衬衫</div>
-      <div class="t-mic mt4 flex gap8"><svg class="i" style="width:14px;height:14px" viewBox="0 0 24 24"><path d="M4 4h7.5l8.5 8.5-7.5 7.5L4 11.5zM8 8h.01"/></svg><span>服装内衣 / 上装</span><span style="color:var(--brand-strong);font-weight:600">更换类目</span></div></div>
+      <div class="t-mic mt4 flex gap8"><svg class="i" style="width:14px;height:14px" viewBox="0 0 24 24"><path d="M4 4h7.5l8.5 8.5-7.5 7.5L4 11.5zM8 8h.01"/></svg><span>服装内衣 / 上装</span><span style="color:var(--brand);font-weight:600">更换类目</span></div></div>
     <span class="btn sm btn-w">修改</span>
   </div>
   <div class="sk mt12" style="height:42px;border-radius:var(--r-md)"></div>

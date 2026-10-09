@@ -1,6 +1,6 @@
-# 爆款视频 AI 生成 · Claude 设计语言重设计
+# 爆款视频 AI 生成 · Apple 深色模式
 
-把 [原型画板](https://baokuan-deliverables.app.workbuddy.host/figma-board.html)（微信小程序，23 屏，黑紫主题）按 Claude 设计语言重做，并补齐缺失的页面和状态，共 41 屏。设计流程遵循仓库 `skills/ui-designer` 技能：先定 Token，再拼组件，DESIGN.md 是唯一事实来源，HTML 是可视化证明。
+把 [原型画板](https://baokuan-deliverables.app.workbuddy.host/figma-board.html)（微信小程序，23 屏）补齐到 41 屏后，按 Apple 深色模式重做：纯黑画布、SF 风格无衬线、唯一强调色 Apple Blue。设计流程遵循 `skills/ui-designer`：先定 Token，再拼组件，DESIGN.md 是唯一事实来源，HTML 是可视化证明。
 
 | 文件 | 内容 |
 | --- | --- |
