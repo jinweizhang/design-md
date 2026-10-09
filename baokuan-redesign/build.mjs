@@ -107,51 +107,42 @@ const lum = (hex) => {
 const ratio = (a, b) => ((Math.max(lum(a), lum(b)) + 0.05) / (Math.min(lum(a), lum(b)) + 0.05)).toFixed(2);
 
 const COLORS = [
-  ['--pa', '#f5f4ed', 'Parchment', '页面底色'],
-  ['--iv', '#faf9f5', 'Ivory', '卡片、Dock、TabBar'],
-  ['--wh', '#ffffff', 'White', '输入框、可点浮起卡片'],
-  ['--sand', '#e8e6dc', 'Warm Sand', '次按钮、图标底、进度轨道'],
-  ['--sand2', '#dedbcf', 'Sand Pressed', '次按钮按下'],
-  ['--ink', '#141413', 'Near Black', '标题、深色 Toast、邀请卡'],
-  ['--ink2', '#30302e', 'Dark Surface', '深色按钮按下'],
-  ['--char', '#4d4c48', 'Charcoal', '正文'],
-  ['--olive', '#5e5d59', 'Olive Gray', '辅助说明'],
-  ['--stone', '#87867f', 'Stone Gray', '仅占位符、划线原价'],
-  ['--silver', '#b0aea5', 'Warm Silver', '深色面上的次文字'],
-  ['--bc', '#f0eee6', 'Border Cream', '分隔线'],
-  ['--bw', '#e8e6dc', 'Border Warm', '描边'],
-  ['--ring', '#d1cfc5', 'Ring Warm', '环形阴影'],
-  ['--brand', '#c96442', 'Terracotta', '图形强调：进度、图标、选中描边'],
-  ['--brand-strong', '#ae5230', 'Brand Strong', '主按钮、价格、Tab 选中'],
-  ['--brand-pressed', '#963f22', 'Brand Pressed', '主按钮按下'],
-  ['--brand-ink', '#9a4526', 'Brand Ink', '品牌浅底上的文字'],
-  ['--brand-soft', '#f3e3da', 'Brand Soft', '品牌浅底'],
-  ['--coral', '#d97757', 'Coral', '深色面上的品牌图标'],
-  ['--ok', '#56693f', 'Success', '已完成、到账'],
-  ['--ok-soft', '#e6e9dc', 'Success Soft', '成功浅底'],
-  ['--err', '#b53333', 'Error', '失败、删除、校验'],
-  ['--err-soft', '#f5e2dd', 'Error Soft', '错误浅底'],
-  ['--warn', '#83570f', 'Warning', '排队中、提示'],
-  ['--warn-soft', '#f2e8d3', 'Warning Soft', '警告浅底'],
-  ['--focus', '#3898ec', 'Focus Blue', '仅键盘焦点环'],
+  ['--pa', '#000000', 'Pure Black', '页面底色'],
+  ['--surface', '#1c1c1e', 'Dark Surface', '卡片、列表、TabBar'],
+  ['--wh', '#2c2c2e', 'Elevated', '输入框、可点浮起'],
+  ['--sand', '#3a3a3c', 'Fill', '次按钮、图标底、进度轨道'],
+  ['--sand2', '#636366', 'Fill Pressed', '次按钮按下'],
+  ['--ink', '#f5f5f7', 'Label', '标题与正文'],
+  ['--iv', '#ffffff', 'White', '按钮文字、播放键'],
+  ['--olive', '#98989d', 'Secondary Label', '辅助说明'],
+  ['--stone', '#8e8e93', 'Tertiary Label', '占位符、划线原价'],
+  ['--silver', '#aeaeb2', 'Quaternary', '黑底卡片上的次文字'],
+  ['--brand', '#2997ff', 'Bright Blue', '深底上的链接、价格、进度'],
+  ['--brand-strong', '#0071e3', 'Apple Blue', '主按钮底色'],
+  ['--brand-pressed', '#0066cc', 'Blue Pressed', '主按钮按下'],
+  ['--brand-ink', '#64d2ff', 'Blue Ink', '蓝色浅底上的文字'],
+  ['--ok', '#30d158', 'System Green', '已完成、到账'],
+  ['--err', '#ff453a', 'System Red', '失败、删除、校验'],
+  ['--warn', '#ff9f0a', 'System Orange', '排队中、提示'],
+  ['--focus', '#0071e3', 'Focus', '键盘焦点环'],
 ];
 const PAIRS = [
-  ['#141413', '#f5f4ed', '标题 / 页面'], ['#4d4c48', '#faf9f5', '正文 / 卡片'], ['#5e5d59', '#faf9f5', '辅助说明 / 卡片'],
-  ['#87867f', '#ffffff', '占位符 / 输入框（不承载信息）'], ['#faf9f5', '#ae5230', '主按钮文字 / 底'], ['#faf9f5', '#c96442', '陶土原色上的白字（不使用）'],
-  ['#ae5230', '#faf9f5', '价格 / 卡片'], ['#9a4526', '#f3e3da', '品牌徽标'], ['#56693f', '#e6e9dc', '成功徽标'],
-  ['#b53333', '#f5e2dd', '错误徽标'], ['#83570f', '#f2e8d3', '警告徽标'], ['#4d4c48', '#e8e6dc', '次按钮文字 / 底'], ['#b0aea5', '#141413', '次文字 / 深色面'],
+  ['#f5f5f7', '#000000', '标题 / 页面'], ['#ebebf5', '#1c1c1e', '正文 / 卡片'], ['#98989d', '#1c1c1e', '辅助说明 / 卡片'],
+  ['#8e8e93', '#2c2c2e', '占位符 / 输入框'], ['#ffffff', '#0071e3', '主按钮文字 / 底'], ['#ffffff', '#0a84ff', '更亮的系统蓝上的白字（不使用）'],
+  ['#2997ff', '#000000', '链接 / 页面'], ['#2997ff', '#1c1c1e', '价格 / 卡片'], ['#30d158', '#1c1c1e', '成功'],
+  ['#ff453a', '#1c1c1e', '错误'], ['#ff9f0a', '#000000', '警告'], ['#f5f5f7', '#3a3a3c', '次按钮文字 / 底'],
 ];
 const TYPE = [
-  ['h-page', '页面大标题', '衬线 28 / 500 / 1.2 / −0.01em', '爆款复刻'],
-  ['h-sec', '区块与弹窗标题', '衬线 20 / 500 / 1.25', '确认生成'],
-  ['h-card', '卡片标题', '无衬线 16 / 600 / 1.35', '夏季棉麻衬衫'],
-  ['t-body', '正文', '无衬线 15 / 400 / 1.6', '新人赠送 500 积分，够做 1 条 15 秒。先免费做一条，看到效果再决定。'],
-  ['t-cap', '说明', '无衬线 13 / 400 / 1.45', '服装内衣 / 上装 · 更换类目'],
-  ['t-mic', '注脚', '无衬线 12 / 400 / 1.4 / +0.12px', '09-19 18:42 生成 · 9:16 · 15 秒 · 消耗 270 积分'],
-  ['num', '数字', 'Georgia 等宽数字', '1,190'],
+  ['h-page', '页面大标题', 'SF Pro Display 34 / 600 / 1.12 / −0.022em', '爆款复刻'],
+  ['h-sec', '区块与弹窗标题', 'SF Pro Display 22 / 600 / 1.2', '确认生成'],
+  ['h-card', '卡片标题', 'SF Pro Text 16 / 600 / 1.35', '夏季棉麻衬衫'],
+  ['t-body', '正文', 'SF Pro Text 15 / 400 / 1.6', '新人赠送 500 积分，够做 1 条 15 秒。先免费做一条，看到效果再决定。'],
+  ['t-cap', '说明', 'SF Pro Text 13 / 400 / 1.45', '服装内衣 / 上装 · 更换类目'],
+  ['t-mic', '注脚', 'SF Pro Text 12 / 400 / 1.4', '09-19 18:42 生成 · 9:16 · 15 秒 · 消耗 270 积分'],
+  ['num', '数字', 'SF Mono 等宽数字', '1,190'],
 ];
 const SPACE = [['--s05', 2], ['--s1', 4], ['--s15', 6], ['--s2', 8], ['--s3', 12], ['--s4', 16], ['--s5', 20], ['--s6', 24], ['--s8', 32], ['--s12', 48]];
-const RADIUS = [['--r-2xs', 3, '进度条'], ['--r-xs', 6, '时长标'], ['--r-sm', 8, '小按钮、骨架'], ['--r-md', 12, '按钮、输入框、缩略图'], ['--r-lg', 16, '卡片、列表'], ['--r-xl', 20, '播放器'], ['--r-2xl', 24, '面板、弹窗'], ['--r-3xl', 32, '空态插图底'], ['--r-pill', 999, '胶囊']];
+const RADIUS = [['--r-2xs', 3, '进度条'], ['--r-xs', 6, '时长标'], ['--r-sm', 10, '小按钮'], ['--r-md', 14, '按钮、输入框'], ['--r-lg', 16, '卡片、列表'], ['--r-xl', 20, '播放器'], ['--r-2xl', 24, '面板、弹窗'], ['--r-3xl', 32, '空态插图底'], ['--r-pill', 999, '胶囊']];
 
 const previewCss = `
 .pv{padding:56px 48px 96px;max-width:1280px;margin:0 auto;color:var(--ink)}
@@ -218,7 +209,7 @@ const preview = `<div class="pv">
   <div class="rad">${RADIUS.map(([v, n, use]) => `<div><i style="border-radius:${n}px"></i>${n === 999 ? '胶囊' : n}<br><code>${v}</code><br>${use}</div>`).join('')}</div>
 
   <h2>4 · 按钮</h2>
-  <p class="t-cap mt12">高度 50 / 44 / 36，圆角 12 / 12 / 8。一屏最多一个陶土色实心按钮。按下态加深一档，禁用态用 Sand 底 Stone 字而非半透明，聚焦环仅用于键盘操作。</p>
+  <p class="t-cap mt12">高度 50 / 44 / 36，圆角 14 / 14 / 10。一屏最多一个蓝色实心按钮。按下态改为 #0066cc，禁用态用灰色底，聚焦环仅用于键盘操作。</p>
   ${btnMatrix([['btn-p', '主按钮', 'wechat'], ['btn-s', '次按钮', ''], ['btn-w', '白底按钮', ''], ['btn-d', '深色按钮', ''], ['btn-danger', '危险按钮', 'trash'], ['btn-g', '文字按钮', '']])}
   <h3>尺寸</h3>
   <div class="row"><span class="btn btn-p" style="width:200px">大 · 50</span><span class="btn md btn-p">中 · 44</span><span class="btn sm btn-p">小 · 36</span><span class="btn sm btn-s">${ic('filter')}带图标</span></div>
@@ -227,7 +218,7 @@ const preview = `<div class="pv">
   <div class="grid3">
     <div class="cell"><div class="field" style="width:100%">夏季棉麻衬衫</div><div class="lab">默认</div></div>
     <div class="cell"><div class="field ph" style="width:100%">如：夏季棉麻衬衫</div><div class="lab">占位</div></div>
-    <div class="cell"><div class="field focus" style="width:100%">夏季棉麻衬衫|</div><div class="lab">聚焦（陶土描边 + 品牌浅底外环）</div></div>
+    <div class="cell"><div class="field focus" style="width:100%">夏季棉麻衬衫|</div><div class="lab">聚焦（蓝色描边 + 蓝色浅底外环）</div></div>
     <div class="cell"><div class="field err" style="width:100%">如：轻薄透气</div><div class="errtxt">${ic('alert')}请填写商品卖点</div><div class="lab">错误</div></div>
     <div class="cell"><div class="field dis" style="width:100%">微信用户</div><div class="lab">禁用</div></div>
     <div class="cell"><div class="field flex gap8" style="width:100%;height:42px;padding:0 12px;color:var(--stone)">${ic('search')}搜索标题或类目</div><div class="lab">搜索框</div></div>
@@ -246,23 +237,23 @@ const preview = `<div class="pv">
 
   <h2>7 · 卡片、列表与进度</h2>
   <div class="grid3">
-    <div><div class="card pad"><div class="h-card">卡片 · Ivory</div><div class="t-cap mt4">默认容器，1px Border Cream 描边，圆角 16</div></div><div class="lab">.card</div></div>
-    <div><div class="card wh pad"><div class="h-card">卡片 · White</div><div class="t-cap mt4">用于需要“可点”暗示的浮起内容</div></div><div class="lab">.card.wh</div></div>
+    <div><div class="card pad"><div class="h-card">卡片 · Surface</div><div class="t-cap mt4">默认容器，1px 白色发丝线，圆角 16，无投影</div></div><div class="lab">.card</div></div>
+    <div><div class="card wh pad"><div class="h-card">卡片 · Elevated</div><div class="t-cap mt4">输入与可点内容抬到 #2c2c2e</div></div><div class="lab">.card.wh</div></div>
     <div><div class="card pad" style="background:var(--brand-soft);border-color:var(--brand-line)"><div class="h-card">付费触点</div><div class="t-cap mt4">品牌浅底 + 品牌描边，一屏一个</div></div><div class="lab">.card + brand-soft</div></div>
-    <div><div class="list"><div class="li"><span class="ic">${ic('wallet')}</span><span class="grow">充值中心</span>${ic('chev', 'chev')}</div><div class="li"><span class="grow">昵称</span><span class="t-cap">微信用户</span>${ic('chev', 'chev')}</div><div class="li"><span class="grow">清除缓存</span><span class="t-cap">42.6 MB</span></div></div><div class="lab">.list / .li（行高 ≥ 52，按下变 Parchment）</div></div>
+    <div><div class="list"><div class="li"><span class="ic">${ic('wallet')}</span><span class="grow">充值中心</span>${ic('chev', 'chev')}</div><div class="li"><span class="grow">昵称</span><span class="t-cap">微信用户</span>${ic('chev', 'chev')}</div><div class="li"><span class="grow">清除缓存</span><span class="t-cap">42.6 MB</span></div></div><div class="lab">.list / .li（行高 ≥ 52，按下变 #2c2c2e）</div></div>
     <div><div class="bar"><i style="width:62%"></i></div><div class="bar mt12" style="height:8px"><i style="width:30%"></i></div><div class="kv mt12"><span>本次消耗</span><span><span class="strike num">990</span>&nbsp; <b class="price">${pts(270)}</b></span></div><div class="kv"><span>生成后剩余</span><b class="num">920</b></div><div class="lab">.bar / .kv / .price</div></div>
-    <div><div class="step"><span class="n done">${ic('check')}</span><div><div style="font-size:14px;font-weight:600">解析参考视频结构</div><div class="t-mic">0:08</div></div></div><div class="step"><span class="n now">3</span><div><div style="font-size:14px;font-weight:600">合成商品画面</div><div class="t-mic" style="color:var(--brand-strong)">进行中</div></div></div><div class="step"><span class="n">4</span><div style="font-size:14px;font-weight:600;color:var(--olive)">配音、字幕与导出</div></div><div class="lab">.step（完成 / 进行中 / 未开始）</div></div>
+    <div><div class="step"><span class="n done">${ic('check')}</span><div><div style="font-size:14px;font-weight:600">解析参考视频结构</div><div class="t-mic">0:08</div></div></div><div class="step"><span class="n now">3</span><div><div style="font-size:14px;font-weight:600">合成商品画面</div><div class="t-mic" style="color:var(--brand)">进行中</div></div></div><div class="step"><span class="n">4</span><div style="font-size:14px;font-weight:600;color:var(--olive)">配音、字幕与导出</div></div><div class="lab">.step（完成 / 进行中 / 未开始）</div></div>
   </div>
 
   <h2>8 · 缩略图占位（字标）</h2>
-  <p class="t-cap mt12">原型阶段的视频封面统一用“商品单字 + 暖色块 + 偏置圆形”占位，避免假图片干扰评审。角标位置固定：左上画幅 / 状态，右下时长，右上勾选。</p>
-  <div class="row mt20">${th('衬', '#e9dccb', 120, 160, { size: .34, tl: '<span class="dur">9:16</span>', br: '<span class="dur">0:15</span>' })}${th('夏', '#dfe3d3', 120, 160, { size: .34, tl: statusBadge({ s: 'g', pct: 62 }) })}${th('通', '#e6d6cd', 160, 90, { size: .4, tl: '<span class="dur">16:9</span>' })}${th('衬', '#3a3631', 120, 160, { size: .34, play: true })}${th('包', '#e6d6cd', 72, 72, { size: .42 })}${th('料', '#e8dcc3', 52, 52, { size: .46 })}</div>
+  <p class="t-cap mt12">视频封面用深灰块加白色单字占位，播放键是白底黑图标。角标位置固定：左上画幅 / 状态，右下时长，右上勾选。</p>
+  <div class="row mt20">${th('衬', '#3a3a3c', 120, 160, { size: .34, tl: '<span class="dur">9:16</span>', br: '<span class="dur">0:15</span>' })}${th('夏', '#48484a', 120, 160, { size: .34, tl: statusBadge({ s: 'g', pct: 62 }) })}${th('通', '#2c2c2e', 160, 90, { size: .4, tl: '<span class="dur">16:9</span>' })}${th('衬', '#0a0a0a', 120, 160, { size: .34, play: true })}${th('包', '#404042', 72, 72, { size: .42 })}${th('料', '#363638', 52, 52, { size: .46 })}</div>
 
   <h2>9 · 层级：面板、弹窗、遮罩</h2>
   <div class="row" style="align-items:flex-start">
     <div class="demo fixed"><div class="scrim"></div><div class="sheet"><div class="grab"></div><div class="sh-h"><div><div class="h-sec">底部面板</div><div class="t-mic mt4">圆角 24，顶部把手，右上关闭</div></div><span class="x">${ic('close')}</span></div><span class="btn btn-p mt20">主操作</span><span class="btn btn-g mt4">次操作</span></div></div>
     <div class="demo fixed"><div class="scrim"></div><div class="dlg"><div class="h-sec">删除这条作品？</div><div class="t-body">「每日新款穿搭分享 · 衬衫款」删除后无法恢复。</div><div class="row2 mt20"><span class="btn md btn-s">取消</span><span class="btn md btn-danger">删除</span></div></div></div>
-    <div style="max-width:360px" class="t-cap"><b style="color:var(--ink)">层级规则</b><br>0 页面 Parchment → 1 卡片 Ivory + 描边 → 2 可点浮起 White + 环形阴影 → 3 面板 / 弹窗 Ivory + 遮罩 rgba(20,20,19,.42) → 4 Toast Near Black。<br><br>不使用渐变（骨架微光除外）与大面积投影；弹窗投影 <code>--sh-md</code>，Toast 投影 <code>--sh-lg</code>。</div>
+    <div style="max-width:360px" class="t-cap"><b style="color:var(--ink)">层级规则</b><br>0 页面 Pure Black → 1 卡片 #1c1c1e + 发丝线 → 2 可点浮起 #2c2c2e → 3 面板 / 弹窗 #3a3a3c + 遮罩 rgba(0,0,0,.64) → 4 Toast #3a3a3c。<br><br>不使用渐变（骨架微光除外）与投影。毛玻璃只用于 TabBar 与底栏。</div>
   </div>
 </div>`;
 writeFileSync(join(out, 'preview.html'), doc('Token 与组件目录 · 爆款视频 AI 生成', preview, previewCss));
